@@ -5,29 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.1.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/myblog/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/nanchenkunkun.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/nanchenkunkun.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/nanchenkunkun.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/nanchenkunkun.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/myblog/css/main.css">
+<link rel="stylesheet" href="/nanchenkunkun.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/myblog/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/nanchenkunkun.github.io/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"yoursite.com","root":"/myblog/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"nanchenkunkun.github.io","root":"/nanchenkunkun.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="算法原理SnowFlake算法生成id的结果是一个64bit大小的整数，它的结构如下图：   1bit，不用，因为二进制中最高位是符号位，1表示负数，0表示正数。生成的id一般都是用整数，所以最高位固定为0。 41bit-时间戳，用来记录时间戳，毫秒级。 - 41位可以表示个数字， - 如果只用来表示正整数（计算机中正数包含0），可以表示的数值范围是：0 至 ，减1是因为可表示的数值范围是从0开始">
 <meta property="og:type" content="article">
 <meta property="og:title" content="雪花算法">
-<meta property="og:url" content="http://yoursite.com/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:url" content="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="kkの博客">
 <meta property="og:description" content="算法原理SnowFlake算法生成id的结果是一个64bit大小的整数，它的结构如下图：   1bit，不用，因为二进制中最高位是符号位，1表示负数，0表示正数。生成的id一般都是用整数，所以最高位固定为0。 41bit-时间戳，用来记录时间戳，毫秒级。 - 41位可以表示个数字， - 如果只用来表示正整数（计算机中正数包含0），可以表示的数值范围是：0 至 ，减1是因为可表示的数值范围是从0开始">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/img%5C1.png">
+<meta property="og:image" content="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/img%5C1.png">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1">
 <meta property="og:image" content="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1">
@@ -40,9 +40,9 @@
 <meta property="article:author" content="zkk">
 <meta property="article:tag" content="高并发分布式">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/img%5C1.png">
+<meta name="twitter:image" content="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/img%5C1.png">
 
-<link rel="canonical" href="http://yoursite.com/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/">
+<link rel="canonical" href="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/">
 
 
 <script id="page-configurations">
@@ -104,7 +104,7 @@
 
   <div class="site-meta">
 
-    <a href="/myblog/" class="brand" rel="start">
+    <a href="/nanchenkunkun.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">kkの博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -125,22 +125,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/myblog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/nanchenkunkun.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/myblog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">2</span></a>
+    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">2</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/myblog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
+    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/myblog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">12</span></a>
+    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">12</span></a>
 
   </li>
   </ul>
@@ -171,10 +171,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/myblog/images/1.jpg">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
       <meta itemprop="name" content="zkk">
       <meta itemprop="description" content="kkの博客">
     </span>
@@ -203,11 +203,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/myblog/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
+                  <a href="/nanchenkunkun.github.io/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
                 </span>
             </span>
 
@@ -246,7 +246,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/myblog/tags/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 高并发分布式</a>
+              <a href="/nanchenkunkun.github.io/tags/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 高并发分布式</a>
           </div>
 
         
@@ -255,11 +255,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/myblog/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2%E3%80%81%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="prev" title="建造者模式">
+    <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2%E3%80%81%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="prev" title="建造者模式">
       <i class="fa fa-chevron-left"></i> 建造者模式
     </a></div>
       <div class="post-nav-item">
-    <a href="/myblog/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/6%E3%80%81%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" rel="next" title="适配器模式">
+    <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/6%E3%80%81%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" rel="next" title="适配器模式">
       适配器模式 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -327,27 +327,27 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="zkk"
-      src="/myblog/images/1.jpg">
+      src="/nanchenkunkun.github.io/images/1.jpg">
   <p class="site-author-name" itemprop="name">zkk</p>
   <div class="site-description" itemprop="description">kkの博客</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/myblog/archives/">
+          <a href="/nanchenkunkun.github.io/archives/">
         
           <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/myblog/categories/">
+            <a href="/nanchenkunkun.github.io/categories/">
           
         <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/myblog/tags/">
+            <a href="/nanchenkunkun.github.io/tags/">
           
         <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">标签</span></a>
@@ -399,19 +399,19 @@
   </div>
 
   
-  <script src="/myblog/lib/anime.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.min.js"></script>
-  <script src="/myblog/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/nanchenkunkun.github.io/lib/anime.min.js"></script>
+  <script src="/nanchenkunkun.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/nanchenkunkun.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/myblog/js/utils.js"></script>
+<script src="/nanchenkunkun.github.io/js/utils.js"></script>
 
-<script src="/myblog/js/motion.js"></script>
-
-
-<script src="/myblog/js/schemes/pisces.js"></script>
+<script src="/nanchenkunkun.github.io/js/motion.js"></script>
 
 
-<script src="/myblog/js/next-boot.js"></script>
+<script src="/nanchenkunkun.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/nanchenkunkun.github.io/js/next-boot.js"></script>
 
 
 
