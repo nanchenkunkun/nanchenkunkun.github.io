@@ -118,17 +118,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">1</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">2</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">9</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">12</span></a>
 
   </li>
   </ul>
@@ -154,6 +154,163 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/8%E3%80%81%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="kkの博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/8%E3%80%81%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">装饰模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:12" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>装饰模式</p>
+<p>一、概述 </p>
+<p>二、装饰模式的结构 </p>
+<p>三、具体案列 </p>
+<p>四、装饰模式与类继承的区别 </p>
+<p>五、装饰模式的特点： </p>
+<p>六、装饰模式、适配器模式、代理模式区别</p>
+<p><strong>一、概述</strong></p>
+<p>1.装饰模式(Decorator)的定义：又名包装(Wrapper)模式，装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案。 </p>
+<p>2.装饰模式以对客户端透明的方式动态的给一个对象附加上更多的责任。换言之客户端并不会觉的对象在装饰前和装饰后有什么区别。 </p>
+<p>3.装饰模式可以在不创造更多的子类的模式下，将对象的功能加以扩展。</p>
+<p><strong>二、装饰模式的结构</strong></p>
+<p>　　装饰模式的类图如下：</p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\8.png"></p>
+<p>在装饰模式中的角色有： </p>
+<p>●抽象构件(Component)角色：给出一个抽象接口，以规范准备接收附加责任的对象。 </p>
+<p>●具体构件(ConcreteComponent)角色：定义一个将要接收附加责任的类。 </p>
+<p>●装饰(Decorator)角色：持有一个构件(Component)对象的实例，并定义一个与抽象构件接口一致的接口。 </p>
+<p>●具体装饰(ConcreteDecorator)角色：负责给构件对象“贴上”附加的责任。</p>
+<p>源代码</p>
+<p>抽象构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteComponent</span> <span class="keyword">implements</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>装饰角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Decorator</span> <span class="keyword">implements</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Component component;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Decorator</span><span class="params">(Component component)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.component = component;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 委派给构件        </span></span><br><span class="line">    component.sampleOperation();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体装饰角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecoratorA</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecoratorA</span><span class="params">(Component component)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">　　　　　<span class="keyword">super</span>.sampleOperation();</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecoratorB</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecoratorB</span><span class="params">(Component component)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">　　　　  <span class="keyword">super</span>.sampleOperation();</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>三、具体案列</strong></p>
+<p>本例中 抽象构建角色由Programmer程序员接口扮演<br>具体构件角色由类汤高扮演  他实现了程序员具有的功能<br>装饰构件由 类Derector扮演 它必须也实现抽象构件接口<br>具体装饰构件角色由 类Hacker(黑客) 和类 SoftwareAchitect(架构师)扮演<br>具体程序员汤高有编程能力,上帝可以给他赋予更多能力 每赋予一种能力,他就多一个技能 这是通过装饰构件实现的</p>
+<p>抽象构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 抽象构件角色</span></span><br><span class="line"><span class="comment"> *  程序员接口   程序员具有编程的能力</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Programmer</span> </span>&#123;</span><br><span class="line">    <span class="comment">//编程</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 具体构件角色  </span></span><br><span class="line"><span class="comment"> *  汤高是一个具体的程序员  </span></span><br><span class="line"><span class="comment"> * 那么他就具有编程能力</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 汤高 <span class="keyword">implements</span> <span class="title">Programmer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我是一个程序员, 我能编程&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>装饰角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 装饰角色</span></span><br><span class="line"><span class="comment"> *  </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Derector</span> <span class="keyword">implements</span> <span class="title">Programmer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Programmer programmer;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Derector</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.programmer = programmer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        programmer.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体装饰角色1</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 　具体装饰角色  </span></span><br><span class="line"><span class="comment"> *  黑客类   他具有附加的功能  他能入侵别人的电脑</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hacker</span> <span class="keyword">extends</span> <span class="title">Derector</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hacker</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(programmer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;我具有黑客的技能   我能入侵别人的电脑&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体装饰角色2</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 　具体装饰角色  </span></span><br><span class="line"><span class="comment"> *  软件架构师类   他具有附加的功能  能设计总个网站或系统的骨</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SoftwareArchitect</span> <span class="keyword">extends</span> <span class="title">Derector</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SoftwareArchitect</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(programmer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;我具有架构师的技能  我能设计总个网站或系统的骨架&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建构件对象   汤高 -&gt;他是一个具体的程序员 </span></span><br><span class="line">        <span class="comment">//但是现在他只有编程能力  那怎么行</span></span><br><span class="line">        <span class="comment">//必须赋予他更大的能力  不然怎么赚大钱!</span></span><br><span class="line">        <span class="comment">//所以 上帝给他装饰了一番  瞬间提神了他的B格</span></span><br><span class="line">        Programmer programmer=<span class="keyword">new</span> 汤高();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//装饰类登场  屌丝  我来装饰你  让你具有更大的能力 </span></span><br><span class="line">        Derector hacker=<span class="keyword">new</span> Hacker(programmer);</span><br><span class="line">        <span class="comment">//这下汤高这个屌丝程序员就具有黑客的技能包了</span></span><br><span class="line">        <span class="comment">//这下就没有谁敢叫他屌丝了吧  哈哈  不然分分钟让你电脑崩溃</span></span><br><span class="line">        System.out.println(<span class="string">&quot;第一次装饰&quot;</span>);</span><br><span class="line">        hacker.programme();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//程序员还不满足  他还要更多的技能  因为他要逆袭</span></span><br><span class="line">        <span class="comment">//所以上帝再给他装饰了一下 </span></span><br><span class="line">        <span class="comment">//在他具有黑客技能的基础上另外赋予了他架构师的功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;--------------第二次装饰&quot;</span>);</span><br><span class="line">        Derector  achitect=<span class="keyword">new</span> SoftwareArchitect(hacker);</span><br><span class="line"></span><br><span class="line">        achitect.programme();</span><br><span class="line">        <span class="comment">//也可以一步装饰两个技能 因为他们有共同的父类抽象构件接口 Programmer</span></span><br><span class="line">        System.out.println(<span class="string">&quot;------------一步装饰两个技能&quot;</span>);</span><br><span class="line">        Derector achitect1=<span class="keyword">new</span> SoftwareArchitect(   <span class="keyword">new</span>  Hacker(<span class="keyword">new</span> 汤高() ) );</span><br><span class="line">        achitect1.programme();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果： </p>
+<p>第一次装饰 </p>
+<p>我是一个程序员, 我能编程 </p>
+<p>我具有黑客的技能 我能入侵别人的电脑 </p>
+<p>————–第二次装饰 </p>
+<p>我是一个程序员, 我能编程 </p>
+<p>我具有黑客的技能 我能入侵别人的电脑 </p>
+<p>我具有架构师的技能 我能设计总个网站或系统的骨架 </p>
+<p>————一步装饰两个技能 </p>
+<p>我是一个程序员, 我能编程 </p>
+<p>我具有黑客的技能 我能入侵别人的电脑 </p>
+<p>我具有架构师的技能 我能设计总个网站或系统的骨架</p>
+<p><strong>四、装饰模式与类继承的区别</strong></p>
+<p>1)装饰模式是一种动态行为，对已经存在类进行随意组合，而类的继承是一种静态的行为，一个类定义成什么样的，该类的对象便具有什么样的功能，无法动态的改变。</p>
+<p>2)装饰模式扩展的是对象的功能，不需要增加类的数量，而类继承扩展是类的功能，在继承的关系中，如果我们想增加一个对象的功能，我们只能通过继承关系，在子类中增加方法。</p>
+<p>3)装饰模式是在不改变原类文件和使用继承的情况下，动态的扩展一个对象的功能，它是通过创建一个包装对象，也就是装饰来包裹真是的对象。</p>
+<p><strong>五、装饰模式的特点：</strong></p>
+<p>1)装饰对象和真实对象具有相同的接口，这样客户端对象就可以以真实对象的相同的方式和装饰对象交互。 </p>
+<p>2)装饰对象包含一个真实对象的引用(reference). </p>
+<p>3)装饰对象接受所有来自客户端的请求，它把这些请求转发给真实的对象。 </p>
+<p>4)装饰对象可以在转发这些请求以前或者以后增加一些附加的功能。这样就能确保在运行时，不用修改给定对象结构就可以在外部增加附加的功能。在面向对象的程序设计中，通常是使用继承的关系来扩展给定类的功能。</p>
+<p><strong>六、装饰模式、适配器模式、代理模式区别</strong></p>
+<p>适配器模式，一个适配允许通常因为接口不兼容而不能在一起工作的类工作在一起，做法是将类自己的接口包裹在一个已存在的类中。</p>
+<p>装饰器模式，原有的不能满足现有的需求，对原有的进行增强。 </p>
+<p>代理模式，同一个类而去调用另一个类的方法，不对这个方法进行直接操作。</p>
+<p>适配器的特点在于兼容，从代码上的特点来说，适配类与原有的类具有相同的接口，并且持有新的目标对象。</p>
+<p>就如同一个三孔转2孔的适配器一样，他有三孔的插头，可以插到三孔插座里，又有两孔的插座可以被2孔插头插入。</p>
+<p>适配器模式是在于对原有3孔的改造。</p>
+<p>在使用适配器模式的时候，我们必须同时持有原对象，适配对象，目标对象。。。。</p>
+<p>装饰器模式特点在于增强，他的特点是被装饰类和所有的装饰类必须实现同一个接口，而且必须持有被装饰的对象，可以无限装饰。</p>
+<p>代理模式的特点在于隔离，隔离调用类和被调用类的关系，通过一个代理类去调用。</p>
+<p>总的来说就是如下三句话： </p>
+<p>1 适配器模式是将一个类通过某种方式转换成另一个类.</p>
+<p>3 代理模式是将一个类转换成具体的操作类.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -255,168 +412,6 @@
 </ol>
 <p>不管如何变化，建造模式都存在这么两个部分，一个部分是部件构造。另一个部分是整体构建的算法。 </p>
 <p>再直白点说，建造模式的重心在于分离构建算法和具体的构造实现，从而使得构建算法可以重用。具体的构造实现可以很方便地扩展和切换，从而可以灵活地组合来构造出不同的产品对象。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/1.jpg">
-      <meta itemprop="name" content="zkk">
-      <meta itemprop="description" content="kkの博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kkの博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">工厂模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:37" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><p>目前从网上了解工厂模式大体分为简单工厂、工厂方法、抽象工厂等三种模式。工厂方法模式也可称为工厂模式，与抽象模式都是属于GOF23种设计模式中的一员。可以大概理解为：简单工厂进阶变成了工厂方法，然后再进阶成了抽象工厂。难度逐步增加，也越来越抽象。下面按先易到难逐个分析。</p>
-<h3 id="二、简单工厂模式"><a href="#二、简单工厂模式" class="headerlink" title="二、简单工厂模式"></a><strong>二、简单工厂模式</strong></h3><p>属于<strong>创建型模式</strong>，又叫做<strong>静态工厂方法模式</strong>，不属于23种GOF设计模式之一。是由一个工厂对象决定创建出哪一种产品类的实例。实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（这些产品类继承自一个父类或接口）的实例。</p>
-<p>作用：将“类实例化的操作”与“使用对象的操作”分开，让使用者不用知道具体参数就可以实例化出所需要的“产品”类，从而避免了在客户端代码中显式指定，实现了解耦。</p>
-<p><strong>主要角色</strong></p>
-<p><strong>工厂：</strong>负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</p>
-<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
-<p><strong>具体产品：</strong>描述生产的具体产品。</p>
-<p><strong>举个简单易懂的例子：</strong></p>
-<p>“假设”有一台饮料机（工厂），可以调出各种口味的饮料（抽象产品），有三个按钮（参数）对应这三种饮料（具体产品）。这时候你可以根据点击按钮来选择你喜欢的饮料。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> *  @ Product.java</span><br><span class="line"> *  抽象产品</span><br><span class="line"> *  描述产品的公共接口</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract  class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ AProduct.java</span><br><span class="line"> * 具体产品A</span><br><span class="line"> * （可以看成是一种饮料：可乐）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class AProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;可乐&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ BProduct.java</span><br><span class="line"> * @具体产品B</span><br><span class="line"> * @（可以看成是一种饮料：奶茶）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class BProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;奶茶&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ CProduct.java</span><br><span class="line"> * 具体产品C</span><br><span class="line"> * （可以看成是一种饮料：咖啡）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class CProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;咖啡&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">Factory.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * 工厂</span><br><span class="line"> * 负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Factory &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 供外界调用的方法</span><br><span class="line">     * （可以看成是对外提供的三种按钮）</span><br><span class="line">     * @param type </span><br><span class="line">     * @return 产品实例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static Product getProduct(String type) &#123;</span><br><span class="line">        switch (type) &#123;</span><br><span class="line">            case &quot;A&quot;:</span><br><span class="line">                return new AProduct();</span><br><span class="line">            case &quot;B&quot;:</span><br><span class="line">                return new BProduct();</span><br><span class="line">            case &quot;C&quot;:</span><br><span class="line">                return new CProduct();</span><br><span class="line">            default:</span><br><span class="line">                return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        Factory factory &#x3D; new Factory();</span><br><span class="line">        &#x2F;&#x2F;根据传入的参数生产不同的产品实例</span><br><span class="line">        &#x2F;&#x2F;(按下不同的按钮，获取饮料)</span><br><span class="line">        Product A &#x3D; Factory.getProduct(&quot;A&quot;);</span><br><span class="line">        A.intro();</span><br><span class="line">        Product B &#x3D; Factory.getProduct(&quot;B&quot;);</span><br><span class="line">        B.intro();</span><br><span class="line">        Product C &#x3D; Factory.getProduct(&quot;C&quot;);</span><br><span class="line">        C.intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个具体工厂类，通过往此工厂的static方法中传入不同参数，产出不同的具体产品类实例。</strong></p>
-<p>优点：将创建使用工作分开，不必关心类对象如何创建，实现了解耦；</p>
-<p>缺点：违背“开放 - 关闭原则”，一旦添加新产品就不得不修改工厂类的逻辑，这样就会造成工厂逻辑过于复杂。</p>
-<h3 id="三、工厂方法模式"><a href="#三、工厂方法模式" class="headerlink" title="三、工厂方法模式"></a><strong>三、工厂方法模式</strong></h3><p>又称<strong>工厂模式、多态工厂模式</strong>和<strong>虚拟构造器模式</strong>，通过<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong>。一种常用的对象创建型设计模式,此模式的核心精神是封装 类中不变的部分。</p>
-<p>作用：将类的实例化（具体产品的创建）延迟到工厂类的子类（具体工厂）中完成，即由子类来决定应该实例化（创建）哪一个类。</p>
-<p><strong>主要角色</strong></p>
-<p><strong>抽象工厂：</strong>描述具体工厂的公共接口</p>
-<p><strong>具体工厂：</strong>描述具体工厂，创建产品的实例，供外界调用</p>
-<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
-<p><strong>具体产品：</strong>描述生产的具体产品</p>
-<p><strong>举个简单易懂的例子：</strong></p>
-<p>“假设”有各类的饮料机（抽象工厂），可以调出各种的饮料（抽象产品）。但是一类饮料机（具体工厂），只能生产一种饮料（具体产品）。如果你需要喝可乐，就需要买可乐饮料机。</p>
-<p><strong>产品：Product.java 、ProductA.java 、ProductB.java</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java </span><br><span class="line"> *   抽象产品</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java </span><br><span class="line"> * 具体产品A</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料A&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java </span><br><span class="line"> * 具体产品B</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料B&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java 、FactoryB.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> *  @ Factory.java</span><br><span class="line"> *    抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产产品</span><br><span class="line">    abstract Product getProduct();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的产品A生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductA();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryB.java</span><br><span class="line"> * @具体工厂B</span><br><span class="line"> * 负责具体的产品B生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryB extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;生产相对应的产品</span><br><span class="line">        factoryA.getProduct().intro();</span><br><span class="line">        FactoryB factoryB &#x3D; new FactoryB();</span><br><span class="line">        factoryB.getProduct().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。每个具体工厂类只能创建一个具体产品类的实例</strong>。</p>
-<p>优点：</p>
-<ol>
-<li>符合开-闭原则：新增一种产品时，只需要增加相应的具体产品类和相应的工厂子类即可</li>
-<li>符合单一职责原则：每个具体工厂类只负责创建对应的产品</li>
-</ol>
-<p>缺点：</p>
-<ol>
-<li>增加了系统的复杂度：类的个数将成对增加</li>
-<li>增加了系统的抽象性和理解难度</li>
-<li>一个具体工厂只能创建一种具体产品</li>
-</ol>
-<h3 id="四、抽象工厂模式"><a href="#四、抽象工厂模式" class="headerlink" title="四、抽象工厂模式"></a><strong>四、抽象工厂模式</strong></h3><p>定义：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></p>
-<p>解决的问题：每个工厂只能创建一类产品（工厂方法模式）</p>
-<p>抽象工厂模式与工厂方法模式最大的区别：抽象工厂中每个工厂可以创建多种类的产品；而工厂方法每个工厂只能创建一类</p>
-<p><strong>主要对象</strong></p>
-<p><strong>抽象工厂</strong>：描述具体工厂的公共接口</p>
-<p><strong>具体工厂</strong>：描述具体工厂，创建产品的实例，供外界调用</p>
-<p><strong>抽象产品族</strong>：描述抽象产品的公共接口</p>
-<p><strong>抽象产品</strong>：描述具体产品的公共接口</p>
-<p><strong>具体产品</strong>：具体产品</p>
-<p><strong>举个简单易懂的例子：（找了个不怎么好的比喻，看不懂得可以看相关推荐链接）</strong></p>
-<p>“假设”有各类的自动售卖机（抽象工厂），可以出售各类食品（抽象产品族）。</p>
-<p>有饮料、零食（抽象产品），比如常见的零食售卖机（具体工厂），出售矿泉水与面包（具体产品）。</p>
-<p><strong>产品：Product、ProductA、ProductB、ProductAa、ProductBb</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java</span><br><span class="line"> * 抽象产品族 (食品)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java</span><br><span class="line"> * 抽象产品  (饮料)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java</span><br><span class="line"> * 抽象产品  (零食)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductAa.java</span><br><span class="line"> * 具体产品  (矿泉水)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public  class ProductAa extends ProductA&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;矿泉水&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductBb.java</span><br><span class="line"> * 抽象产品  (面包)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductBb extends ProductB&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;面包&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ Factory.java</span><br><span class="line"> * 抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产饮料</span><br><span class="line">    abstract Product getProductA();</span><br><span class="line">    &#x2F;&#x2F;生产零食</span><br><span class="line">    abstract Product getProductB();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的A类产品生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductA() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产矿泉水</span><br><span class="line">        return new ProductAa();</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductB() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产面包</span><br><span class="line">        return new ProductBb();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建零食售卖机（具体工厂），</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;获取矿泉水与面包（具体产品）</span><br><span class="line">        factoryA.getProductA().intro();</span><br><span class="line">        factoryA.getProductB().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>根据实例可以描述为： <strong>多个抽象产品类，每个抽象产品类可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。 每个具体工厂类可以创建多个具体产品类的实例</strong>。.</p>
-<p>优点：</p>
-<ol>
-<li>降低耦合</li>
-<li>符合开-闭原则</li>
-<li>符合单一职责原则</li>
-<li>不使用静态工厂方法，可以形成基于继承的等级结构。</li>
-</ol>
-<p>缺点：难以扩展新种类产品</p>
-<h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a><strong>五、总结</strong></h3><p><strong>角色不同：</strong></p>
-<ol>
-<li>简单工厂：具体工厂、抽象产品、具体产品</li>
-<li>工厂方法：<strong>抽象工厂</strong>、具体工厂、抽象产品、具体产品</li>
-<li>抽象工厂：抽象工厂、具体工厂、<strong>抽象产品族</strong>、抽象产品、具体产品</li>
-</ol>
-<p><strong>定义：</strong></p>
-<ol>
-<li>简单工厂：<strong>由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（继承自一个父类或接口）的实例。</strong></li>
-<li>工厂方法：<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong></li>
-<li>抽象工厂：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></li>
-</ol>
-<p><strong>对比：</strong></p>
-<ol>
-<li><strong>工厂方法模式</strong>解决了<strong>简单工厂模式</strong>的“开放 - 关闭原则</li>
-<li>抽象工厂模式解决了<strong>工厂方法模式</strong>一个具体工厂只能创建一类产品</li>
-</ol>
 
       
     </div>
@@ -924,7 +919,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/8%E3%80%81%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/1.jpg">
@@ -938,7 +933,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/8%E3%80%81%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">装饰模式</a>
+            <a href="/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">工厂模式</a>
         </h2>
 
         <div class="post-meta">
@@ -949,7 +944,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:12" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:37" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -976,92 +971,97 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>装饰模式</p>
-<p>一、概述 </p>
-<p>二、装饰模式的结构 </p>
-<p>三、具体案列 </p>
-<p>四、装饰模式与类继承的区别 </p>
-<p>五、装饰模式的特点： </p>
-<p>六、装饰模式、适配器模式、代理模式区别</p>
-<p><strong>一、概述</strong></p>
-<p>1.装饰模式(Decorator)的定义：又名包装(Wrapper)模式，装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案。 </p>
-<p>2.装饰模式以对客户端透明的方式动态的给一个对象附加上更多的责任。换言之客户端并不会觉的对象在装饰前和装饰后有什么区别。 </p>
-<p>3.装饰模式可以在不创造更多的子类的模式下，将对象的功能加以扩展。</p>
-<p><strong>二、装饰模式的结构</strong></p>
-<p>　　装饰模式的类图如下：</p>
-<p><img src="A:\gitdir\学习资料\java\设计模式\img\8.png"></p>
-<p>在装饰模式中的角色有： </p>
-<p>●抽象构件(Component)角色：给出一个抽象接口，以规范准备接收附加责任的对象。 </p>
-<p>●具体构件(ConcreteComponent)角色：定义一个将要接收附加责任的类。 </p>
-<p>●装饰(Decorator)角色：持有一个构件(Component)对象的实例，并定义一个与抽象构件接口一致的接口。 </p>
-<p>●具体装饰(ConcreteDecorator)角色：负责给构件对象“贴上”附加的责任。</p>
-<p>源代码</p>
-<p>抽象构件角色</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><p>目前从网上了解工厂模式大体分为简单工厂、工厂方法、抽象工厂等三种模式。工厂方法模式也可称为工厂模式，与抽象模式都是属于GOF23种设计模式中的一员。可以大概理解为：简单工厂进阶变成了工厂方法，然后再进阶成了抽象工厂。难度逐步增加，也越来越抽象。下面按先易到难逐个分析。</p>
+<h3 id="二、简单工厂模式"><a href="#二、简单工厂模式" class="headerlink" title="二、简单工厂模式"></a><strong>二、简单工厂模式</strong></h3><p>属于<strong>创建型模式</strong>，又叫做<strong>静态工厂方法模式</strong>，不属于23种GOF设计模式之一。是由一个工厂对象决定创建出哪一种产品类的实例。实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（这些产品类继承自一个父类或接口）的实例。</p>
+<p>作用：将“类实例化的操作”与“使用对象的操作”分开，让使用者不用知道具体参数就可以实例化出所需要的“产品”类，从而避免了在客户端代码中显式指定，实现了解耦。</p>
+<p><strong>主要角色</strong></p>
+<p><strong>工厂：</strong>负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</p>
+<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
+<p><strong>具体产品：</strong>描述生产的具体产品。</p>
+<p><strong>举个简单易懂的例子：</strong></p>
+<p>“假设”有一台饮料机（工厂），可以调出各种口味的饮料（抽象产品），有三个按钮（参数）对应这三种饮料（具体产品）。这时候你可以根据点击按钮来选择你喜欢的饮料。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> *  @ Product.java</span><br><span class="line"> *  抽象产品</span><br><span class="line"> *  描述产品的公共接口</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract  class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ AProduct.java</span><br><span class="line"> * 具体产品A</span><br><span class="line"> * （可以看成是一种饮料：可乐）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class AProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;可乐&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ BProduct.java</span><br><span class="line"> * @具体产品B</span><br><span class="line"> * @（可以看成是一种饮料：奶茶）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class BProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;奶茶&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ CProduct.java</span><br><span class="line"> * 具体产品C</span><br><span class="line"> * （可以看成是一种饮料：咖啡）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class CProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;咖啡&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>具体构件角色</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteComponent</span> <span class="keyword">implements</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">Factory.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * 工厂</span><br><span class="line"> * 负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Factory &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 供外界调用的方法</span><br><span class="line">     * （可以看成是对外提供的三种按钮）</span><br><span class="line">     * @param type </span><br><span class="line">     * @return 产品实例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static Product getProduct(String type) &#123;</span><br><span class="line">        switch (type) &#123;</span><br><span class="line">            case &quot;A&quot;:</span><br><span class="line">                return new AProduct();</span><br><span class="line">            case &quot;B&quot;:</span><br><span class="line">                return new BProduct();</span><br><span class="line">            case &quot;C&quot;:</span><br><span class="line">                return new CProduct();</span><br><span class="line">            default:</span><br><span class="line">                return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>装饰角色</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Decorator</span> <span class="keyword">implements</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Component component;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Decorator</span><span class="params">(Component component)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.component = component;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 委派给构件        </span></span><br><span class="line">    component.sampleOperation();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        Factory factory &#x3D; new Factory();</span><br><span class="line">        &#x2F;&#x2F;根据传入的参数生产不同的产品实例</span><br><span class="line">        &#x2F;&#x2F;(按下不同的按钮，获取饮料)</span><br><span class="line">        Product A &#x3D; Factory.getProduct(&quot;A&quot;);</span><br><span class="line">        A.intro();</span><br><span class="line">        Product B &#x3D; Factory.getProduct(&quot;B&quot;);</span><br><span class="line">        B.intro();</span><br><span class="line">        Product C &#x3D; Factory.getProduct(&quot;C&quot;);</span><br><span class="line">        C.intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>具体装饰角色</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecoratorA</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecoratorA</span><span class="params">(Component component)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">　　　　　<span class="keyword">super</span>.sampleOperation();</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecoratorB</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecoratorB</span><span class="params">(Component component)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">　　　　  <span class="keyword">super</span>.sampleOperation();</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个具体工厂类，通过往此工厂的static方法中传入不同参数，产出不同的具体产品类实例。</strong></p>
+<p>优点：将创建使用工作分开，不必关心类对象如何创建，实现了解耦；</p>
+<p>缺点：违背“开放 - 关闭原则”，一旦添加新产品就不得不修改工厂类的逻辑，这样就会造成工厂逻辑过于复杂。</p>
+<h3 id="三、工厂方法模式"><a href="#三、工厂方法模式" class="headerlink" title="三、工厂方法模式"></a><strong>三、工厂方法模式</strong></h3><p>又称<strong>工厂模式、多态工厂模式</strong>和<strong>虚拟构造器模式</strong>，通过<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong>。一种常用的对象创建型设计模式,此模式的核心精神是封装 类中不变的部分。</p>
+<p>作用：将类的实例化（具体产品的创建）延迟到工厂类的子类（具体工厂）中完成，即由子类来决定应该实例化（创建）哪一个类。</p>
+<p><strong>主要角色</strong></p>
+<p><strong>抽象工厂：</strong>描述具体工厂的公共接口</p>
+<p><strong>具体工厂：</strong>描述具体工厂，创建产品的实例，供外界调用</p>
+<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
+<p><strong>具体产品：</strong>描述生产的具体产品</p>
+<p><strong>举个简单易懂的例子：</strong></p>
+<p>“假设”有各类的饮料机（抽象工厂），可以调出各种的饮料（抽象产品）。但是一类饮料机（具体工厂），只能生产一种饮料（具体产品）。如果你需要喝可乐，就需要买可乐饮料机。</p>
+<p><strong>产品：Product.java 、ProductA.java 、ProductB.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java </span><br><span class="line"> *   抽象产品</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java </span><br><span class="line"> * 具体产品A</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料A&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java </span><br><span class="line"> * 具体产品B</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料B&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><strong>三、具体案列</strong></p>
-<p>本例中 抽象构建角色由Programmer程序员接口扮演<br>具体构件角色由类汤高扮演  他实现了程序员具有的功能<br>装饰构件由 类Derector扮演 它必须也实现抽象构件接口<br>具体装饰构件角色由 类Hacker(黑客) 和类 SoftwareAchitect(架构师)扮演<br>具体程序员汤高有编程能力,上帝可以给他赋予更多能力 每赋予一种能力,他就多一个技能 这是通过装饰构件实现的</p>
-<p>抽象构件角色</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 抽象构件角色</span></span><br><span class="line"><span class="comment"> *  程序员接口   程序员具有编程的能力</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Programmer</span> </span>&#123;</span><br><span class="line">    <span class="comment">//编程</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java 、FactoryB.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> *  @ Factory.java</span><br><span class="line"> *    抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产产品</span><br><span class="line">    abstract Product getProduct();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的产品A生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductA();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryB.java</span><br><span class="line"> * @具体工厂B</span><br><span class="line"> * 负责具体的产品B生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryB extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>具体构件角色</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 具体构件角色  </span></span><br><span class="line"><span class="comment"> *  汤高是一个具体的程序员  </span></span><br><span class="line"><span class="comment"> * 那么他就具有编程能力</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 汤高 <span class="keyword">implements</span> <span class="title">Programmer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我是一个程序员, 我能编程&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;生产相对应的产品</span><br><span class="line">        factoryA.getProduct().intro();</span><br><span class="line">        FactoryB factoryB &#x3D; new FactoryB();</span><br><span class="line">        factoryB.getProduct().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>装饰角色</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 装饰角色</span></span><br><span class="line"><span class="comment"> *  </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Derector</span> <span class="keyword">implements</span> <span class="title">Programmer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Programmer programmer;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Derector</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.programmer = programmer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        programmer.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。每个具体工厂类只能创建一个具体产品类的实例</strong>。</p>
+<p>优点：</p>
+<ol>
+<li>符合开-闭原则：新增一种产品时，只需要增加相应的具体产品类和相应的工厂子类即可</li>
+<li>符合单一职责原则：每个具体工厂类只负责创建对应的产品</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>增加了系统的复杂度：类的个数将成对增加</li>
+<li>增加了系统的抽象性和理解难度</li>
+<li>一个具体工厂只能创建一种具体产品</li>
+</ol>
+<h3 id="四、抽象工厂模式"><a href="#四、抽象工厂模式" class="headerlink" title="四、抽象工厂模式"></a><strong>四、抽象工厂模式</strong></h3><p>定义：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></p>
+<p>解决的问题：每个工厂只能创建一类产品（工厂方法模式）</p>
+<p>抽象工厂模式与工厂方法模式最大的区别：抽象工厂中每个工厂可以创建多种类的产品；而工厂方法每个工厂只能创建一类</p>
+<p><strong>主要对象</strong></p>
+<p><strong>抽象工厂</strong>：描述具体工厂的公共接口</p>
+<p><strong>具体工厂</strong>：描述具体工厂，创建产品的实例，供外界调用</p>
+<p><strong>抽象产品族</strong>：描述抽象产品的公共接口</p>
+<p><strong>抽象产品</strong>：描述具体产品的公共接口</p>
+<p><strong>具体产品</strong>：具体产品</p>
+<p><strong>举个简单易懂的例子：（找了个不怎么好的比喻，看不懂得可以看相关推荐链接）</strong></p>
+<p>“假设”有各类的自动售卖机（抽象工厂），可以出售各类食品（抽象产品族）。</p>
+<p>有饮料、零食（抽象产品），比如常见的零食售卖机（具体工厂），出售矿泉水与面包（具体产品）。</p>
+<p><strong>产品：Product、ProductA、ProductB、ProductAa、ProductBb</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java</span><br><span class="line"> * 抽象产品族 (食品)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java</span><br><span class="line"> * 抽象产品  (饮料)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java</span><br><span class="line"> * 抽象产品  (零食)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductAa.java</span><br><span class="line"> * 具体产品  (矿泉水)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public  class ProductAa extends ProductA&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;矿泉水&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductBb.java</span><br><span class="line"> * 抽象产品  (面包)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductBb extends ProductB&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;面包&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>具体装饰角色1</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 　具体装饰角色  </span></span><br><span class="line"><span class="comment"> *  黑客类   他具有附加的功能  他能入侵别人的电脑</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hacker</span> <span class="keyword">extends</span> <span class="title">Derector</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hacker</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(programmer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;我具有黑客的技能   我能入侵别人的电脑&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ Factory.java</span><br><span class="line"> * 抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产饮料</span><br><span class="line">    abstract Product getProductA();</span><br><span class="line">    &#x2F;&#x2F;生产零食</span><br><span class="line">    abstract Product getProductB();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的A类产品生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductA() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产矿泉水</span><br><span class="line">        return new ProductAa();</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductB() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产面包</span><br><span class="line">        return new ProductBb();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>具体装饰角色2</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 　具体装饰角色  </span></span><br><span class="line"><span class="comment"> *  软件架构师类   他具有附加的功能  能设计总个网站或系统的骨</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SoftwareArchitect</span> <span class="keyword">extends</span> <span class="title">Derector</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SoftwareArchitect</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(programmer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;我具有架构师的技能  我能设计总个网站或系统的骨架&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建零食售卖机（具体工厂），</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;获取矿泉水与面包（具体产品）</span><br><span class="line">        factoryA.getProductA().intro();</span><br><span class="line">        factoryA.getProductB().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>客户端</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建构件对象   汤高 -&gt;他是一个具体的程序员 </span></span><br><span class="line">        <span class="comment">//但是现在他只有编程能力  那怎么行</span></span><br><span class="line">        <span class="comment">//必须赋予他更大的能力  不然怎么赚大钱!</span></span><br><span class="line">        <span class="comment">//所以 上帝给他装饰了一番  瞬间提神了他的B格</span></span><br><span class="line">        Programmer programmer=<span class="keyword">new</span> 汤高();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//装饰类登场  屌丝  我来装饰你  让你具有更大的能力 </span></span><br><span class="line">        Derector hacker=<span class="keyword">new</span> Hacker(programmer);</span><br><span class="line">        <span class="comment">//这下汤高这个屌丝程序员就具有黑客的技能包了</span></span><br><span class="line">        <span class="comment">//这下就没有谁敢叫他屌丝了吧  哈哈  不然分分钟让你电脑崩溃</span></span><br><span class="line">        System.out.println(<span class="string">&quot;第一次装饰&quot;</span>);</span><br><span class="line">        hacker.programme();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//程序员还不满足  他还要更多的技能  因为他要逆袭</span></span><br><span class="line">        <span class="comment">//所以上帝再给他装饰了一下 </span></span><br><span class="line">        <span class="comment">//在他具有黑客技能的基础上另外赋予了他架构师的功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;--------------第二次装饰&quot;</span>);</span><br><span class="line">        Derector  achitect=<span class="keyword">new</span> SoftwareArchitect(hacker);</span><br><span class="line"></span><br><span class="line">        achitect.programme();</span><br><span class="line">        <span class="comment">//也可以一步装饰两个技能 因为他们有共同的父类抽象构件接口 Programmer</span></span><br><span class="line">        System.out.println(<span class="string">&quot;------------一步装饰两个技能&quot;</span>);</span><br><span class="line">        Derector achitect1=<span class="keyword">new</span> SoftwareArchitect(   <span class="keyword">new</span>  Hacker(<span class="keyword">new</span> 汤高() ) );</span><br><span class="line">        achitect1.programme();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果： </p>
-<p>第一次装饰 </p>
-<p>我是一个程序员, 我能编程 </p>
-<p>我具有黑客的技能 我能入侵别人的电脑 </p>
-<p>————–第二次装饰 </p>
-<p>我是一个程序员, 我能编程 </p>
-<p>我具有黑客的技能 我能入侵别人的电脑 </p>
-<p>我具有架构师的技能 我能设计总个网站或系统的骨架 </p>
-<p>————一步装饰两个技能 </p>
-<p>我是一个程序员, 我能编程 </p>
-<p>我具有黑客的技能 我能入侵别人的电脑 </p>
-<p>我具有架构师的技能 我能设计总个网站或系统的骨架</p>
-<p><strong>四、装饰模式与类继承的区别</strong></p>
-<p>1)装饰模式是一种动态行为，对已经存在类进行随意组合，而类的继承是一种静态的行为，一个类定义成什么样的，该类的对象便具有什么样的功能，无法动态的改变。</p>
-<p>2)装饰模式扩展的是对象的功能，不需要增加类的数量，而类继承扩展是类的功能，在继承的关系中，如果我们想增加一个对象的功能，我们只能通过继承关系，在子类中增加方法。</p>
-<p>3)装饰模式是在不改变原类文件和使用继承的情况下，动态的扩展一个对象的功能，它是通过创建一个包装对象，也就是装饰来包裹真是的对象。</p>
-<p><strong>五、装饰模式的特点：</strong></p>
-<p>1)装饰对象和真实对象具有相同的接口，这样客户端对象就可以以真实对象的相同的方式和装饰对象交互。 </p>
-<p>2)装饰对象包含一个真实对象的引用(reference). </p>
-<p>3)装饰对象接受所有来自客户端的请求，它把这些请求转发给真实的对象。 </p>
-<p>4)装饰对象可以在转发这些请求以前或者以后增加一些附加的功能。这样就能确保在运行时，不用修改给定对象结构就可以在外部增加附加的功能。在面向对象的程序设计中，通常是使用继承的关系来扩展给定类的功能。</p>
-<p><strong>六、装饰模式、适配器模式、代理模式区别</strong></p>
-<p>适配器模式，一个适配允许通常因为接口不兼容而不能在一起工作的类工作在一起，做法是将类自己的接口包裹在一个已存在的类中。</p>
-<p>装饰器模式，原有的不能满足现有的需求，对原有的进行增强。 </p>
-<p>代理模式，同一个类而去调用另一个类的方法，不对这个方法进行直接操作。</p>
-<p>适配器的特点在于兼容，从代码上的特点来说，适配类与原有的类具有相同的接口，并且持有新的目标对象。</p>
-<p>就如同一个三孔转2孔的适配器一样，他有三孔的插头，可以插到三孔插座里，又有两孔的插座可以被2孔插头插入。</p>
-<p>适配器模式是在于对原有3孔的改造。</p>
-<p>在使用适配器模式的时候，我们必须同时持有原对象，适配对象，目标对象。。。。</p>
-<p>装饰器模式特点在于增强，他的特点是被装饰类和所有的装饰类必须实现同一个接口，而且必须持有被装饰的对象，可以无限装饰。</p>
-<p>代理模式的特点在于隔离，隔离调用类和被调用类的关系，通过一个代理类去调用。</p>
-<p>总的来说就是如下三句话： </p>
-<p>1 适配器模式是将一个类通过某种方式转换成另一个类.</p>
-<p>3 代理模式是将一个类转换成具体的操作类.</p>
+<p>根据实例可以描述为： <strong>多个抽象产品类，每个抽象产品类可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。 每个具体工厂类可以创建多个具体产品类的实例</strong>。.</p>
+<p>优点：</p>
+<ol>
+<li>降低耦合</li>
+<li>符合开-闭原则</li>
+<li>符合单一职责原则</li>
+<li>不使用静态工厂方法，可以形成基于继承的等级结构。</li>
+</ol>
+<p>缺点：难以扩展新种类产品</p>
+<h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a><strong>五、总结</strong></h3><p><strong>角色不同：</strong></p>
+<ol>
+<li>简单工厂：具体工厂、抽象产品、具体产品</li>
+<li>工厂方法：<strong>抽象工厂</strong>、具体工厂、抽象产品、具体产品</li>
+<li>抽象工厂：抽象工厂、具体工厂、<strong>抽象产品族</strong>、抽象产品、具体产品</li>
+</ol>
+<p><strong>定义：</strong></p>
+<ol>
+<li>简单工厂：<strong>由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（继承自一个父类或接口）的实例。</strong></li>
+<li>工厂方法：<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong></li>
+<li>抽象工厂：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></li>
+</ol>
+<p><strong>对比：</strong></p>
+<ol>
+<li><strong>工厂方法模式</strong>解决了<strong>简单工厂模式</strong>的“开放 - 关闭原则</li>
+<li>抽象工厂模式解决了<strong>工厂方法模式</strong>一个具体工厂只能创建一类产品</li>
+</ol>
 
       
     </div>
@@ -1223,7 +1223,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/%E7%BD%91%E7%BB%9C/CDN/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8FID%E6%96%B9%E6%A1%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/1.jpg">
@@ -1237,7 +1237,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/09/01/%E7%BD%91%E7%BB%9C/CDN/" class="post-title-link" itemprop="url">CDN</a>
+            <a href="/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8FID%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">分布式ID方案总结</a>
         </h2>
 
         <div class="post-meta">
@@ -1248,7 +1248,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-09-01 09:03:49 / 修改时间：09:35:42" itemprop="dateCreated datePublished" datetime="2020-09-01T09:03:49+08:00">2020-09-01</time>
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:29:06" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1256,7 +1256,11 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
                 </span>
             </span>
 
@@ -1271,67 +1275,174 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="CDN概念"><a href="#CDN概念" class="headerlink" title="CDN概念"></a>CDN概念</h2><p>CDN全称叫做“Content Delivery Network”，中文叫<strong>内容分发网络</strong>。</p>
-<p>实际上CDN这个概念是在1996年由美国麻省理工学院的一个研究小组为<strong>改善互联网的服务质量</strong>而提出的。那么它到底是怎么改善互联网服务质量的呢？</p>
-<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><p>我们知道，当我们使用域名访问某一个网站时，实际上就是将请求包（以Http请求为例）通过网络传输给某台服务器，比如访问”<a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">百度</a>“时：</p>
-<ol>
-<li>首先解析出该域名所对应的IP地址(DNS域名解析)</li>
-<li>然后将Http请求包通过网络路由到IP地址所对应的服务器</li>
-</ol>
-<blockquote>
-<p>我们通常说“服务器的IP地址”，这其实不太准确，IP地址是和网卡绑定的，一个服务器可以有多个网卡，也就是可能有多个IP地址。</p>
-</blockquote>
-<p>我们先来看第一步：域名解析</p>
-<h3 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h3><p>解析域名分为两种：</p>
-<ol>
-<li>将一个域名解析为一个IP地址</li>
-<li>将一个域名解析为另外一个域名</li>
-</ol>
-<p>其实解析思路不难，我们在域名服务商购买了一个域名之后，需要去映射一个IP地址，可以用Map来表示这个关系：<code>&#123;域名：IP&#125;</code>。</p>
-<p>同时我们也可以给某个域名取一个别名，比如“<a href="www.baidu.com">百度</a>”取一个别名“test.baidu.com”，这种关系也可以用Map来表示：<code>&#123;域名：别名&#125;</code>。这里的别名专业一点叫做<strong>CNAME</strong>，相信大家对这个词有点眼熟，它就是这个意思。</p>
-<p>而<strong>域名解析</strong>，实际上就是解析出指定域名所对应的IP地址，或者该域名的一个CNAME。</p>
-<p>而域名解析是由DNS系统来负责的，DNS服务接受外部请求，从请求里提取域名，</p>
+          <p><strong>分布式ID方案总结</strong></p>
+<p>ID是数据的唯一标识，传统的做法是利用UUID和数据库的自增ID，在互联网企业中，大部分公司使用的都是Mysql，并且因为需要事务支持，所以通常会使用Innodb存储引擎，UUID太长以及无序，所以并不适合在Innodb中来作为主键，自增ID比较合适，但是随着公司的业务发展，数据量将越来越大，需要对数据进行分表，而分表后，每个表中的数据都会按自己的节奏进行自增，很有可能出现ID冲突。这时就需要一个单独的机制来负责生成唯一ID，生成出来的ID也可以叫做<strong>分布式ID</strong>，或<strong>全局ID</strong>。下面来分析各个生成分布式ID的机制。</p>
+<p><img src="A:\gitdir\学习资料\java\java框架\spring\img\15.png"></p>
+<h2 id="数据库自增ID"><a href="#数据库自增ID" class="headerlink" title="数据库自增ID"></a>数据库自增ID</h2><p>第一种方案仍然还是基于数据库的自增ID，需要单独使用一个数据库实例，在这个实例中新建一个单独的表：</p>
+<p>表结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE &#96;SEQID&#96;;</span><br><span class="line"></span><br><span class="line">CREATE TABLE SEQID.SEQUENCE_ID (</span><br><span class="line">  id bigint(20) unsigned NOT NULL auto_increment, </span><br><span class="line">  stub char(10) NOT NULL default &#39;&#39;,</span><br><span class="line">  PRIMARY KEY (id),</span><br><span class="line">  UNIQUE KEY stub (stub)</span><br><span class="line">) ENGINE&#x3D;MyISAM;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用下面的语句生成并获取到一个自增ID</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">begin;</span><br><span class="line">replace into SEQUENCE_ID (stub) VALUES (&#39;anyword&#39;);</span><br><span class="line">select last_insert_id();</span><br><span class="line">commit;</span><br></pre></td></tr></table></figure>
+
+<p>stub字段在这里并没有什么特殊的意义，只是为了方便的去插入数据，只有能插入数据才能产生自增id。而对于插入我们用的是replace，replace会先看是否存在stub指定值一样的数据，如果存在则先delete再insert，如果不存在则直接insert。</p>
+<p>这种生成分布式ID的机制，需要一个单独的Mysql实例，虽然可行，但是基于性能与可靠性来考虑的话都不够，<strong>业务系统每次需要一个ID时，都需要请求数据库获取，性能低，并且如果此数据库实例下线了，那么将影响所有的业务系统。</strong></p>
+<p>为了解决数据库可靠性问题，我们可以使用第二种分布式ID生成方案。</p>
+<h2 id="数据库多主模式"><a href="#数据库多主模式" class="headerlink" title="数据库多主模式"></a>数据库多主模式</h2><p>如果我们两个数据库组成一个<strong>主从模式</strong>集群，正常情况下可以解决数据库可靠性问题，但是如果主库挂掉后，数据没有及时同步到从库，这个时候会出现ID重复的现象。我们可以使用<strong>双主模式</strong>集群，也就是两个Mysql实例都能单独的生产自增ID，这样能够提高效率，但是如果不经过其他改造的话，这两个Mysql实例很可能会生成同样的ID。需要单独给每个Mysql实例配置不同的起始值和自增步长。</p>
+<p>第一台Mysql实例配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set @@auto_increment_offset &#x3D; 1;     -- 起始值</span><br><span class="line">set @@auto_increment_increment &#x3D; 2;  -- 步长</span><br></pre></td></tr></table></figure>
+
+<p>第二台Mysql实例配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set @@auto_increment_offset &#x3D; 2;     -- 起始值</span><br><span class="line">set @@auto_increment_increment &#x3D; 2;  -- 步长</span><br></pre></td></tr></table></figure>
+
+<p>过上面的配置后，这两个Mysql实例生成的id序列如下：</p>
+<p>mysql1,起始值为1,步长为2,ID生成的序列为：1,3,5,7,9,…</p>
+<p>mysql2,起始值为2,步长为2,ID生成的序列为：2,4,6,8,10,…</p>
+<p>对于这种生成分布式ID的方案，需要单独新增一个生成分布式ID应用，比如DistributIdService，该应用提供一个接口供业务应用获取ID，业务应用需要一个ID时，通过rpc的方式请求DistributIdService，DistributIdService随机去上面的两个Mysql实例中去获取ID。</p>
+<p>实行这种方案后，就算其中某一台Mysql实例下线了，也不会影响DistributIdService，DistributIdService仍然可以利用另外一台Mysql来生成ID。</p>
+<p>但是这种方案的扩展性不太好，如果两台Mysql实例不够用，需要新增Mysql实例来提高性能时，这时就会比较麻烦。</p>
+<p>现在如果要新增一个实例mysql3，要怎么操作呢？</p>
+<p>第一，mysql1、mysql2的步长肯定都要修改为3，而且只能是人工去修改，这是需要时间的。</p>
+<p>第二，因为mysql1和mysql2是不停在自增的，对于mysql3的起始值我们可能要定得大一点，以给充分的时间去修改mysql1，mysql2的步长。</p>
+<p>第三，在修改步长的时候很可能会出现重复ID，要解决这个问题，可能需要停机才行。</p>
+<p>为了解决上面的问题，以及能够进一步提高DistributIdService的性能，如果使用第三种生成分布式ID机制。</p>
+<h2 id="号段模式"><a href="#号段模式" class="headerlink" title="号段模式"></a>号段模式</h2><p>我们可以使用号段的方式来获取自增ID，号段可以理解成批量获取，比如DistributIdService从数据库获取ID时，如果能批量获取多个ID并缓存在本地的话，那样将大大提供业务应用获取ID的效率。</p>
+<p>比如DistributIdService每次从数据库获取ID时，就获取一个号段，比如(1,1000]，这个范围表示了1000个ID，业务应用在请求DistributIdService提供ID时，DistributIdService只需要在本地从1开始自增并返回即可，而不需要每次都请求数据库，一直到本地自增到1000时，也就是当前号段已经被用完时，才去数据库重新获取下一号段。</p>
+<p>所以，我们需要对数据库表进行改动，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CREATE TABLE <span class="title">id_generator</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  id <span class="keyword">int</span>(<span class="number">10</span>)</span> NOT NULL,</span></span><br><span class="line"><span class="function">  current_max_id <span class="title">bigint</span><span class="params">(<span class="number">20</span>)</span> NOT NULL COMMENT &#x27;当前最大id&#x27;,</span></span><br><span class="line"><span class="function">  increment_step <span class="title">int</span><span class="params">(<span class="number">10</span>)</span> NOT NULL COMMENT &#x27;号段的长度&#x27;,</span></span><br><span class="line"><span class="function">  PRIMARY <span class="title">KEY</span> <span class="params">(`id`)</span></span></span><br><span class="line"><span class="function">) ENGINE</span>=InnoDB DEFAULT CHARSET=utf8;</span><br></pre></td></tr></table></figure>
+
+<p>这个数据库表用来记录自增步长以及当前自增ID的最大值（也就是当前已经被申请的号段的最后一个值），因为自增逻辑被移到DistributIdService中去了，所以数据库不需要这部分逻辑了。</p>
+<p>这种方案不再强依赖数据库，就算数据库不可用，那么DistributIdService也能继续支撑一段时间。但是如果DistributIdService重启，会丢失一段ID，导致ID空洞。</p>
+<p>为了提高DistributIdService的高可用，需要做一个集群，业务在请求DistributIdService集群获取ID时，会随机的选择某一个DistributIdService节点进行获取，对每一个DistributIdService节点来说，数据库连接的是同一个数据库，那么可能会产生多个DistributIdService节点同时请求数据库获取号段，那么这个时候需要利用乐观锁来进行控制，比如在数据库表中增加一个version字段，在获取号段时使用如下SQL：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update id_generator set current_max_id=#&#123;newMaxId&#125;, version=version+1 where version = #&#123;version&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为newMaxId是DistributIdService中根据oldMaxId+步长算出来的，只要上面的update更新成功了就表示号段获取成功了。</p>
+<p>为了提供数据库层的高可用，需要对数据库使用多主模式进行部署，对于每个数据库来说要保证生成的号段不重复，这就需要利用最开始的思路，再在刚刚的数据库表中增加起始值和步长，比如如果现在是两台Mysql，那么</p>
+<p>mysql1将生成号段（1,1001]，自增的时候序列为1，3，4，5，7….</p>
+<p>mysql1将生成号段（2,1002]，自增的时候序列为2，4，6，8，10…</p>
+<h2 id="雪花算法"><a href="#雪花算法" class="headerlink" title="雪花算法"></a>雪花算法</h2><p>上面的三种方法总的来说是基于自增思想的，而接下来就介绍比较著名的雪花算法-snowflake。</p>
+<p>我们可以换个角度来对分布式ID进行思考，只要能让负责生成分布式ID的每台机器在每毫秒内生成不一样的ID就行了。</p>
+<p>snowflake是twitter开源的分布式ID生成算法，是一种算法，所以它和上面的三种生成分布式ID机制不太一样，它不依赖数据库。</p>
+<p>核心思想是：分布式ID固定是一个long型的数字，一个long型占8个字节，也就是64个bit，原始snowflake算法中对于bit的分配如下图：</p>
+<p><img src="A:\gitdir\学习资料\java\java框架\spring\img\16.png"></p>
 <ul>
-<li>如果这个域名对应的是IP地址，则返回这个IP地址，</li>
-<li>如果这个域名对应的是CNAME，则继续查找CNAME域名的IP地址，然后将该地址返回给请求发送者。</li>
+<li><p>第一个bit位是标识部分，在java中由于long的最高位是符号位，正数是0，负数是1，一般生成的ID为正数，所以固定为0。</p>
+</li>
+<li><p>时间戳部分占41bit，这个是毫秒级的时间，一般实现上不会存储当前的时间戳，而是时间戳的差值（当前时间-固定的开始时间），这样可以使产生的ID从更小值开始；41位的时间戳可以使用69年，(1L &lt;&lt; 41) / (1000L * 60 * 60 * 24 * 365) = 69年</p>
+</li>
+<li><p>工作机器id占10bit，这里比较灵活，比如，可以使用前5位作为数据中心机房标识，后5位作为单机房机器标识，可以部署1024个节点。</p>
+</li>
+<li><p>序列号部分占12bit，支持同一毫秒内同一个节点可以生成4096个ID</p>
+</li>
 </ul>
-<p>请求发送者拿到IP地址之后，完成真正的请求调用。</p>
-<p>实际上DNS系统是非常庞大的，这里不去多将，大家把它当作一个黑盒子，这个盒子的作用就是上文所描述的.</p>
-<p><strong>特别注意：在有CNAME的情况下，我们可以发现，CNAME实际上在域名解析的过程中承担了中间人（或者说代理）的角色，这是CDN实现的关键。</strong></p>
-<h3 id="CDN原理"><a href="#CDN原理" class="headerlink" title="CDN原理"></a>CDN原理</h3><p>首先<strong>CDN</strong>是为了<strong>改善**</strong>互联网的服务质量<strong>的</strong>。**通俗一点说其实就是提高访问速度。</p>
-<p>假设百度网站现在只有一台服务器，现在有一个人在上海访问百度，如果该服务器也在上海，那么通常来说访问比较快，如果该服务器在拉萨，那么相对而言访问就比较慢了。那么这个问题的根本原因是网络传输是依赖于网线的，网线越长，那么时间肯定就越久。</p>
-<p>那么怎么解决这个问题呢？其实思路很简单，<strong>百度在全国各地都部署一模一样的服务器就行了，专业一点叫冗余。</strong></p>
-<p>思路很简单，但实现还是比较麻烦的，服务器上的资源分为两种：<strong>静态资源</strong>与<strong>动态资源</strong>。</p>
+<p>根据这个算法的逻辑，只需要将这个算法用Java语言实现出来，封装为一个工具方法，那么各个业务应用可以直接使用该工具方法来获取分布式ID，只需保证每个业务应用有自己的工作机器id即可，而不需要单独去搭建一个获取分布式ID的应用。</p>
+<p>snowflake算法实现起来并不难，提供一个github上用java实现的：<a target="_blank" rel="noopener" href="https://github.com/beyondfengyu/SnowFlake">https://github.com/beyondfengyu/SnowFlake</a></p>
+<p>在大厂里，其实并没有直接使用snowflake，而是进行了改造，因为snowflake算法中最难实践的就是工作机器id，原始的snowflake算法需要人工去为每台机器去指定一个机器id，并配置在某个地方从而让snowflake从此处获取机器id。</p>
+<p>但是在大厂里，机器是很多的，人力成本太大且容易出错，所以大厂对snowflake进行了改造。</p>
+<h3 id="百度（uid-generator）"><a href="#百度（uid-generator）" class="headerlink" title="百度（uid-generator）"></a>百度（uid-generator）</h3><p>github地址：<a target="_blank" rel="noopener" href="https://github.com/baidu/uid-generator">uid-generator</a></p>
+<p>uid-generator使用的就是snowflake，只是在生产机器id，也叫做workId时有所不同。</p>
+<p>uid-generator中的workId是由uid-generator自动生成的，并且考虑到了应用部署在docker上的情况，在uid-generator中用户可以自己去定义workId的生成策略，默认提供的策略是：应用启动时由数据库分配。说的简单一点就是：应用在启动时会往数据库表(uid-generator需要新增一个WORKER_NODE表)中去插入一条数据，数据插入成功后返回的该数据对应的自增唯一id就是该机器的workId，而数据由host，port组成。</p>
+<p>对于uid-generator中的workId，占用了22个bit位，时间占用了28个bit位，序列化占用了13个bit位，需要注意的是，和原始的snowflake不太一样，时间的单位是秒，而不是毫秒，workId也不一样，同一个应用每重启一次就会消费一个workId。</p>
+<p>具体可参考<a target="_blank" rel="noopener" href="https://github.com/baidu/uid-generator/blob/master/README.zh_cn.md">https://github.com/baidu/uid-generator/blob/master/README.zh_cn.md</a></p>
+<h3 id="美团（Leaf）"><a href="#美团（Leaf）" class="headerlink" title="美团（Leaf）"></a>美团（Leaf）</h3><p>美团的Leaf也是一个分布式ID生成框架。它非常全面，即支持号段模式，也支持snowflake模式。号段模式这里就不介绍了，和上面的分析类似。</p>
+<p>Leaf中的snowflake模式和原始snowflake算法的不同点，也主要在workId的生成，Leaf中workId是基于ZooKeeper的顺序Id来生成的，每个应用在使用Leaf-snowflake时，在启动时都会都在Zookeeper中生成一个顺序Id，相当于一台机器对应一个顺序节点，也就是一个workId。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总得来说，上面两种都是自动生成workId，以让系统更加稳定以及减少人工成功。</p>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>这里额外再介绍一下使用Redis来生成分布式ID，其实和利用Mysql自增ID类似，可以利用Redis中的incr命令来实现原子性的自增与返回，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set seq_id 1     &#x2F;&#x2F; 初始化自增ID为1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; incr seq_id      &#x2F;&#x2F; 增加1，并返回</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; incr seq_id      &#x2F;&#x2F; 增加1，并返回</span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure>
+
+<p>使用redis的效率是非常高的，但是要考虑持久化的问题。Redis支持RDB和AOF两种持久化的方式。</p>
+<p>RDB持久化相当于定时打一个快照进行持久化，如果打完快照后，连续自增了几次，还没来得及做下一次快照持久化，这个时候Redis挂掉了，重启Redis后会出现ID重复。</p>
+<p>AOF持久化相当于对每条写命令进行持久化，如果Redis挂掉了，不会出现ID重复的现象，但是会由于incr命令过得，导致重启恢复数据时间过长。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/CAS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="kkの博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/CAS/" class="post-title-link" itemprop="url">CAS原理以及CAS带来的三大问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:28:53" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="CAS原理以及CAS带来的三大问题"><a href="#CAS原理以及CAS带来的三大问题" class="headerlink" title="CAS原理以及CAS带来的三大问题"></a>CAS原理以及CAS带来的三大问题</h1><ol>
+<li><p>CAS是什么？</p>
+</li>
+<li><p>CAS带来的三大问题</p>
 <ul>
-<li>静态资源：这种资源通常是很少变动的，比如图片，视频，css，javascript等等</li>
-<li>动态资源：这种资源不同用户不同时刻访问通常是不一样的，比如ftl，jsp等等。</li>
+<li><p>ABA问题</p>
+</li>
+<li><p>循环时间长开销大</p>
+</li>
+<li><p>只能保证一个共享变量的原子操作</p>
+</li>
 </ul>
-<p>那么如果百度要在全国各地都部署服务器，如果说每个服务器上都有相同的动态资源，那么可能还需要配置相应的数据库，因为动态资源所记录的信息通常会存储在数据库中，那么这就涉及到了数据同步等等问题，这会导致成本很高，这种做法专业一点其实就是<strong>集群，</strong>而目前来说集群架构最多是<strong>三**</strong>地五中心，**不是说全国多地集群不可能，主要是成本太高。</p>
-<p>那么有没有成本比较低的方式呢，有，就是在每个服务器上只部署静态资源，静态资源通常不涉及到数据库，所以成本也比较低，而且也能提高用户的访问速度。</p>
-<p>到这里，介绍了CDN想要达到的目的，那么怎么达到这个目的呢?</p>
-<p>现在如果要比较CDN系统，我们可以考虑两点：</p>
-<ol>
-<li>CDN系统中存储静态资源服务器的性能以及网速怎么样。</li>
-<li>CDN系统中全国甚至全球范围内服务器节点的数量以及部署情况。</li>
+</li>
 </ol>
-<p>第一点很好理解，第二点大家应该也能理解了，如果静态资源的服务器节点很多，能够让每个用户在访问这些静态资源时都不用“跑很远的路程”才能获取到，那么自然这是CDN系统的优点。</p>
-<p>有公司看到了这种需求，所以现在其实有很多CDN供应商，比如阿里，腾讯等等都有自己的CDN服务。只要你自己的系统接入了这些大厂所提供的CDN服务，你把自己的静态资源传给CDN服务，那么这些静态资源将自动的分布到全世界各地去。</p>
-<p>好，那么现在的问题是，用户在访问静态资源时也是通过域名来访问的，域名会被解析成<strong>某一个</strong>IP地址，关键的问题就是，<strong>DNS系统怎么在做域名解析时，解析出来一个离用户最近的一个IP地址呢</strong>。</p>
-<p>普通的DNS系是做不到的，需要一个特殊的DNS服务器，这个特殊DNS需要知道</p>
-<ol>
-<li>用户当前所在位置</li>
-<li>还需要知道用户现在访问的这个域名对应哪些IP地址，以及这个IP地址分别在哪?</li>
-</ol>
-<p>对于第一个问题好解决，直接从用户请求里提取出用户的ip地址，比如这个ip地址被解析为北京电信、上海移动等等。</p>
-<p>第二个问题由谁来解决，我们现在考虑的是CDN，CDN提供商肯定知道他们公司在哪些地方部署了机器以及它们的IP地址，所以这个问题只能有CDN提供商来解决，<strong>CDN提供商会提供这个特殊的DNS服务器，我们叫做 CDN专用DNS服务器</strong>。</p>
-<p>这样的话，只要用户在使用某个域名访问静态资源时，如果用户直接配置自己电脑的<strong>DNS地址为CDN专用DNS服务器</strong>。那么自然解决了问题，但是我们需要考虑的时，我们不能要求世界上所有的用户都去修改自己电脑的DNS地址。所以这个时候就要利用DNS中的CNAME了。</p>
-<p>用户使用某个域名来访问静态资源时（这个域名在阿里CDN服务中叫做“加速域名”），比如这个域名为“image.baidu.com”，它对应一个CNAME，叫做“cdn.ali.com”，那么普通DNS服务器（区别<strong>CDN专用DNS服务器</strong>）在解析“image.baidu.com”时，会先解析成“cdn.ali.com”，普通DNS服务器发现该域名对应的也是一个DNS服务器，那么会将域名解析工作转交给该DNS服务器，该DNS服务器就是<strong>CDN专用DNS服务器。**</strong>CDN专用DNS服务器**对“cdn.ali.com”进行解析，然后依据服务器上记录的所有CDN服务器地址信息，选出一个离用户最近的一个CDN服务器地址，并返回给用户，用户即可访问离自己最近的一台CDN服务器了。</p>
-<h2 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h2><p>在对域名解析时有多种类型的记录，最常用的比如：</p>
-<ul>
-<li>A记录：一个域名对应一个IP地址</li>
-<li>CNAME：一个域名对应另外一个域名</li>
-<li>NS：将子域名指定其他DNS服务器解析</li>
-</ul>
+<h3 id="1-CAS是什么？"><a href="#1-CAS是什么？" class="headerlink" title="1. CAS是什么？"></a>1. CAS是什么？</h3><p><strong>CAS</strong>：Compare and Swap，即比较再交换。</p>
+<p><strong>CAS算法理解</strong>：CAS是一种无锁算法，CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。</p>
+<h3 id="2-CAS带来的三大问题"><a href="#2-CAS带来的三大问题" class="headerlink" title="2. CAS带来的三大问题"></a>2. CAS带来的三大问题</h3><p>1.ABA问题<br> 因为CAS需要在操作值的时候，检查值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么CAS进行检查的时候发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面加上版本号，每次变量更新的时候把版本号加1，那么A-&gt;B-&gt;A就会变成1A-&gt;2B-&gt;3A。从Java 1.5开始，JDK的Atomic包里提供了一个类AtomicStampedReference来解决ABA问题。这个类的compareAndSet方法的作用是首先检查当前引用是否等于预期引用，并且检查当前的标志是否等于预期标志，如果全部相等，则以原子方式将该应用和该标志的值设置为给定的更新值。</p>
+<p>2.循环时间长开销大<br> 自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销，如果JVM能支持处理器提供的pause指令，那么效率会有一定的提升。pause指令有两个作用：第一，它可以延迟流水线执行指令（de-pipeline），使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零；第二，它可以避免在循环的时候因内存顺序冲突（Memory Order Violation）而引起CPU流水线被清空，从而提高CPU的实行效率。</p>
+<p>3.只能保证一个共享变量的原子操作<br> 当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候可以用锁。还有一个取巧的办法，就是把多个共享变量合并成一个共享变量来操作。比如，有两个共享变量i=2,j=a,合并一下ji=2a,然后用CAS来操作ij。从Java 1.5开始，JDK提供了AtomicReference类来保证引用对象之前的原子性，就可以把多个变量放在一个对象里来进行CAS操作。</p>
 
       
     </div>
@@ -1349,6 +1460,9 @@
 
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -1415,20 +1529,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
