@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、简介目前从网上了解工厂模式大体分为简单工厂、工厂方法、抽象工厂等三种模式。工厂方法模式也可称为工厂模式，与抽象模式都是属于GOF23种设计模式中的一员。可以大概理解为：简单工厂进阶变成了工厂方法，然后再进阶成了抽象工厂。难度逐步增加，也越来越抽象。下面按先易到难逐个分析。 二、简单工厂模式属于创建型模式，又叫做静态工厂方法模式，不属于23种GOF设计模式之一。是由一个工厂对象决定创建出哪一种产">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工厂模式">
+<meta property="og:url" content="http://yoursite.com/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="kkの博客">
+<meta property="og:description" content="一、简介目前从网上了解工厂模式大体分为简单工厂、工厂方法、抽象工厂等三种模式。工厂方法模式也可称为工厂模式，与抽象模式都是属于GOF23种设计模式中的一员。可以大概理解为：简单工厂进阶变成了工厂方法，然后再进阶成了抽象工厂。难度逐步增加，也越来越抽象。下面按先易到难逐个分析。 二、简单工厂模式属于创建型模式，又叫做静态工厂方法模式，不属于23种GOF设计模式之一。是由一个工厂对象决定创建出哪一种产">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-09-01T01:37:26.000Z">
+<meta property="article:modified_time" content="2020-09-01T02:09:37.242Z">
+<meta property="article:author" content="zkk">
+<meta property="article:tag" content="设计模式">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>工厂模式 | kkの博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">kkの博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">kkの博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">1</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">9</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="kkの博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          工厂模式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:37" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><p>目前从网上了解工厂模式大体分为简单工厂、工厂方法、抽象工厂等三种模式。工厂方法模式也可称为工厂模式，与抽象模式都是属于GOF23种设计模式中的一员。可以大概理解为：简单工厂进阶变成了工厂方法，然后再进阶成了抽象工厂。难度逐步增加，也越来越抽象。下面按先易到难逐个分析。</p>
+<h3 id="二、简单工厂模式"><a href="#二、简单工厂模式" class="headerlink" title="二、简单工厂模式"></a><strong>二、简单工厂模式</strong></h3><p>属于<strong>创建型模式</strong>，又叫做<strong>静态工厂方法模式</strong>，不属于23种GOF设计模式之一。是由一个工厂对象决定创建出哪一种产品类的实例。实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（这些产品类继承自一个父类或接口）的实例。</p>
+<p>作用：将“类实例化的操作”与“使用对象的操作”分开，让使用者不用知道具体参数就可以实例化出所需要的“产品”类，从而避免了在客户端代码中显式指定，实现了解耦。</p>
+<p><strong>主要角色</strong></p>
+<p><strong>工厂：</strong>负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</p>
+<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
+<p><strong>具体产品：</strong>描述生产的具体产品。</p>
+<p><strong>举个简单易懂的例子：</strong></p>
+<p>“假设”有一台饮料机（工厂），可以调出各种口味的饮料（抽象产品），有三个按钮（参数）对应这三种饮料（具体产品）。这时候你可以根据点击按钮来选择你喜欢的饮料。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> *  @ Product.java</span><br><span class="line"> *  抽象产品</span><br><span class="line"> *  描述产品的公共接口</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract  class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ AProduct.java</span><br><span class="line"> * 具体产品A</span><br><span class="line"> * （可以看成是一种饮料：可乐）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class AProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;可乐&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ BProduct.java</span><br><span class="line"> * @具体产品B</span><br><span class="line"> * @（可以看成是一种饮料：奶茶）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class BProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;奶茶&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ CProduct.java</span><br><span class="line"> * 具体产品C</span><br><span class="line"> * （可以看成是一种饮料：咖啡）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class CProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;咖啡&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">Factory.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * 工厂</span><br><span class="line"> * 负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Factory &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 供外界调用的方法</span><br><span class="line">     * （可以看成是对外提供的三种按钮）</span><br><span class="line">     * @param type </span><br><span class="line">     * @return 产品实例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static Product getProduct(String type) &#123;</span><br><span class="line">        switch (type) &#123;</span><br><span class="line">            case &quot;A&quot;:</span><br><span class="line">                return new AProduct();</span><br><span class="line">            case &quot;B&quot;:</span><br><span class="line">                return new BProduct();</span><br><span class="line">            case &quot;C&quot;:</span><br><span class="line">                return new CProduct();</span><br><span class="line">            default:</span><br><span class="line">                return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        Factory factory &#x3D; new Factory();</span><br><span class="line">        &#x2F;&#x2F;根据传入的参数生产不同的产品实例</span><br><span class="line">        &#x2F;&#x2F;(按下不同的按钮，获取饮料)</span><br><span class="line">        Product A &#x3D; Factory.getProduct(&quot;A&quot;);</span><br><span class="line">        A.intro();</span><br><span class="line">        Product B &#x3D; Factory.getProduct(&quot;B&quot;);</span><br><span class="line">        B.intro();</span><br><span class="line">        Product C &#x3D; Factory.getProduct(&quot;C&quot;);</span><br><span class="line">        C.intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个具体工厂类，通过往此工厂的static方法中传入不同参数，产出不同的具体产品类实例。</strong></p>
+<p>优点：将创建使用工作分开，不必关心类对象如何创建，实现了解耦；</p>
+<p>缺点：违背“开放 - 关闭原则”，一旦添加新产品就不得不修改工厂类的逻辑，这样就会造成工厂逻辑过于复杂。</p>
+<h3 id="三、工厂方法模式"><a href="#三、工厂方法模式" class="headerlink" title="三、工厂方法模式"></a><strong>三、工厂方法模式</strong></h3><p>又称<strong>工厂模式、多态工厂模式</strong>和<strong>虚拟构造器模式</strong>，通过<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong>。一种常用的对象创建型设计模式,此模式的核心精神是封装 类中不变的部分。</p>
+<p>作用：将类的实例化（具体产品的创建）延迟到工厂类的子类（具体工厂）中完成，即由子类来决定应该实例化（创建）哪一个类。</p>
+<p><strong>主要角色</strong></p>
+<p><strong>抽象工厂：</strong>描述具体工厂的公共接口</p>
+<p><strong>具体工厂：</strong>描述具体工厂，创建产品的实例，供外界调用</p>
+<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
+<p><strong>具体产品：</strong>描述生产的具体产品</p>
+<p><strong>举个简单易懂的例子：</strong></p>
+<p>“假设”有各类的饮料机（抽象工厂），可以调出各种的饮料（抽象产品）。但是一类饮料机（具体工厂），只能生产一种饮料（具体产品）。如果你需要喝可乐，就需要买可乐饮料机。</p>
+<p><strong>产品：Product.java 、ProductA.java 、ProductB.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java </span><br><span class="line"> *   抽象产品</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java </span><br><span class="line"> * 具体产品A</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料A&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java </span><br><span class="line"> * 具体产品B</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料B&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java 、FactoryB.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> *  @ Factory.java</span><br><span class="line"> *    抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产产品</span><br><span class="line">    abstract Product getProduct();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的产品A生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductA();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryB.java</span><br><span class="line"> * @具体工厂B</span><br><span class="line"> * 负责具体的产品B生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryB extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;生产相对应的产品</span><br><span class="line">        factoryA.getProduct().intro();</span><br><span class="line">        FactoryB factoryB &#x3D; new FactoryB();</span><br><span class="line">        factoryB.getProduct().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。每个具体工厂类只能创建一个具体产品类的实例</strong>。</p>
+<p>优点：</p>
+<ol>
+<li>符合开-闭原则：新增一种产品时，只需要增加相应的具体产品类和相应的工厂子类即可</li>
+<li>符合单一职责原则：每个具体工厂类只负责创建对应的产品</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>增加了系统的复杂度：类的个数将成对增加</li>
+<li>增加了系统的抽象性和理解难度</li>
+<li>一个具体工厂只能创建一种具体产品</li>
+</ol>
+<h3 id="四、抽象工厂模式"><a href="#四、抽象工厂模式" class="headerlink" title="四、抽象工厂模式"></a><strong>四、抽象工厂模式</strong></h3><p>定义：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></p>
+<p>解决的问题：每个工厂只能创建一类产品（工厂方法模式）</p>
+<p>抽象工厂模式与工厂方法模式最大的区别：抽象工厂中每个工厂可以创建多种类的产品；而工厂方法每个工厂只能创建一类</p>
+<p><strong>主要对象</strong></p>
+<p><strong>抽象工厂</strong>：描述具体工厂的公共接口</p>
+<p><strong>具体工厂</strong>：描述具体工厂，创建产品的实例，供外界调用</p>
+<p><strong>抽象产品族</strong>：描述抽象产品的公共接口</p>
+<p><strong>抽象产品</strong>：描述具体产品的公共接口</p>
+<p><strong>具体产品</strong>：具体产品</p>
+<p><strong>举个简单易懂的例子：（找了个不怎么好的比喻，看不懂得可以看相关推荐链接）</strong></p>
+<p>“假设”有各类的自动售卖机（抽象工厂），可以出售各类食品（抽象产品族）。</p>
+<p>有饮料、零食（抽象产品），比如常见的零食售卖机（具体工厂），出售矿泉水与面包（具体产品）。</p>
+<p><strong>产品：Product、ProductA、ProductB、ProductAa、ProductBb</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java</span><br><span class="line"> * 抽象产品族 (食品)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java</span><br><span class="line"> * 抽象产品  (饮料)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java</span><br><span class="line"> * 抽象产品  (零食)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductAa.java</span><br><span class="line"> * 具体产品  (矿泉水)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public  class ProductAa extends ProductA&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;矿泉水&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductBb.java</span><br><span class="line"> * 抽象产品  (面包)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductBb extends ProductB&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;面包&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ Factory.java</span><br><span class="line"> * 抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产饮料</span><br><span class="line">    abstract Product getProductA();</span><br><span class="line">    &#x2F;&#x2F;生产零食</span><br><span class="line">    abstract Product getProductB();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的A类产品生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductA() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产矿泉水</span><br><span class="line">        return new ProductAa();</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductB() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产面包</span><br><span class="line">        return new ProductBb();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建零食售卖机（具体工厂），</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;获取矿泉水与面包（具体产品）</span><br><span class="line">        factoryA.getProductA().intro();</span><br><span class="line">        factoryA.getProductB().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据实例可以描述为： <strong>多个抽象产品类，每个抽象产品类可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。 每个具体工厂类可以创建多个具体产品类的实例</strong>。.</p>
+<p>优点：</p>
+<ol>
+<li>降低耦合</li>
+<li>符合开-闭原则</li>
+<li>符合单一职责原则</li>
+<li>不使用静态工厂方法，可以形成基于继承的等级结构。</li>
+</ol>
+<p>缺点：难以扩展新种类产品</p>
+<h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a><strong>五、总结</strong></h3><p><strong>角色不同：</strong></p>
+<ol>
+<li>简单工厂：具体工厂、抽象产品、具体产品</li>
+<li>工厂方法：<strong>抽象工厂</strong>、具体工厂、抽象产品、具体产品</li>
+<li>抽象工厂：抽象工厂、具体工厂、<strong>抽象产品族</strong>、抽象产品、具体产品</li>
+</ol>
+<p><strong>定义：</strong></p>
+<ol>
+<li>简单工厂：<strong>由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（继承自一个父类或接口）的实例。</strong></li>
+<li>工厂方法：<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong></li>
+<li>抽象工厂：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></li>
+</ol>
+<p><strong>对比：</strong></p>
+<ol>
+<li><strong>工厂方法模式</strong>解决了<strong>简单工厂模式</strong>的“开放 - 关闭原则</li>
+<li>抽象工厂模式解决了<strong>工厂方法模式</strong>一个具体工厂只能创建一类产品</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="tag"># 设计模式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/4%E3%80%81%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" rel="prev" title="代理模式">
+      <i class="fa fa-chevron-left"></i> 代理模式
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2%E3%80%81%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/" rel="next" title="建造者模式">
+      建造者模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">一、简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">二、简单工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">三、工厂方法模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">四、抽象工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">五、总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zkk"
+      src="/images/1.jpg">
+  <p class="site-author-name" itemprop="name">zkk</p>
+  <div class="site-description" itemprop="description">kkの博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zkk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
