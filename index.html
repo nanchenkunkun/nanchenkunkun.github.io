@@ -118,17 +118,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">2</span></a>
+    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">3</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">4</span></a>
+    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">12</span></a>
+    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">13</span></a>
 
   </li>
   </ul>
@@ -154,6 +154,111 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/02/java/%E6%A1%86%E6%9E%B6/mybatis/mybatis%E6%8F%92%E4%BB%B6%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="kkの博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/02/java/%E6%A1%86%E6%9E%B6/mybatis/mybatis%E6%8F%92%E4%BB%B6%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">mybatis插件原理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-02 10:07:48 / 修改时间：10:20:13" itemprop="dateCreated datePublished" datetime="2020-09-02T10:07:48+08:00">2020-09-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E6%A1%86%E6%9E%B6/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Mybatis插件实现原理"><a href="#Mybatis插件实现原理" class="headerlink" title="Mybatis插件实现原理"></a><strong>Mybatis插件实现原理</strong></h2><p><code>mybatis</code>中的插件，也就是拦截器<code>interceptor</code>。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用#"></a><strong>使用#</strong></h2><p>使用方式很简单</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用这个注解，表明这是一个拦截器  </span></span><br><span class="line"><span class="meta">@Intercepts(</span></span><br><span class="line"><span class="meta">  // 方法签名</span></span><br><span class="line"><span class="meta">  &#123;@Signature(</span></span><br><span class="line"><span class="meta">     // 被拦截方法所在的类</span></span><br><span class="line"><span class="meta">     type= Executor.class,</span></span><br><span class="line"><span class="meta">     // 被拦截方法名</span></span><br><span class="line"><span class="meta">     method = &quot;update&quot;,</span></span><br><span class="line"><span class="meta">     // 被拦截方法参数列表类型</span></span><br><span class="line"><span class="meta">     args = &#123;MappedStatement.class ,Object.class&#125;)&#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ExamplePlugin</span> <span class="keyword">implements</span> <span class="title">Interceptor</span> </span>&#123;</span><br><span class="line">     <span class="comment">// 拦截时具体行为</span></span><br><span class="line">     <span class="meta">@Override</span></span><br><span class="line">     <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Invocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">       <span class="comment">// implement pre-processing if needed</span></span><br><span class="line">       Object returnObject = invocation.proceed();</span><br><span class="line">       <span class="comment">// implement post-processing if needed</span></span><br><span class="line">       <span class="keyword">return</span> returnObject;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后如果是xml配置的话</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">plugin</span> <span class="attr">interceptor</span>=<span class="string">&quot;org.mybatis.example.ExamplePlugin&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;someProperty&quot;</span> <span class="attr">value</span>=<span class="string">&quot;100&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果是 <code>SpringBoot</code>的话，应该是配合自动配置使用，将上面的类使用<code>@Component</code>注解，交由<code>Spring</code>容器管理，然后注册到<code>mybatis</code>的<code>InterceptorChain</code></p>
+<p><code>mybaits</code>目前支持拦截的类和方法，有下面这些</p>
+<ul>
+<li><strong>Executor</strong> (update, query, flushStatements, commit, rollback, getTransaction, close, isClosed)</li>
+<li><strong>StatementHandler</strong> (prepare, parameterize, batch, update, query)</li>
+<li><strong>ParameterHandler</strong> (getParameterObject, setParameters)</li>
+<li><strong>ResultsetHandle</strong> (handleResultSets, handleOutputParameters)</li>
+</ul>
+<h2 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h2><p>有可能从上面的使用猜出来它的拦截器的实现原理，那就是动态代理的方式，只不过<code>mybatis</code>这里并不是很直接的来使用代理，绕了个弯，于是给人感觉特别晕，也说不好这个实现是不是有些问题</p>
+<p>就先从<code>Executor</code>说起吧</p>
+<p>我们从<code>SqlSessionFactory</code>获取一个<code>SqlSession</code>时，会创建一个新的<code>Executor</code>实例，这个实际的创建动作在这里</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.ibatis.session.Configuration#newExecutor</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Executor <span class="title">newExecutor</span><span class="params">(Transaction transaction, ExecutorType executorType)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 根据设置的执行器类型，创建相应类型的执行器</span></span><br><span class="line">  executorType = executorType == <span class="keyword">null</span> ? defaultExecutorType : executorType;</span><br><span class="line">  executorType = executorType == <span class="keyword">null</span> ? ExecutorType.SIMPLE : executorType;</span><br><span class="line">  Executor executor;</span><br><span class="line">  <span class="keyword">if</span> (ExecutorType.BATCH == executorType) &#123;</span><br><span class="line">    executor = <span class="keyword">new</span> BatchExecutor(<span class="keyword">this</span>, transaction);</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (ExecutorType.REUSE == executorType) &#123;</span><br><span class="line">    executor = <span class="keyword">new</span> ReuseExecutor(<span class="keyword">this</span>, transaction);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    executor = <span class="keyword">new</span> SimpleExecutor(<span class="keyword">this</span>, transaction);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 如果开启了缓存，使用缓存，这里缓存执行器有点类似静态代理了</span></span><br><span class="line">  <span class="keyword">if</span> (cacheEnabled) &#123;</span><br><span class="line">    executor = <span class="keyword">new</span> CachingExecutor(executor);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将原始执行器对象，包装下，生成一个新的执行器，代理后的对象</span></span><br><span class="line">  executor = (Executor) interceptorChain.pluginAll(executor);</span><br><span class="line">  <span class="keyword">return</span> executor;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>InterceptorChain</code>是一个管家，有点类似于<code>FilterChain</code>，但是注意，其实差别非常的大</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InterceptorChain</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 所有拦截器列表</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> List&lt;Interceptor&gt; interceptors = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 这里可能会是层层代理对象，一套又一套的，具体取决于拦截器的个数和被拦截的</span></span><br><span class="line">  <span class="comment">// 方法所在的类</span></span><br><span class="line">  <span class="comment">// 配置的拦截器数和每一次代理对象生成次数并不相同，会小于等于拦截器的个数</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Object <span class="title">pluginAll</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (Interceptor interceptor : interceptors) &#123;</span><br><span class="line">      target = interceptor.plugin(target);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回最后一次创建的代理对象</span></span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 注册拦截器的</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addInterceptor</span><span class="params">(Interceptor interceptor)</span> </span>&#123;</span><br><span class="line">    interceptors.add(interceptor);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Interceptor</code>是一个接口，也就是mybatis直接暴露给用户使用的需要用户实现的拦截器接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Interceptor</span> </span>&#123;</span><br><span class="line">   <span class="comment">// 实现类填充自己的逻辑，参数为Invocation，</span></span><br><span class="line">  <span class="function">Object <span class="title">intercept</span><span class="params">(Invocation invocation)</span> <span class="keyword">throws</span> Throwable</span>;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// 默认方法，创建代理对象</span></span><br><span class="line">  <span class="function"><span class="keyword">default</span> Object <span class="title">plugin</span><span class="params">(Object target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Plugin.wrap(target, <span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line">   <span class="comment">// 实现类去做些事情</span></span><br><span class="line">  <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">setProperties</span><span class="params">(Properties properties)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// NOP</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 首先这是一个Jdk动态代理的InvocationHandler实现类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Plugin</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Object target;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Interceptor interceptor;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Plugin</span><span class="params">(Object target, Interceptor interceptor, Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.target = target;</span><br><span class="line">    <span class="keyword">this</span>.interceptor = interceptor;</span><br><span class="line">    <span class="keyword">this</span>.signatureMap = signatureMap;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 静态方法，用来直接创建代理对象</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">wrap</span><span class="params">(Object target, Interceptor interceptor)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取当前拦截器需要被拦截的所有的方法</span></span><br><span class="line">    Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap = getSignatureMap(interceptor);</span><br><span class="line">    <span class="comment">// 获取被代理对象的Class</span></span><br><span class="line">    Class&lt;?&gt; type = target.getClass();</span><br><span class="line">    <span class="comment">// 把被代理对象所有能在签名Map中找到的直接实现的接口和祖先接口，查找出来</span></span><br><span class="line">    Class&lt;?&gt;[] interfaces = getAllInterfaces(type, signatureMap);</span><br><span class="line">    <span class="comment">// 找到了就创建代理对象</span></span><br><span class="line">    <span class="keyword">if</span> (interfaces.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> Proxy.newProxyInstance(</span><br><span class="line">          type.getClassLoader(),</span><br><span class="line">          interfaces,</span><br><span class="line">          <span class="comment">// 创建一个InvocationHandler实例</span></span><br><span class="line">          <span class="keyword">new</span> Plugin(target, interceptor, signatureMap));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 没找到 就返回</span></span><br><span class="line">    <span class="comment">// 这个对象不一定说一个未经代理过的对象，也可能是代理过的</span></span><br><span class="line">    <span class="keyword">return</span> target;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 当调用这个代理对象的任何方法时，调用此方法</span></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// 首先找下当前被调用的这个方法所在的类，被拦截的所有的方法 </span></span><br><span class="line">      Set&lt;Method&gt; methods = signatureMap.get(method.getDeclaringClass());</span><br><span class="line">      <span class="keyword">if</span> (methods != <span class="keyword">null</span> &amp;&amp; methods.contains(method)) &#123;</span><br><span class="line">        <span class="comment">// 如果当前被调用的方法是需要被拦截的，那么就执行我们自定义的拦截逻辑</span></span><br><span class="line">        <span class="comment">// interceptor是我们自定义的拦截器，在我们自定义的拦截器里，需要获取到</span></span><br><span class="line">        <span class="comment">// 原委托对象，被调用的方法，以及参数，这里做了很好的封装，将用户的使用和</span></span><br><span class="line">        <span class="comment">// 具体的实现，做了一个完全的分离，用户感知不到任何具体的实现</span></span><br><span class="line">        <span class="comment">// Invocation#proceed 就做了一件事 method.invoke(target,args);</span></span><br><span class="line">        <span class="keyword">return</span> interceptor.intercept(<span class="keyword">new</span> Invocation(target, method, args));</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 如果当前被调用的方法没有被拦截，那么直接调用原方法</span></span><br><span class="line">      <span class="keyword">return</span> method.invoke(target, args);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      <span class="keyword">throw</span> ExceptionUtil.unwrapThrowable(e);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获取拦截器指定的被拦截方法的方法签名</span></span><br><span class="line">  <span class="comment">// key是被拦截方法的返回值类型</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; getSignatureMap(Interceptor interceptor) &#123;</span><br><span class="line">    <span class="comment">// 获取注解 @Intercepts信息</span></span><br><span class="line">    Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);</span><br><span class="line">    <span class="comment">// issue #251 避免出现没有具体的拦截信息的情况</span></span><br><span class="line">    <span class="keyword">if</span> (interceptsAnnotation == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> PluginException(<span class="string">&quot;No @Intercepts annotation was found in interceptor &quot;</span> + interceptor.getClass().getName());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取配置的被拦截方法的签名信息</span></span><br><span class="line">    Signature[] sigs = interceptsAnnotation.value();</span><br><span class="line">    Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="comment">// 统统放到Map</span></span><br><span class="line">    <span class="keyword">for</span> (Signature sig : sigs) &#123;</span><br><span class="line">      Set&lt;Method&gt; methods = signatureMap.computeIfAbsent(sig.type(), k -&gt; <span class="keyword">new</span> HashSet&lt;&gt;());</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 将定义构建成实际的Method对象</span></span><br><span class="line">        Method method = sig.type().getMethod(sig.method(), sig.args());</span><br><span class="line">        methods.add(method);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (NoSuchMethodException e) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> PluginException(<span class="string">&quot;Could not find method on &quot;</span> + sig.type() + <span class="string">&quot; named &quot;</span> + sig.method() + <span class="string">&quot;. Cause: &quot;</span> + e, e);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> signatureMap;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获取被代理对象所有的接口信息</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Class&lt;?&gt;[] getAllInterfaces(Class&lt;?&gt; type, Map&lt;Class&lt;?&gt;, Set&lt;Method&gt;&gt; signatureMap) &#123;</span><br><span class="line">    Set&lt;Class&lt;?&gt;&gt; interfaces = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span> (type != <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">for</span> (Class&lt;?&gt; c : type.getInterfaces()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (signatureMap.containsKey(c)) &#123;</span><br><span class="line">          <span class="comment">// 如果被代理类接口和返回值类型一致，接口加进来</span></span><br><span class="line">          interfaces.add(c);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 找到被代理类的父类，然后继续查找接口信息</span></span><br><span class="line">      type = type.getSuperclass();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> interfaces.toArray(<span class="keyword">new</span> Class&lt;?&gt;[interfaces.size()]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -263,92 +368,6 @@
 <p>　　（1）当希望将一个类转换为满足另一个新接口的类时，可以使用<strong>类的适配器模式</strong>，创建一个新类，继承原有的类，实现新的接口即可，例如4.3.1。</p>
 <p>　　（2） 当希望将一个对象转换成满足另一个新接口的对象时，可以创建一个Typec2Vga2 类，持有原类的一个实例，在Typec2Vga2 类的方法中，调用实例的方法就行，例如4.3.2对象的适配器模式。</p>
 <p>　　（3）当不希望实现一个接口中所有的方法时，可以创建一个抽象类Adapter ，实现所有方法，我们写别的类的时候，继承抽象类即可，例如4.3.3接口的适配器模式。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
-      <meta itemprop="name" content="zkk">
-      <meta itemprop="description" content="kkの博客">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kkの博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">雪花算法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:29:13" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><p>SnowFlake算法生成id的结果是一个64bit大小的整数，它的结构如下图：</p>
-<p><img src="img%5C1.png"></p>
-<ol>
-<li><strong>1bit</strong>，不用，因为二进制中最高位是符号位，1表示负数，0表示正数。生成的id一般都是用整数，所以最高位固定为0。</li>
-<li><strong>41bit-时间戳</strong>，用来记录时间戳，毫秒级。<br> - 41位可以表示<img src="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1" alt="2^{41}-1">个数字，<br> - 如果只用来表示正整数（计算机中正数包含0），可以表示的数值范围是：0 至 <img src="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1" alt="2^{41}-1">，减1是因为可表示的数值范围是从0开始算的，而不是1。<br> - 也就是说41位可以表示<img src="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1" alt="2^{41}-1">个毫秒的值，转化成单位年则是<img src="https://math.jianshu.com/math?formula=(2%5E%7B41%7D-1)%20/%20(1000%20*%2060%20*%2060%20*%2024%20*365)%20=%2069" alt="(2^{41}-1) / (1000 * 60 * 60 * 24 *365) = 69">年</li>
-<li><strong>10bit-工作机器id</strong>，用来记录工作机器id。<br> - 可以部署在<img src="https://math.jianshu.com/math?formula=2%5E%7B10%7D%20=%201024" alt="2^{10} = 1024">个节点，包括5位datacenterId和5位workerId<br> - 5位（bit）可以表示的最大正整数是<img src="https://math.jianshu.com/math?formula=2%5E%7B5%7D-1%20=%2031" alt="2^{5}-1 = 31">，即可以用0、1、2、3、….31这32个数字，来表示不同的datecenterId或workerId</li>
-<li><strong>12bit-序列号</strong>，序列号，用来记录同毫秒内产生的不同id。<br> -  12位（bit）可以表示的最大正整数是<img src="https://math.jianshu.com/math?formula=2%5E%7B12%7D-1%20=%204095" alt="2^{12}-1 = 4095">，即可以用0、1、2、3、….4094这4095个数字，来表示同一机器同一时间截（毫秒)内产生的4095个ID序号。</li>
-</ol>
-<p><strong>SnowFlake可以保证：</strong></p>
-<blockquote>
-<ol>
-<li>所有生成的id按时间趋势递增</li>
-<li>整个分布式系统内不会产生重复id（因为有datacenterId和workerId来做区分）</li>
-</ol>
-</blockquote>
 
       
     </div>
@@ -1466,20 +1485,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/nanchenkunkun.github.io/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/nanchenkunkun.github.io/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/nanchenkunkun.github.io/tags/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
