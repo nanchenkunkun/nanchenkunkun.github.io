@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/nanchenkunkun.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/nanchenkunkun.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/nanchenkunkun.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/nanchenkunkun.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/nanchenkunkun.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/nanchenkunkun.github.io/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"nanchenkunkun.github.io","root":"/nanchenkunkun.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="线程池原理分析CountDownLatch(计数器)CountDownLatch CountDownLatch 类位于java.util.concurrent包下，利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕之后才能执行，此时就可以利用CountDownLatch来实现这种功能了。CountDownLatch是通过一个计数器来实现的，计数器的初始值为线程的数量。每">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程池原理分析">
+<meta property="og:url" content="https://nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E4%BA%94%E3%80%81%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="kkの博客">
+<meta property="og:description" content="线程池原理分析CountDownLatch(计数器)CountDownLatch CountDownLatch 类位于java.util.concurrent包下，利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕之后才能执行，此时就可以利用CountDownLatch来实现这种功能了。CountDownLatch是通过一个计数器来实现的，计数器的初始值为线程的数量。每">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="a:/gitdir/学习资料/java/多线程/img/13.png">
+<meta property="article:published_time" content="2020-09-02T02:40:53.904Z">
+<meta property="article:modified_time" content="2020-09-02T02:43:08.262Z">
+<meta property="article:author" content="zkk">
+<meta property="article:tag" content="多线程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="a:/gitdir/学习资料/java/多线程/img/13.png">
+
+<link rel="canonical" href="https://nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E4%BA%94%E3%80%81%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>线程池原理分析 | kkの博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/nanchenkunkun.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">kkの博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">kkの博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/nanchenkunkun.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">7</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">21</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E4%BA%94%E3%80%81%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="kkの博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          线程池原理分析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-02 10:40:53 / 修改时间：10:43:08" itemprop="dateCreated datePublished" datetime="2020-09-02T10:40:53+08:00">2020-09-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="线程池原理分析"><a href="#线程池原理分析" class="headerlink" title="线程池原理分析"></a>线程池原理分析</h1><h3 id="CountDownLatch"><a href="#CountDownLatch" class="headerlink" title="CountDownLatch"></a>CountDownLatch</h3><p>(计数器)CountDownLatch CountDownLatch 类位于java.util.concurrent包下，利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕之后才能执行，此时就可以利用CountDownLatch来实现这种功能了。CountDownLatch是通过一个计数器来实现的，计数器的初始值为线程的数量。每当一个线程完成了自己的任务后，计数器的值就会减1。当计数器值到达0时，它表示所有的线程已经完成了任务，然后在闭锁上等待的线程就可以恢复执行任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		CountDownLatch countDownLatch = <span class="keyword">new</span> CountDownLatch(<span class="number">2</span>);</span><br><span class="line">		<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				System.out.println(Thread.currentThread().getName() + <span class="string">&quot;,子线程开始执行...&quot;</span>);</span><br><span class="line">				countDownLatch.countDown();</span><br><span class="line">				System.out.println(Thread.currentThread().getName() + <span class="string">&quot;,子线程结束执行...&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start();</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				System.out.println(Thread.currentThread().getName() + <span class="string">&quot;,子线程开始执行...&quot;</span>);</span><br><span class="line">				countDownLatch.countDown();<span class="comment">//计数器值每次减去1</span></span><br><span class="line">				System.out.println(Thread.currentThread().getName() + <span class="string">&quot;,子线程结束执行...&quot;</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;).start();</span><br><span class="line">		countDownLatch.await();<span class="comment">// 減去为0,恢复任务继续执行</span></span><br><span class="line">	    System.out.println(<span class="string">&quot;两个子线程执行完毕....&quot;</span>);</span><br><span class="line">	    System.out.println(<span class="string">&quot;主线程继续执行.....&quot;</span>);</span><br><span class="line">	    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;<span class="number">10</span>; i++) &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;main,i:&quot;</span>+i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="屏障-CyclicBarrier"><a href="#屏障-CyclicBarrier" class="headerlink" title="(屏障)CyclicBarrier"></a>(屏障)CyclicBarrier</h3><p>CyclicBarrier初始化时规定一个数目，然后计算调用了CyclicBarrier.await()进入等待的线程数。当线程数达到了这个数目时，所有进入等待状态的线程被唤醒并继续。 </p>
+<p>CyclicBarrier就象它名字的意思一样，可看成是个障碍， 所有的线程必须到齐后才能一起通过这个障碍。 </p>
+<p>CyclicBarrier初始时还可带一个Runnable的参数， 此Runnable任务在CyclicBarrier的数目达到后，所有其它线程被唤醒前被执行。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Writer</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> CyclicBarrier cyclicBarrier;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Writer</span><span class="params">(CyclicBarrier cyclicBarrier)</span></span>&#123;</span><br><span class="line">		 <span class="keyword">this</span>.cyclicBarrier=cyclicBarrier;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;线程&quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;,正在写入数据&quot;</span>);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Thread.sleep(<span class="number">3000</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			<span class="comment">// <span class="doctag">TODO:</span> handle exception</span></span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">&quot;线程&quot;</span> + Thread.currentThread().getName() + <span class="string">&quot;,写入数据成功.....&quot;</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			cyclicBarrier.await();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">&quot;所有线程执行完毕..........&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test001</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		CyclicBarrier cyclicBarrier=<span class="keyword">new</span> CyclicBarrier(<span class="number">5</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">			Writer writer = <span class="keyword">new</span> Writer(cyclicBarrier);</span><br><span class="line">			writer.start();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="计数信号量-Semaphore"><a href="#计数信号量-Semaphore" class="headerlink" title="(计数信号量)Semaphore"></a>(计数信号量)Semaphore</h3><p>Semaphore是一种基于计数的信号量。它可以设定一个阈值，基于此，多个线程竞争获取许可信号，做自己的申请后归还，超过阈值后，线程申请许可信号将会被阻塞。Semaphore可<strong>以用来构建一些对象池，资源池之类的</strong>，比如数据库连接池，我们也可以创建计数为1的Semaphore，将其作为一种类似互斥锁的机制，这也叫二元信号量，表示两种互斥状态。它的用法如下：</p>
+<p>availablePermits()函数; 用来获取当前可用的资源数量</p>
+<p>wc.acquire(); //申请资源</p>
+<p>wc.release();// 释放资源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个计数阈值为5的信号量对象  </span></span><br><span class="line">   	<span class="comment">// 只能5个线程同时访问  </span></span><br><span class="line">   	Semaphore semp = <span class="keyword">new</span> Semaphore(<span class="number">5</span>);  </span><br><span class="line">   	  </span><br><span class="line">   	<span class="keyword">try</span> &#123;  </span><br><span class="line">   	    <span class="comment">// 申请许可  </span></span><br><span class="line">   	    semp.acquire();  </span><br><span class="line">   	    <span class="keyword">try</span> &#123;  </span><br><span class="line">   	        <span class="comment">// 业务逻辑  </span></span><br><span class="line">   	    &#125; <span class="keyword">catch</span> (Exception e) &#123;  </span><br><span class="line">   	  </span><br><span class="line">   	    &#125; <span class="keyword">finally</span> &#123;  </span><br><span class="line">   	        <span class="comment">// 释放许可  </span></span><br><span class="line">   	        semp.release();  </span><br><span class="line">   	    &#125;  </span><br><span class="line">   	&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;  </span><br><span class="line">   	  </span><br><span class="line">   	&#125;  </span><br></pre></td></tr></table></figure>
+
+<p><strong>案例:</strong></p>
+<p>需求: 一个厕所只有3个坑位，但是有10个人来上厕所，那怎么办？假设10的人的编号分别为1-10，并且1号先到厕所，10号最后到厕所。那么1-3号来的时候必然有可用坑位，顺利如厕，4号来的时候需要看看前面3人是否有人出来了，如果有人出来，进去，否则等待。同样的道理，4-10号也需要等待正在上厕所的人出来后才能进去，并且谁先进去这得看等待的人是否有素质，是否能遵守先来先上的规则。</p>
+<p>代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ThradDemo001</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line">	<span class="keyword">private</span> Semaphore wc;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ThradDemo001</span><span class="params">(String name, Semaphore wc)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.name = name;</span><br><span class="line">		<span class="keyword">this</span>.wc = wc;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 剩下的资源</span></span><br><span class="line">		<span class="keyword">int</span> availablePermits = wc.availablePermits();</span><br><span class="line">		<span class="keyword">if</span> (availablePermits &gt; <span class="number">0</span>) &#123;</span><br><span class="line">			System.out.println(name + <span class="string">&quot;天助我也，终于有茅坑了.....&quot;</span>);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			System.out.println(name + <span class="string">&quot;怎么没有茅坑了...&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 申请资源</span></span><br><span class="line">			wc.acquire();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(name + <span class="string">&quot;终于上厕所啦.爽啊&quot;</span> + <span class="string">&quot;,剩下厕所:&quot;</span> + wc.availablePermits());</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Thread.sleep(<span class="keyword">new</span> Random().nextInt(<span class="number">1000</span>));</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			<span class="comment">// <span class="doctag">TODO:</span> handle exception</span></span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(name + <span class="string">&quot;厕所上完啦!&quot;</span>);</span><br><span class="line">		<span class="comment">// 释放资源</span></span><br><span class="line">		wc.release();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSemaphore</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Semaphore semaphore = <span class="keyword">new</span> Semaphore(<span class="number">3</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++) &#123;</span><br><span class="line">			ThradDemo001 thradDemo001 = <span class="keyword">new</span> ThradDemo001(<span class="string">&quot;第&quot;</span> + i + <span class="string">&quot;个人&quot;</span>, semaphore);</span><br><span class="line">			thradDemo001.start();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<h3 id="并发队列"><a href="#并发队列" class="headerlink" title="并发队列"></a><strong>并发</strong>队列</h3><p>在并发队列上JDK提供了两套实现，一个是以ConcurrentLinkedQueue为代表的高性能队列非阻塞，一个是以BlockingQueue接口为代表的阻塞队列，无论哪种都继承自Queue。</p>
+<h3 id="阻塞队列与非阻塞队"><a href="#阻塞队列与非阻塞队" class="headerlink" title="阻塞队列与非阻塞队"></a><strong>阻塞队列与非阻塞队</strong></h3><p>阻塞队列与普通队列的区别在于<strong>，当队列是空的时，从队列中获取元素的操作将会被阻塞，或者当队列是满时，往队列里添加元素的操作会被阻塞</strong>。<strong>试图从空的阻塞队列中获取元素的线程将会被阻塞，直到其他的线程往空的队列插入新的元素。同样，试图往已满的阻塞队列中添加新元素的线程同样也会被阻塞，直到其他的线程使队列重新变得空闲起来，</strong>如从队列中移除一个或者多个元素，或者完全清空队列.</p>
+<p>1.ArrayDeque, （数组双端队列）<br>2.PriorityQueue, （优先级队列）<br>3.ConcurrentLinkedQueue, （基于链表的并发队列）<br>4.DelayQueue, （延期阻塞队列）（阻塞队列实现了BlockingQueue接口）<br>5.ArrayBlockingQueue, （基于数组的并发阻塞队列）<br>6.LinkedBlockingQueue, （基于链表的FIFO阻塞队列）<br>7.LinkedBlockingDeque, （基于链表的FIFO双端阻塞队列）<br>8.PriorityBlockingQueue, （带优先级的无界阻塞队列）<br>9.SynchronousQueue （并发同步阻塞队列）</p>
+<p><strong>ConcurrentLinkedDeque</strong></p>
+<p>ConcurrentLinkedQueue : 是一个适用于高并发场景下的队列，通过无锁的方式，实现 了高并发状态下的高性能，通常ConcurrentLinkedQueue性能好于BlockingQueue.它 是一个基于链接节点的无界线程安全队列。该队列的元素遵循先进先出的原则。头是最先 加入的，尾是最近加入的，该队列不允许null元素。 ConcurrentLinkedQueue重要方法: add 和offer() 都是加入元素的方法(在ConcurrentLinkedQueue中这俩个方法没有任何区别) poll() 和peek() 都是取头元素节点，区别在于前者会删除元素，后者不会。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ConcurrentLinkedDeque q = <span class="keyword">new</span> ConcurrentLinkedDeque();</span><br><span class="line">	q.offer(<span class="string">&quot;zkk&quot;</span>);</span><br><span class="line">	q.offer(<span class="string">&quot;kkk&quot;</span>);</span><br><span class="line">	q.offer(<span class="string">&quot;ttt&quot;</span>);</span><br><span class="line">	q.offer(<span class="string">&quot;lll&quot;</span>);</span><br><span class="line">	q.offer(<span class="string">&quot;ww&quot;</span>);</span><br><span class="line">	<span class="comment">//从头获取元素,删除该元素</span></span><br><span class="line">	System.out.println(q.poll());</span><br><span class="line">	<span class="comment">//从头获取元素,不刪除该元素</span></span><br><span class="line">	System.out.println(q.peek());</span><br><span class="line">	<span class="comment">//获取总长度</span></span><br><span class="line">	System.out.println(q.size());</span><br></pre></td></tr></table></figure>
+
+<h3 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a><strong>BlockingQueue</strong></h3><p>阻塞队列（BlockingQueue）是一个支持两个附加操作的队列。这两个附加的操作是：</p>
+<p><strong>在队列为空时，获取元素的线程会等待队列变为非空。</strong></p>
+<p><strong>当队列满时，存储元素的线程会等待队列可用。</strong> </p>
+<p>阻塞队列常用于生产者和消费者的场景，生产者是往队列里添加元素的线程，消费者是从队列里拿元素的线程。阻塞队列就是生产者存放元素的容器，而消费者也只从容器里拿元素。</p>
+<p>BlockingQueue即阻塞队列，从阻塞这个词可以看出，在某些情况下对阻塞队列的访问可能会造成阻塞。被阻塞的情况主要有如下两种：</p>
+<ol>
+<li><p>当队列满了的时候进行入队列操作</p>
+</li>
+<li><p>当队列空了的时候进行出队列操作</p>
+</li>
+</ol>
+<p>因此，当一个线程试图对一个已经满了的队列进行入队列操作时，它将会被阻塞，除非有另一个线程做了出队列操作；同样，当一个线程试图对一个空队列进行出队列操作时，它将会被阻塞，除非有另一个线程进行了入队列操作。</p>
+<p>在Java中，BlockingQueue的接口位于java.util.concurrent 包中(在Java5版本开始提供)，由上面介绍的阻塞队列的特性可知，阻塞队列是线程安全的。</p>
+<p>在新增的Concurrent包中，BlockingQueue很好的解决了多线程中，如何高效安全“传输”数据的问题。通过这些高效并且线程安全的队列类，为我们快速搭建高质量的多线程程序带来极大的便利。本文详细介绍了BlockingQueue家庭中的所有成员，包括他们各自的功能以及常见使用场景。</p>
+<p>认识BlockingQueue</p>
+<p>阻塞队列，顾名思义，首先它是一个队列(数据由队列的一端输入，从另外一端输出);</p>
+<p>常用的队列主要有以下两种：（当然通过不同的实现方式，还可以延伸出很多不同类型的队列，DelayQueue就是其中的一种）</p>
+<p>　　先进先出（FIFO）：先插入的队列的元素也最先出队列，类似于排队的功能。从某种程度上来说这种队列也体现了一种公平性。</p>
+<p>　　后进先出（LIFO）：后插入队列的元素最先出队列，这种队列优先处理最近发生的事件。</p>
+<p>​      多线程环境中，通过队列可以很容易实现数据共享，比如经典的“生产者”和“消费者”模型中，通过队列可以很便利地实现两者之间的数据共享。假设我们有若干生产者线程，另外又有若干个消费者线程。如果生产者线程需要把准备好的数据共享给消费者线程，利用队列的方式来传递数据，就可以很方便地解决他们之间的数据共享问题。但如果生产者和消费者在某个时间段内，万一发生数据处理速度不匹配的情况呢？理想情况下，如果生产者产出数据的速度大于消费者消费的速度，并且当生产出来的数据累积到一定程度的时候，那么生产者必须暂停等待一下（阻塞生产者线程），以便等待消费者线程把累积的数据处理完毕，反之亦然。然而，在concurrent包发布以前，在多线程环境下，我们每个程序员都必须去自己控制这些细节，尤其还要兼顾效率和线程安全，而这会给我们的程序带来不小的复杂度。好在此时，强大的concurrent包横空出世了，而他也给我们带来了强大的BlockingQueue。（在多线程领域：所谓阻塞，在某些情况下会挂起线程（即阻塞），一旦条件满足，被挂起的线程又会自动被唤醒）</p>
+<h3 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a><strong>ArrayBlockingQueue</strong></h3><p>ArrayBlockingQueue是一个有边界的阻塞队列，它的内部实现是一个数组。有边界的意思是它的容量是有限的，我们必须在其初始化的时候指定它的容量大小，容量大小一旦指定就不可改变。</p>
+<p>ArrayBlockingQueue是以先进先出的方式存储数据，最新插入的对象是尾部，最新移出的对象是头部。下面</p>
+<p>是一个初始化和使用ArrayBlockingQueue的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">   &lt;String&gt; arrays = <span class="keyword">new</span> ArrayBlockingQueue&lt;String&gt;(<span class="number">3</span>);</span><br><span class="line">arrays.add(<span class="string">&quot;zz&quot;</span>);</span><br><span class="line">arrays.add(<span class="string">&quot;kk&quot;</span>);</span><br><span class="line">arrays.add(<span class="string">&quot;ll&quot;</span>);</span><br><span class="line"><span class="comment">// 添加阻塞队列</span></span><br><span class="line">arrays.offer(<span class="string">&quot;ww&quot;</span>, <span class="number">1</span>, TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure>
+
+<h3 id="LinkedBlockingQueue"><a href="#LinkedBlockingQueue" class="headerlink" title="LinkedBlockingQueue"></a><strong>LinkedBlockingQueue</strong></h3><p>LinkedBlockingQueue阻塞队列大小的配置是可选的，如果我们初始化时指定一个大小，它就是有边界的，如果不指定，它就是无边界的。说是无边界，其实是采用了默认大小为Integer.MAX_VALUE的容量 。它的内部实现是一个链表。</p>
+<p>和ArrayBlockingQueue一样，LinkedBlockingQueue 也是以先进先出的方式存储数据，最新插入的对象是尾部，最新移出的对象是头部。下面是一个初始化和使LinkedBlockingQueue的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">LinkedBlockingQueue linkedBlockingQueue = <span class="keyword">new</span> LinkedBlockingQueue(<span class="number">3</span>);</span><br><span class="line">linkedBlockingQueue.add(<span class="string">&quot;张三&quot;</span>);</span><br><span class="line">linkedBlockingQueue.add(<span class="string">&quot;李四&quot;</span>);</span><br><span class="line">linkedBlockingQueue.add(<span class="string">&quot;李四&quot;</span>);</span><br><span class="line">System.out.println(linkedBlockingQueue.size());</span><br></pre></td></tr></table></figure>
+
+<h3 id="PriorityBlockingQueue"><a href="#PriorityBlockingQueue" class="headerlink" title="PriorityBlockingQueue"></a><strong>PriorityBlockingQueue</strong></h3><p>PriorityBlockingQueue是一个没有边界的队列，它的排序规则和 java.util.PriorityQueue一样。需要注 </p>
+<p>意，PriorityBlockingQueue中允许插入null对象。</p>
+<p>所有插入PriorityBlockingQueue的对象必须实现 java.lang.Comparable接口，队列优先级的排序规则就 </p>
+<p>是按照我们对这个接口的实现来定义的。</p>
+<p>另外，我们可以从PriorityBlockingQueue获得一个迭代器Iterator，但这个迭代器并不保证按照优先级顺 </p>
+<p>序进行迭代。</p>
+<p>下面我们举个例子来说明一下，首先我们定义一个对象类型，这个对象需要实现Comparable接口：</p>
+<h3 id="SynchronousQueue"><a href="#SynchronousQueue" class="headerlink" title="SynchronousQueue"></a><strong>SynchronousQueue</strong></h3><p>SynchronousQueue队列内部仅允许容纳一个元素。当一个线程插入一个元素后会被阻塞，除非这个元素被另一个线程消费。</p>
+<h3 id="使用BlockingQueue模拟生产者与消费者"><a href="#使用BlockingQueue模拟生产者与消费者" class="headerlink" title="使用BlockingQueue模拟生产者与消费者"></a>使用BlockingQueue模拟生产者与消费者</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ProducerThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> BlockingQueue&lt;String&gt; blockingQueue;</span><br><span class="line">	<span class="keyword">private</span> AtomicInteger count = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> FLAG = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ProducerThread</span><span class="params">(BlockingQueue&lt;String&gt; blockingQueue)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.blockingQueue = blockingQueue;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(Thread.currentThread().getName() + <span class="string">&quot;生产者开始启动....&quot;</span>);</span><br><span class="line">		<span class="keyword">while</span> (FLAG) &#123;</span><br><span class="line">			String data = count.incrementAndGet() + <span class="string">&quot;&quot;</span>;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">boolean</span> offer = blockingQueue.offer(data, <span class="number">2</span>, TimeUnit.SECONDS);</span><br><span class="line">				<span class="keyword">if</span> (offer) &#123;</span><br><span class="line">					System.out.println(Thread.currentThread().getName() + <span class="string">&quot;,生产队列&quot;</span> + data + <span class="string">&quot;成功..&quot;</span>);</span><br><span class="line">				&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">					System.out.println(Thread.currentThread().getName() + <span class="string">&quot;,生产队列&quot;</span> + data + <span class="string">&quot;失败..&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(Thread.currentThread().getName() + <span class="string">&quot;,生产者线程停止...&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.FLAG = <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConsumerThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">boolean</span> FLAG = <span class="keyword">true</span>;</span><br><span class="line">	<span class="keyword">private</span> BlockingQueue&lt;String&gt; blockingQueue;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">ConsumerThread</span><span class="params">(BlockingQueue&lt;String&gt; blockingQueue)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.blockingQueue = blockingQueue;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(Thread.currentThread().getName() + <span class="string">&quot;消费者开始启动....&quot;</span>);</span><br><span class="line">		<span class="keyword">while</span> (FLAG) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				String data = blockingQueue.poll(<span class="number">2</span>, TimeUnit.SECONDS);</span><br><span class="line">				<span class="keyword">if</span> (data == <span class="keyword">null</span> || data == <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">					FLAG = <span class="keyword">false</span>;</span><br><span class="line">					System.out.println(<span class="string">&quot;消费者超过2秒时间未获取到消息.&quot;</span>);</span><br><span class="line">					<span class="keyword">return</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				System.out.println(<span class="string">&quot;消费者获取到队列信息成功,data:&quot;</span> + data);</span><br><span class="line"></span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				<span class="comment">// <span class="doctag">TODO:</span> handle exception</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test0008</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		BlockingQueue&lt;String&gt; blockingQueue = <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(<span class="number">3</span>);</span><br><span class="line">		ProducerThread producerThread = <span class="keyword">new</span> ProducerThread(blockingQueue);</span><br><span class="line">		ConsumerThread consumerThread = <span class="keyword">new</span> ConsumerThread(blockingQueue);</span><br><span class="line">		Thread t1 = <span class="keyword">new</span> Thread(producerThread);</span><br><span class="line">		Thread t2 = <span class="keyword">new</span> Thread(consumerThread);</span><br><span class="line">		t1.start();</span><br><span class="line">		t2.start();</span><br><span class="line">		<span class="comment">//10秒后 停止线程..</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Thread.sleep(<span class="number">10</span>*<span class="number">1000</span>);</span><br><span class="line">			producerThread.stop();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			<span class="comment">// <span class="doctag">TODO:</span> handle exception</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><h5 id="什么是线程池："><a href="#什么是线程池：" class="headerlink" title="什么是线程池："></a>什么是线程池：</h5><p>Java中的线程池是运用场景最多的并发框架，几乎所有需要异步或并发执行任务的程序<br>都可以使用线程池。在开发过程中，合理地使用线程池能够带来3个好处。<br>第一：降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。<br>第二：提高响应速度。当任务到达时，任务可以不需要等到线程创建就能立即执行。<br>第三：提高线程的可管理性。线程是稀缺资源，如果无限制地创建，不仅会消耗系统资源，<br>还会降低系统的稳定性，使用线程池可以进行统一分配、调优和监控。但是，要做到合理利用<br>线程池，必须对其实现原理了如指掌。</p>
+<h5 id="线程池作用："><a href="#线程池作用：" class="headerlink" title="线程池作用："></a>线程池作用：</h5><p>线程池是为突然大量爆发的线程设计的，通过有限的几个固定线程为大量的操作服务，减少了创建和销毁线程所需的时间，从而提高效率。</p>
+<p>如果一个线程的时间非常长，就没必要用线程池了(不是不能作长时间操作，而是不宜。)，况且我们还不能控制线程池中线程的开始、挂起、和中止。</p>
+<h5 id="线程池的分类"><a href="#线程池的分类" class="headerlink" title="线程池的分类"></a>线程池的分类</h5><h6 id="ThreadPoolExecutor"><a href="#ThreadPoolExecutor" class="headerlink" title="ThreadPoolExecutor"></a><strong>ThreadPoolExecutor</strong></h6><p>Java是天生就支持并发的语言，支持并发意味着多线程，线程的频繁创建在高并发及大数据量是非常消耗资源的，因为java提供了线程池。在jdk1.5以前的版本中，线程池的使用是及其简陋的，但是在JDK1.5后，有了很大的改善。JDK1.5之后加入了java.util.concurrent包，java.util.concurrent包的加入给予开发人员开发并发程序以及解决并发问题很大的帮助。这篇文章主要介绍下并发包下的Executor接口，Executor接口虽然作为一个非常旧的接口（JDK1.5 2004年发布），但是很多程序员对于其中的一些原理还是不熟悉，因此写这篇文章来介绍下Executor接口，同时巩固下自己的知识。如果文章中有出现错误，欢迎大家指出。</p>
+<p>Executor框架的最顶层实现是ThreadPoolExecutor类，Executors工厂类中提供的newScheduledThreadPool、newFixedThreadPool、newCachedThreadPool方法其实也只是ThreadPoolExecutor的构造函数参数不同而已。通过传入不同的参数，就可以构造出适用于不同应用场景下的线程池，那么它的底层原理是怎样实现的呢，这篇就来介绍下ThreadPoolExecutor线程池的运行过程。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">corePoolSize： 核心池的大小。 当有任务来之后，就会创建一个线程去执行任务，当线程池中的线程数目达到corePoolSize后，就会把到达的任务放到缓存队列当中</span><br><span class="line">maximumPoolSize： 线程池最大线程数，它表示在线程池中最多能创建多少个线程；</span><br><span class="line">keepAliveTime： 表示线程没有任务执行时最多保持多久时间会终止。</span><br><span class="line">unit： 参数keepAliveTime的时间单位，有7种取值，在TimeUnit类中有7种静态属性：</span><br></pre></td></tr></table></figure>
+
+<h5 id="线程池四种创建方式"><a href="#线程池四种创建方式" class="headerlink" title="线程池四种创建方式"></a><strong>线程池四种创建方式</strong></h5><p>Java通过Executors（jdk1.5并发包）提供四种线程池，分别为：</p>
+<p>newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。</p>
+<p>newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。</p>
+<p>newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行。</p>
+<p>newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。</p>
+<h5 id="newCachedThreadPool"><a href="#newCachedThreadPool" class="headerlink" title="newCachedThreadPool"></a><strong>newCachedThreadPool</strong></h5><p>创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。示例代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 无限大小线程池 jvm自动回收</span><br><span class="line">		ExecutorService newCachedThreadPool &#x3D; Executors.newCachedThreadPool();</span><br><span class="line">		for (int i &#x3D; 0; i &lt; 10; i++) &#123;</span><br><span class="line">			final int temp &#x3D; i;</span><br><span class="line">			newCachedThreadPool.execute(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">				@Override</span><br><span class="line">				public void run() &#123;</span><br><span class="line">					try &#123;</span><br><span class="line">						Thread.sleep(100);</span><br><span class="line">					&#125; catch (Exception e) &#123;</span><br><span class="line">						&#x2F;&#x2F; TODO: handle exception</span><br><span class="line">					&#125;</span><br><span class="line">					System.out.println(Thread.currentThread().getName() + &quot;,i:&quot; + temp);</span><br><span class="line"></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>**总结 **线程池为无限大，当执行第二个任务时第一个任务已经完成，会复用执行第一个任务的线程，而不用每次新建线程。</p>
+<h5 id="newFixedThreadPool"><a href="#newFixedThreadPool" class="headerlink" title="newFixedThreadPool"></a><strong>newFixedThreadPool</strong></h5><p>创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。示例代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService newFixedThreadPool &#x3D; Executors.newFixedThreadPool(5);</span><br><span class="line">		for (int i &#x3D; 0; i &lt; 10; i++) &#123;</span><br><span class="line">			final int temp &#x3D; i;</span><br><span class="line">			newFixedThreadPool.execute(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">				@Override</span><br><span class="line">				public void run() &#123;</span><br><span class="line">					System.out.println(Thread.currentThread().getId() + &quot;,i:&quot; + temp);</span><br><span class="line"></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>定长线程池的大小最好根据系统资源进行设置。如Runtime.getRuntime().availableProcessors()</strong></p>
+<h5 id="newScheduledThreadPool"><a href="#newScheduledThreadPool" class="headerlink" title="newScheduledThreadPool"></a><strong>newScheduledThreadPool</strong></h5><p>创建一个定长线程池，支持定时及周期性任务执行。延迟执行示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ScheduledExecutorService newScheduledThreadPool = Executors.newScheduledThreadPool(<span class="number">5</span>);</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">			<span class="keyword">final</span> <span class="keyword">int</span> temp = i;</span><br><span class="line">			newScheduledThreadPool.schedule(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">					System.out.println(<span class="string">&quot;i:&quot;</span> + temp);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;, <span class="number">3</span>, TimeUnit.SECONDS);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>表示延迟3秒执行。</strong></p>
+<h5 id="newSingleThreadExecutor"><a href="#newSingleThreadExecutor" class="headerlink" title="newSingleThreadExecutor"></a><strong>newSingleThreadExecutor</strong></h5><p>创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。示例代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ExecutorService newSingleThreadExecutor &#x3D; Executors.newSingleThreadExecutor();</span><br><span class="line">		for (int i &#x3D; 0; i &lt; 10; i++) &#123;</span><br><span class="line">			final int index &#x3D; i;</span><br><span class="line">			newSingleThreadExecutor.execute(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">				@Override</span><br><span class="line">				public void run() &#123;</span><br><span class="line">					System.out.println(&quot;index:&quot; + index);</span><br><span class="line">					try &#123;</span><br><span class="line">						Thread.sleep(200);</span><br><span class="line">					&#125; catch (Exception e) &#123;</span><br><span class="line">						&#x2F;&#x2F; TODO: handle exception</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意: 结果依次输出，相当于顺序执行各个任务。</p>
+<h3 id="线程池原理剖析"><a href="#线程池原理剖析" class="headerlink" title="线程池原理剖析"></a>线程池原理剖析</h3><p>提交一个任务到线程池中，线程池的处理流程如下：</p>
+<p>1、判断线程池里的核心线程是否都在执行任务，如果不是（核心线程空闲或者还有核心线程没有被创建）则创建一个新的工作线程来执行任务。如果核心线程都在执行任务，则进入下个流程。</p>
+<p>2、线程池判断工作队列是否已满，如果工作队列没有满，则将新提交的任务存储在这个工作队列里。如果工作队列满了，则进入下个流程。</p>
+<p>3、判断线程池里的线程是否都处于工作状态，如果没有，则创建一个新的工作线程来执行任务。如果已经满了，则交给饱和策略来处理这个任务。</p>
+<p><img src="A:\gitdir\学习资料\java\多线程\img\13.png"></p>
+<h5 id="自定义线程线程池"><a href="#自定义线程线程池" class="headerlink" title="自定义线程线程池"></a><strong>自定义</strong>线程线程池</h5><p>如果当前线程池中的线程数目小于corePoolSize，则每来一个任务，就会创建一个线程去执行这个任务；</p>
+<p>如果当前线程池中的线程数目&gt;=corePoolSize，则每来一个任务，会尝试将其添加到任务缓存队列当中，若添加成功，则该任务会等待空闲线程将其取出去执行；若添加失败（一般来说是任务缓存队列已满），则会尝试创建新的线程去执行这个任务；</p>
+<p>如果队列已经满了，则在总线程数不大于maximumPoolSize的前提下，则创建新的线程</p>
+<p>如果当前线程池中的线程数目达到maximumPoolSize，则会采取任务拒绝策略进行处理；</p>
+<p>如果线程池中的线程数量大于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终止，直至线程池中的线程数目不大于corePoolSize；如果允许为核心池中的线程设置存活时间，那么核心池中的线程空闲时间超过keepAliveTime，线程也会被终止。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test0007</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">1</span>, <span class="number">2</span>, <span class="number">60L</span>, TimeUnit.SECONDS, <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(<span class="number">3</span>));</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">6</span>; i++) &#123;</span><br><span class="line">			TaskThred t1 = <span class="keyword">new</span> TaskThred(<span class="string">&quot;任务&quot;</span> + i);</span><br><span class="line">			executor.execute(t1);</span><br><span class="line">		&#125;</span><br><span class="line">		executor.shutdown();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TaskThred</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String taskName;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">TaskThred</span><span class="params">(String taskName)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.taskName = taskName;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(Thread.currentThread().getName()+taskName);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="合理配置线程池"><a href="#合理配置线程池" class="headerlink" title="合理配置线程池"></a><strong>合理配置线程池</strong></h3><h3 id="CPU密集"><a href="#CPU密集" class="headerlink" title="CPU密集"></a><strong>CPU密集</strong></h3><p>CPU密集的意思是该任务需要大量的运算，而没有阻塞，CPU一直全速运行。 </p>
+<p>CPU密集任务只有在真正的多核CPU上才可能得到加速(通过多线程)，而在单核CPU上，无论你开几个模拟的多线程，该任务都不可能得到加速，因为CPU总的运算能力就那些。</p>
+<h3 id="IO密集"><a href="#IO密集" class="headerlink" title="IO密集"></a><strong>IO密集</strong></h3><p>IO密集型，即该任务需要大量的IO，即大量的阻塞。在单线程上运行IO密集型的任务会导致浪费大量的CPU运算能力浪费在等待。所以在IO密集型任务中使用多线程可以大大的加速程序运行，即使在单核CPU上，这种加速主要就是利用了被浪费掉的阻塞时间。</p>
+<p>接着上一篇探讨线程池留下的尾巴，如何合理的设置线程池大小。 </p>
+<p>要想合理的配置线程池的大小，首先得分析任务的特性，可以从以下几个角度分析：</p>
+<ol>
+<li><p>任务的性质：CPU密集型任务、IO密集型任务、混合型任务。</p>
+</li>
+<li><p>任务的优先级：高、中、低。</p>
+</li>
+<li><p>任务的执行时间：长、中、短。</p>
+</li>
+<li><p>任务的依赖性：是否依赖其他系统资源，如数据库连接等。</p>
+</li>
+</ol>
+<p>性质不同的任务可以交给不同规模的线程池执行。</p>
+<p>对于不同性质的任务来说，CPU密集型任务应配置尽可能小的线程，如配置CPU个数+1的线程数，IO密集型任务应配置尽可能多的线程，因为IO操作不占用CPU，不要让CPU闲下来，应加大线程数量，如配置两倍CPU个数+1，而对于混合型的任务，如果可以拆分，拆分成IO密集型和CPU密集型分别处理，前提是两者运行的时间是差不多的，如果处理时间相差很大，则没必要拆分了。</p>
+<p>若任务对其他系统资源有依赖，如某个任务依赖数据库的连接返回的结果，这时候等待的时间越长，则CPU空闲的时间越长，那么线程数量应设置得越大，才能更好的利用CPU。 </p>
+<p>当然具体合理线程池值大小，需要结合系统实际情况，在大量的尝试下比较才能得出，以上只是前人总结的规律。</p>
+<p><strong>CPU密集型时，任务可以少配置线程数，大概和机器的cpu核数相当，这样可以使得每个线程都在执行任务</strong></p>
+<p>*<em>IO密集型时，大部分线程都阻塞，故需要多配置线程数，2</em>cpu核数**</p>
+<p>操作系统之名称解释：</p>
+<p>某些进程花费了绝大多数时间在计算上，而其他则在等待I/O上花费了大多是时间，</p>
+<p>前者称为计算密集型（CPU密集型）computer-bound，后者称为I/O密集型，I/O-bound。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/nanchenkunkun.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag"># 多线程</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E4%BA%8C%E3%80%81%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8/" rel="prev" title="并发编程之多线程线程安全">
+      <i class="fa fa-chevron-left"></i> 并发编程之多线程线程安全
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%85%AB%E3%80%81Callable%E5%92%8Cfuture/" rel="next" title="Callable和future">
+      Callable和future <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">线程池原理分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">1.0.1.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%8F%E9%9A%9C-CyclicBarrier"><span class="nav-number">1.0.2.</span> <span class="nav-text">(屏障)CyclicBarrier</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E6%95%B0%E4%BF%A1%E5%8F%B7%E9%87%8F-Semaphore"><span class="nav-number">1.0.3.</span> <span class="nav-text">(计数信号量)Semaphore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E9%98%9F%E5%88%97"><span class="nav-number">1.0.4.</span> <span class="nav-text">并发队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%BB%E5%A1%9E%E9%98%9F%E5%88%97%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E%E9%98%9F"><span class="nav-number">1.0.5.</span> <span class="nav-text">阻塞队列与非阻塞队</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BlockingQueue"><span class="nav-number">1.0.6.</span> <span class="nav-text">BlockingQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayBlockingQueue"><span class="nav-number">1.0.7.</span> <span class="nav-text">ArrayBlockingQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedBlockingQueue"><span class="nav-number">1.0.8.</span> <span class="nav-text">LinkedBlockingQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PriorityBlockingQueue"><span class="nav-number">1.0.9.</span> <span class="nav-text">PriorityBlockingQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SynchronousQueue"><span class="nav-number">1.0.10.</span> <span class="nav-text">SynchronousQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8BlockingQueue%E6%A8%A1%E6%8B%9F%E7%94%9F%E4%BA%A7%E8%80%85%E4%B8%8E%E6%B6%88%E8%B4%B9%E8%80%85"><span class="nav-number">1.0.11.</span> <span class="nav-text">使用BlockingQueue模拟生产者与消费者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">1.0.12.</span> <span class="nav-text">线程池</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E7%A8%8B%E6%B1%A0%EF%BC%9A"><span class="nav-number">1.0.12.0.1.</span> <span class="nav-text">什么是线程池：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="nav-number">1.0.12.0.2.</span> <span class="nav-text">线程池作用：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E5%88%86%E7%B1%BB"><span class="nav-number">1.0.12.0.3.</span> <span class="nav-text">线程池的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#ThreadPoolExecutor"><span class="nav-number">1.0.12.0.3.1.</span> <span class="nav-text">ThreadPoolExecutor</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%9B%9B%E7%A7%8D%E5%88%9B%E5%BB%BA%E6%96%B9%E5%BC%8F"><span class="nav-number">1.0.12.0.4.</span> <span class="nav-text">线程池四种创建方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#newCachedThreadPool"><span class="nav-number">1.0.12.0.5.</span> <span class="nav-text">newCachedThreadPool</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#newFixedThreadPool"><span class="nav-number">1.0.12.0.6.</span> <span class="nav-text">newFixedThreadPool</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#newScheduledThreadPool"><span class="nav-number">1.0.12.0.7.</span> <span class="nav-text">newScheduledThreadPool</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#newSingleThreadExecutor"><span class="nav-number">1.0.12.0.8.</span> <span class="nav-text">newSingleThreadExecutor</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90"><span class="nav-number">1.0.13.</span> <span class="nav-text">线程池原理剖析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BA%BF%E7%A8%8B%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">1.0.13.0.1.</span> <span class="nav-text">自定义线程线程池</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%88%E7%90%86%E9%85%8D%E7%BD%AE%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">1.0.14.</span> <span class="nav-text">合理配置线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU%E5%AF%86%E9%9B%86"><span class="nav-number">1.0.15.</span> <span class="nav-text">CPU密集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IO%E5%AF%86%E9%9B%86"><span class="nav-number">1.0.16.</span> <span class="nav-text">IO密集</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="zkk"
+      src="/nanchenkunkun.github.io/images/1.jpg">
+  <p class="site-author-name" itemprop="name">zkk</p>
+  <div class="site-description" itemprop="description">kkの博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/nanchenkunkun.github.io/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/nanchenkunkun.github.io/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/nanchenkunkun.github.io/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zkk</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/nanchenkunkun.github.io/lib/anime.min.js"></script>
+  <script src="/nanchenkunkun.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/nanchenkunkun.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/nanchenkunkun.github.io/js/utils.js"></script>
+
+<script src="/nanchenkunkun.github.io/js/motion.js"></script>
+
+
+<script src="/nanchenkunkun.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/nanchenkunkun.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
