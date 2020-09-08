@@ -118,17 +118,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">4</span></a>
+    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">5</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">7</span></a>
+    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">9</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">21</span></a>
+    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a>
 
   </li>
   </ul>
@@ -154,6 +154,1138 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/3%E3%80%81%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">工厂模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:37" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h3><p>目前从网上了解工厂模式大体分为简单工厂、工厂方法、抽象工厂等三种模式。工厂方法模式也可称为工厂模式，与抽象模式都是属于GOF23种设计模式中的一员。可以大概理解为：简单工厂进阶变成了工厂方法，然后再进阶成了抽象工厂。难度逐步增加，也越来越抽象。下面按先易到难逐个分析。</p>
+<h3 id="二、简单工厂模式"><a href="#二、简单工厂模式" class="headerlink" title="二、简单工厂模式"></a><strong>二、简单工厂模式</strong></h3><p>属于<strong>创建型模式</strong>，又叫做<strong>静态工厂方法模式</strong>，不属于23种GOF设计模式之一。是由一个工厂对象决定创建出哪一种产品类的实例。实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（这些产品类继承自一个父类或接口）的实例。</p>
+<p>作用：将“类实例化的操作”与“使用对象的操作”分开，让使用者不用知道具体参数就可以实例化出所需要的“产品”类，从而避免了在客户端代码中显式指定，实现了解耦。</p>
+<p><strong>主要角色</strong></p>
+<p><strong>工厂：</strong>负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</p>
+<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
+<p><strong>具体产品：</strong>描述生产的具体产品。</p>
+<p><strong>举个简单易懂的例子：</strong></p>
+<p>“假设”有一台饮料机（工厂），可以调出各种口味的饮料（抽象产品），有三个按钮（参数）对应这三种饮料（具体产品）。这时候你可以根据点击按钮来选择你喜欢的饮料。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> *  @ Product.java</span><br><span class="line"> *  抽象产品</span><br><span class="line"> *  描述产品的公共接口</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract  class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ AProduct.java</span><br><span class="line"> * 具体产品A</span><br><span class="line"> * （可以看成是一种饮料：可乐）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class AProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;可乐&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ BProduct.java</span><br><span class="line"> * @具体产品B</span><br><span class="line"> * @（可以看成是一种饮料：奶茶）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class BProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;奶茶&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ CProduct.java</span><br><span class="line"> * 具体产品C</span><br><span class="line"> * （可以看成是一种饮料：咖啡）</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class CProduct extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;咖啡&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">Factory.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * 工厂</span><br><span class="line"> * 负责实现创建所有实例的内部逻辑，并提供一个外界调用的方法，创建所需的产品对象。</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Factory &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 供外界调用的方法</span><br><span class="line">     * （可以看成是对外提供的三种按钮）</span><br><span class="line">     * @param type </span><br><span class="line">     * @return 产品实例</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static Product getProduct(String type) &#123;</span><br><span class="line">        switch (type) &#123;</span><br><span class="line">            case &quot;A&quot;:</span><br><span class="line">                return new AProduct();</span><br><span class="line">            case &quot;B&quot;:</span><br><span class="line">                return new BProduct();</span><br><span class="line">            case &quot;C&quot;:</span><br><span class="line">                return new CProduct();</span><br><span class="line">            default:</span><br><span class="line">                return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        Factory factory &#x3D; new Factory();</span><br><span class="line">        &#x2F;&#x2F;根据传入的参数生产不同的产品实例</span><br><span class="line">        &#x2F;&#x2F;(按下不同的按钮，获取饮料)</span><br><span class="line">        Product A &#x3D; Factory.getProduct(&quot;A&quot;);</span><br><span class="line">        A.intro();</span><br><span class="line">        Product B &#x3D; Factory.getProduct(&quot;B&quot;);</span><br><span class="line">        B.intro();</span><br><span class="line">        Product C &#x3D; Factory.getProduct(&quot;C&quot;);</span><br><span class="line">        C.intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个具体工厂类，通过往此工厂的static方法中传入不同参数，产出不同的具体产品类实例。</strong></p>
+<p>优点：将创建使用工作分开，不必关心类对象如何创建，实现了解耦；</p>
+<p>缺点：违背“开放 - 关闭原则”，一旦添加新产品就不得不修改工厂类的逻辑，这样就会造成工厂逻辑过于复杂。</p>
+<h3 id="三、工厂方法模式"><a href="#三、工厂方法模式" class="headerlink" title="三、工厂方法模式"></a><strong>三、工厂方法模式</strong></h3><p>又称<strong>工厂模式、多态工厂模式</strong>和<strong>虚拟构造器模式</strong>，通过<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong>。一种常用的对象创建型设计模式,此模式的核心精神是封装 类中不变的部分。</p>
+<p>作用：将类的实例化（具体产品的创建）延迟到工厂类的子类（具体工厂）中完成，即由子类来决定应该实例化（创建）哪一个类。</p>
+<p><strong>主要角色</strong></p>
+<p><strong>抽象工厂：</strong>描述具体工厂的公共接口</p>
+<p><strong>具体工厂：</strong>描述具体工厂，创建产品的实例，供外界调用</p>
+<p><strong>抽象产品：</strong>负责描述产品的公共接口</p>
+<p><strong>具体产品：</strong>描述生产的具体产品</p>
+<p><strong>举个简单易懂的例子：</strong></p>
+<p>“假设”有各类的饮料机（抽象工厂），可以调出各种的饮料（抽象产品）。但是一类饮料机（具体工厂），只能生产一种饮料（具体产品）。如果你需要喝可乐，就需要买可乐饮料机。</p>
+<p><strong>产品：Product.java 、ProductA.java 、ProductB.java</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java </span><br><span class="line"> *   抽象产品</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java </span><br><span class="line"> * 具体产品A</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料A&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java </span><br><span class="line"> * 具体产品B</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;饮料B&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java 、FactoryB.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> *  @ Factory.java</span><br><span class="line"> *    抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产产品</span><br><span class="line">    abstract Product getProduct();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的产品A生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductA();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryB.java</span><br><span class="line"> * @具体工厂B</span><br><span class="line"> * 负责具体的产品B生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryB extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProduct() &#123;</span><br><span class="line">        return new ProductB();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建具体的工厂</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;生产相对应的产品</span><br><span class="line">        factoryA.getProduct().intro();</span><br><span class="line">        FactoryB factoryB &#x3D; new FactoryB();</span><br><span class="line">        factoryB.getProduct().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据例子可以描述为：<strong>一个抽象产品类，可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。每个具体工厂类只能创建一个具体产品类的实例</strong>。</p>
+<p>优点：</p>
+<ol>
+<li>符合开-闭原则：新增一种产品时，只需要增加相应的具体产品类和相应的工厂子类即可</li>
+<li>符合单一职责原则：每个具体工厂类只负责创建对应的产品</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>增加了系统的复杂度：类的个数将成对增加</li>
+<li>增加了系统的抽象性和理解难度</li>
+<li>一个具体工厂只能创建一种具体产品</li>
+</ol>
+<h3 id="四、抽象工厂模式"><a href="#四、抽象工厂模式" class="headerlink" title="四、抽象工厂模式"></a><strong>四、抽象工厂模式</strong></h3><p>定义：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></p>
+<p>解决的问题：每个工厂只能创建一类产品（工厂方法模式）</p>
+<p>抽象工厂模式与工厂方法模式最大的区别：抽象工厂中每个工厂可以创建多种类的产品；而工厂方法每个工厂只能创建一类</p>
+<p><strong>主要对象</strong></p>
+<p><strong>抽象工厂</strong>：描述具体工厂的公共接口</p>
+<p><strong>具体工厂</strong>：描述具体工厂，创建产品的实例，供外界调用</p>
+<p><strong>抽象产品族</strong>：描述抽象产品的公共接口</p>
+<p><strong>抽象产品</strong>：描述具体产品的公共接口</p>
+<p><strong>具体产品</strong>：具体产品</p>
+<p><strong>举个简单易懂的例子：（找了个不怎么好的比喻，看不懂得可以看相关推荐链接）</strong></p>
+<p>“假设”有各类的自动售卖机（抽象工厂），可以出售各类食品（抽象产品族）。</p>
+<p>有饮料、零食（抽象产品），比如常见的零食售卖机（具体工厂），出售矿泉水与面包（具体产品）。</p>
+<p><strong>产品：Product、ProductA、ProductB、ProductAa、ProductBb</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * @ Product.java</span><br><span class="line"> * 抽象产品族 (食品)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;产品介绍</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductA.java</span><br><span class="line"> * 抽象产品  (饮料)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductA extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductB.java</span><br><span class="line"> * 抽象产品  (零食)</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class ProductB extends Product&#123;</span><br><span class="line">    @Override</span><br><span class="line">    abstract void intro();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductAa.java</span><br><span class="line"> * 具体产品  (矿泉水)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public  class ProductAa extends ProductA&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;矿泉水&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ ProductBb.java</span><br><span class="line"> * 抽象产品  (面包)</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ProductBb extends ProductB&#123;</span><br><span class="line">    @Override</span><br><span class="line">    void intro() &#123;</span><br><span class="line">        System.out.println(&quot;面包&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">工厂：Factory.java、FactoryA.java</span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ Factory.java</span><br><span class="line"> * 抽象工厂</span><br><span class="line"> *&#x2F;</span><br><span class="line">abstract class Factory &#123;</span><br><span class="line">    &#x2F;&#x2F;生产饮料</span><br><span class="line">    abstract Product getProductA();</span><br><span class="line">    &#x2F;&#x2F;生产零食</span><br><span class="line">    abstract Product getProductB();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * @ FactoryA.java</span><br><span class="line"> * 具体工厂A</span><br><span class="line"> * 负责具体的A类产品生产</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class FactoryA extends Factory&#123;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductA() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产矿泉水</span><br><span class="line">        return new ProductAa();</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    Product getProductB() &#123;</span><br><span class="line">        &#x2F;&#x2F;生产面包</span><br><span class="line">        return new ProductBb();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">image.gif</span><br><span class="line">测试：Test.java</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        &#x2F;&#x2F;创建零食售卖机（具体工厂），</span><br><span class="line">        FactoryA factoryA &#x3D; new FactoryA();</span><br><span class="line">        &#x2F;&#x2F;获取矿泉水与面包（具体产品）</span><br><span class="line">        factoryA.getProductA().intro();</span><br><span class="line">        factoryA.getProductB().intro();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据实例可以描述为： <strong>多个抽象产品类，每个抽象产品类可以派生出多个具体产品类。一个抽象工厂类，可以派生出多个具体工厂类。 每个具体工厂类可以创建多个具体产品类的实例</strong>。.</p>
+<p>优点：</p>
+<ol>
+<li>降低耦合</li>
+<li>符合开-闭原则</li>
+<li>符合单一职责原则</li>
+<li>不使用静态工厂方法，可以形成基于继承的等级结构。</li>
+</ol>
+<p>缺点：难以扩展新种类产品</p>
+<h3 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a><strong>五、总结</strong></h3><p><strong>角色不同：</strong></p>
+<ol>
+<li>简单工厂：具体工厂、抽象产品、具体产品</li>
+<li>工厂方法：<strong>抽象工厂</strong>、具体工厂、抽象产品、具体产品</li>
+<li>抽象工厂：抽象工厂、具体工厂、<strong>抽象产品族</strong>、抽象产品、具体产品</li>
+</ol>
+<p><strong>定义：</strong></p>
+<ol>
+<li>简单工厂：<strong>由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（继承自一个父类或接口）的实例。</strong></li>
+<li>工厂方法：<strong>定义工厂父类负责定义创建对象的公共接口，而子类则负责生成具体的对象</strong></li>
+<li>抽象工厂：<strong>提供一个创建一系列相关或相互依赖对象的接口，而无须指定它们具体的类；具体的工厂负责实现具体的产品实例。</strong></li>
+</ol>
+<p><strong>对比：</strong></p>
+<ol>
+<li><strong>工厂方法模式</strong>解决了<strong>简单工厂模式</strong>的“开放 - 关闭原则</li>
+<li>抽象工厂模式解决了<strong>工厂方法模式</strong>一个具体工厂只能创建一类产品</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/4%E3%80%81%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/4%E3%80%81%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">代理模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:31" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h1><h3 id="一、静态代理"><a href="#一、静态代理" class="headerlink" title="一、静态代理"></a>一、静态代理</h3><p>1.生活中： </p>
+<p>代理就是一个人或者一个组织代表其他人去做一件事的现实生活中的。在一些情况下，一个客户不想或者不能够直接引用一个对象，而代理对象可以在客户端和目标对象之间起到中介的作用。 </p>
+<p>2.官方： </p>
+<p>代理模式是对象的结构模式。代理模式给某一个对象提供一个代理对象，并由代理对象控制对原对象的引用</p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\1.png"></p>
+<p>在代理模式中的角色： </p>
+<p>●抽象主题角色：声明了目标对象和代理对象的共同接口，这样一来在任何可以使用目标对象的地方都可以使用代理对象。 </p>
+<p>●真实主题角色：定义了代理对象所代表的目标对象。 </p>
+<p>●代理主题角色：代理对象内部含有目标对象的引用，从而可以在任何时候操作目标对象；代理对象提供一个与目标对象相同的接口，以便可以在任何时候替代 目标对象。代理对象通常在客户端调用传递给目标对象之前或之后，执行某个操作，而不是单纯地将调用传递给目标对象。它可以增加一些真实主题里面没有的功 能。</p>
+<p>生活中的例子：过年加班比较忙，没空去买火车票，这时可以打个电话到附近的票务中心，叫他们帮你买张回家的火车票，当然这会附加额外的劳务费。但要清楚票务中心自己并不卖票，只有火车站才真正卖票，票务中心卖给你的票其实是通过火车站实现的。这点很重要！ </p>
+<p>上面这个例子，你就是“客户”，票务中心就是“代理角色”，火车站是“真实角色”，卖票称为“抽象角色”！</p>
+<p>抽象主题角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//抽象角色：声明真实对象和代理对象的共同接口；</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span>  <span class="title">TicketManager</span> </span>&#123; </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 售票</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  <span class="keyword">void</span>  <span class="title">soldTicket</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 改签</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeTicket</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 退票</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">returnTicket</span><span class="params">()</span></span>;</span><br><span class="line">&#125;   </span><br></pre></td></tr></table></figure>
+
+<p>真实主题角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TicketManagerImpl</span> <span class="keyword">implements</span> <span class="title">TicketManager</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">soldTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//checkIdentity();</span></span><br><span class="line">        System.out.println(<span class="string">&quot;售票&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeTicket</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//checkIdentity();</span></span><br><span class="line">        System.out.println(<span class="string">&quot;改签&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">returnTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">//checkIdentity();</span></span><br><span class="line">        System.out.println(<span class="string">&quot;退票&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkIdentity</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;身份验证&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代理主题角色（添加了身份验证功能）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticProxyTicketManager</span> <span class="keyword">implements</span> <span class="title">TicketManager</span> </span>&#123;</span><br><span class="line">    TicketManager ticketManager;<span class="comment">//目标对象的引用</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">StaticProxyTicketManager</span><span class="params">(TicketManager ticketManager)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.ticketManager = ticketManager;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">soldTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        checkIdentity();</span><br><span class="line">        ticketManager.soldTicket();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        checkIdentity();</span><br><span class="line">        ticketManager.changeTicket();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">returnTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        checkIdentity();</span><br><span class="line">        ticketManager.changeTicket();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkIdentity</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;身份验证--------------&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第二个代理主题角色(添加了日志功能)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">/代理类  实现同一个接口</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogProxy</span> <span class="keyword">implements</span> <span class="title">TicketManager</span> </span>&#123;</span><br><span class="line">    TicketManager ticketManager;<span class="comment">//目标类的引用</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogProxy</span><span class="params">(TicketManager ticketManager)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.ticketManager=ticketManager;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">soldTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ticketManager.soldTicket();</span><br><span class="line">        log();<span class="comment">//后置增强</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">changeTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ticketManager.changeTicket();</span><br><span class="line">        log();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">returnTicket</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ticketManager.returnTicket();</span><br><span class="line">        log();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//增强</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;日志...&quot;</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//装饰模式   new TicketManagerImpl()  真实的目标对象</span></span><br><span class="line">        <span class="comment">//TicketManager tm=new StaticProxyTicketManager(new TicketManagerImpl());</span></span><br><span class="line">        TicketManager tm=<span class="keyword">new</span> LogProxy(<span class="keyword">new</span> StaticProxyTicketManager(<span class="keyword">new</span> TicketManagerImpl()));</span><br><span class="line"></span><br><span class="line">        tm.soldTicket();</span><br><span class="line">        tm.changeTicket();</span><br><span class="line">        tm.returnTicket();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">身份验证————– </span><br><span class="line"></span><br><span class="line">售票 </span><br><span class="line"></span><br><span class="line">日志… </span><br><span class="line"></span><br><span class="line">身份验证————– </span><br><span class="line"></span><br><span class="line">改签 </span><br><span class="line"></span><br><span class="line">日志… </span><br><span class="line"></span><br><span class="line">身份验证————– </span><br><span class="line"></span><br><span class="line">改签 </span><br><span class="line"></span><br><span class="line">日志… </span><br></pre></td></tr></table></figure>
+
+<p>从上面例子可以看出 客户端通过代理来购票 而代理实际上不能卖票给客户，他实际上是通过目标对象卖票给客户的，也就是说他是通过真实主题的目标对象实现给客户端卖票的功能，他只是一个中介，但我们可以在它里面增加一些功能，比如身份验证或者宣传打广告等其他的功能。</p>
+<p>静态代理类：在程序运行前，代理类的.class文件就已经存在了，已确定被代理的对象 </p>
+<p>静态代理： </p>
+<p>优点：对真实对象进行封装，不会修改目标类的代码。 </p>
+<p>缺点： </p>
+<p>1.多个不同类型目标对象需要代理时，我就需要建立多个代理类，造成类的膨胀 </p>
+<p>2.代码的冗余 </p>
+<p>3.编译期加入，不够灵活</p>
+<h3 id="二、动态代理"><a href="#二、动态代理" class="headerlink" title="二、动态代理"></a>二、动态代理</h3><p>描述（这个描述从网上看到的，相对比较容易理解） </p>
+<p>动态代理（Dynamic Proxy）：相比静态代理，动态代理具有更强的灵活性，因为它不用在我们设计实现的时候就指定某一个代理类来代理哪一个被代理对象，我们可以把这种指定延迟到程序运行时由JVM来实现。 </p>
+<p>所谓代理，就是需要代理类和被代理类有相同的对外接口或者说成服务，所以代理类一般都必须实现了所有被代理类已实现的接口，因为接口就是制定了一系列对外服务的标准。 </p>
+<p><strong>1.JDK实现动态代理</strong></p>
+<p>正因为动态代理有这样灵活的特性，所以我们在设计动态代理类（DynamicProxy）时不用显式地让它实现与真实主题类（RealSubject）相同的接口（interface），而是把这种实现推迟到运行时。 </p>
+<p>为了能让DynamicProxy类能够在运行时才去实现RealSubject类已实现的一系列接口并执行接口中相关的方法操作，需要让 DynamicProxy类实现JDK自带的java.lang.reflect.InvocationHandler接口，该接口中的invoke() 方法能够让DynamicProxy实例在运行时调用被代理类的“对外服务”，即调用被代理类需要对外实现的所有接口中的方法，也就是完成对真实方法的调 用，Java帮助文档中称这些真实方法为处理程序。 </p>
+<p>按照上面所述，我们肯定必须先把被代理类RealSubject已实现的所有interface都加载到JVM中，不然JVM怎么能够找到这些方法呢？明白了这个道理，那么我们就可以创建一个被代理类的实例，获得该实例的类加载器ClassLoader。 </p>
+<p>所谓的类加载器ClassLoader，就是具有某个类的类定义，即类的内部相关结构（包括继承树、方法区等等）。 </p>
+<p>更重要的是，动态代理模式可以使得我们在不改变原来已有的代码结构的情况下，对原来的“真实方法”进行扩展、增强其功能，并且可以达到控制被代理对 象的行为的目的。请详看下面代码中的DynamicProxy类，其中必须实现的invoke()方法在调用被代理类的真实方法的前后都可进行一定的特殊 操作。这是动态代理最明显的优点</p>
+<p>类图</p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\2.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationHandler;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Proxy;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicProxyTicketManager</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object targetObject;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 目标的初始化方法，根据目标生成代理类</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> targetObject</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">newProxyInstance</span><span class="params">(Object targetObject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.targetObject = targetObject;</span><br><span class="line">        <span class="comment">// 第一个参数，目标对象 的装载器</span></span><br><span class="line">        <span class="comment">// 第二个参数，目标接口已实现的所有接口，而这些是动态代理类要实现的接口列表</span></span><br><span class="line">        <span class="comment">// 第三个参数， 调用实现了InvocationHandler的对象生成动态代理实例，当你一调用代理，代理就会调用InvocationHandler的invoke方法</span></span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(targetObject.getClass().getClassLoader(), targetObject.getClass().getInterfaces(),</span><br><span class="line">                <span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 反射，这样你可以在不知道具体的类的情况下，根据配置的参数去调用一个类的方法。在灵活编程的时候非常有用。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 检查</span></span><br><span class="line">        checkIdentity();</span><br><span class="line">        Object ret = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 调用目标方法</span></span><br><span class="line">            ret = method.invoke(targetObject, args);</span><br><span class="line">            <span class="comment">// 执行成功，打印成功信息</span></span><br><span class="line">            log();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="comment">// 失败时，打印失败信息</span></span><br><span class="line">            System.out.println(<span class="string">&quot;error--&gt;&gt;&quot;</span> + method.getName());</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkIdentity</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;身份验证--------------&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;日志...&quot;</span> );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        DynamicProxyTicketManager dynamicProxyTicketManager=<span class="keyword">new</span> DynamicProxyTicketManager();</span><br><span class="line">        TicketManager tm=(TicketManager) dynamicProxyTicketManager.newProxyInstance(<span class="keyword">new</span> TicketManagerImpl());</span><br><span class="line"></span><br><span class="line">        tm.soldTicket();</span><br><span class="line">        tm.changeTicket();</span><br><span class="line">        tm.returnTicket();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果同上 </p>
+<p>优缺点 </p>
+<p>优点： </p>
+<p>1、一个动态代理类更加简单了，可以解决创建多个静态代理的麻烦，避免不断的重复多余的代码 </p>
+<p>2、调用目标代码时，会在方法“运行时”动态的加入，决定你是什么类型，才调谁，灵活 </p>
+<p>缺点： </p>
+<p>1、系统灵活了，但是相比而言，效率降低了，比静态代理慢一点 </p>
+<p>2、动态代理比静态代理在代码的可读性上差了一点，不太容易理解 </p>
+<p>3、JDK动态代理只能对实现了接口的类进行代理 </p>
+<p>总结 </p>
+<p>各有各的好，具体情况具体讨论</p>
+<p><strong>2.Cglib实现动态代理</strong></p>
+<p>描述（网上整理） </p>
+<p>AOP的源码中用到了两种动态代理来实现拦截切入功能：jdk动态代理和cglib动态代理。 </p>
+<p>两种方法同时存在，各有优劣。jdk动态代理是由java内部的反射机制来实现的 ，cglib动态代理底层则是借助asm来实现的。总的来说，反射机制在生成类的过程中比较高效，而asm在生成类之后的相关执行过程中比较高效（可以通 过将asm生成的类进行缓存，这样解决asm生成类过程低效问题）。还有一点必须注意：jdk动态代理的应用前提，必须是目标类基于统一的接口。如果没有 上述前提，jdk动态代理不能应用。由此可以看出，jdk动态代理有一定的局限性，cglib这种第三方类库实现的动态代理应用更加广泛， 且在效率上更有优势。 </p>
+<p>JDK的动态代理机制只能代理实现了接口的类，否则不能实现JDK的动态代理，cglib是针对类来实现代理的，他的原理是对指定的目标类生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对final修饰的类进行代理。</p>
+<p>介绍： </p>
+<p>CGLIB的核心类： </p>
+<p>net.sf.cglib.proxy.Enhancer – 主要的增强类 </p>
+<p>net.sf.cglib.proxy.MethodInterceptor – 主要的方法拦截类，它是Callback接口的子接口，需要用户实现 </p>
+<p>net.sf.cglib.proxy.MethodProxy – JDK的java.lang.reflect.Method类的代理类，可以方便的实现对源对象方法的调用,如使用： </p>
+<p>Object o = methodProxy.invokeSuper(proxy, args);//虽然第一个参数是被代理对象，也不会出现死循环的问题。 </p>
+<p>net.sf.cglib.proxy.MethodInterceptor接口是最通用的回调（callback）类型，它经常被基于代理的AOP用来实现拦截（intercept）方法的调用。这个接口只定义了一个方法 </p>
+<p>public Object intercept(Object object, java.lang.reflect.Method method, </p>
+<p>Object[] args, MethodProxy proxy) throws Throwable; </p>
+<p>第一个参数是代理对像，第二和第三个参数分别是拦截的方法和方法的参数。原来的方法可能通过使用java.lang.reflect.Method 对象的一般反射调用，或者使用 net.sf.cglib.proxy.MethodProxy对象调用。net.sf.cglib.proxy.MethodProxy通常被首选使 用，因为它更快</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CglibDynamicProxyTicketManager</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span>  </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Object targetObject;<span class="comment">//目标对象</span></span><br><span class="line">    <span class="comment">/** </span></span><br><span class="line"><span class="comment">     * 创建代理对象 </span></span><br><span class="line"><span class="comment">     *  </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> targetObject </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> </span></span><br><span class="line"><span class="comment">     */</span>  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getInstance</span><span class="params">(Object targetObject)</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">this</span>.targetObject = targetObject;  </span><br><span class="line">        Enhancer enhancer = <span class="keyword">new</span> Enhancer();  <span class="comment">// 用这个类来创建代理对象(被代理类的子类)： 并设置父类；设置回调；</span></span><br><span class="line">        enhancer.setSuperclass(<span class="keyword">this</span>.targetObject.getClass()); <span class="comment">// 设置被代理类作为其父类的代理目标</span></span><br><span class="line">        <span class="comment">// 回调方法  </span></span><br><span class="line">        enhancer.setCallback(<span class="keyword">this</span>);  <span class="comment">// 设置回调--当这个代理对象的方法被调用时 回调方法intercept()会被执行</span></span><br><span class="line">        <span class="comment">// 创建代理对象  </span></span><br><span class="line">        <span class="keyword">return</span> enhancer.create();  </span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">//回调方法</span></span><br><span class="line">    <span class="comment">// methodProxy 代理的类的方法</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * methodProxy 会调用父类(目标对象)的被代理的方法,比如soldTicket方法等</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object obj, Method method, Object[] args,  </span></span></span><br><span class="line"><span class="function"><span class="params">            MethodProxy methodProxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        Object result = <span class="keyword">null</span>;</span><br><span class="line">        checkIdentity();<span class="comment">//前置增强</span></span><br><span class="line">        result=methodProxy.invokeSuper(obj, args); <span class="comment">//调用新生成的cglib的代理对象 所属的父类的被代理的方法</span></span><br><span class="line">         log();<span class="comment">//后置增强</span></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 身份验证</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">checkIdentity</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;身份验证--------------&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">log</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;日志...&quot;</span> );</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        CglibDynamicProxyTicketManager cglibdynamicProxyTicketManager=<span class="keyword">new</span> CglibDynamicProxyTicketManager();</span><br><span class="line">        <span class="comment">//生成代理对象</span></span><br><span class="line">        TicketManager tm=(TicketManager) cglibdynamicProxyTicketManager.getInstance(<span class="keyword">new</span> TicketManagerImpl());</span><br><span class="line"></span><br><span class="line">        tm.soldTicket();<span class="comment">//当调用代理对象的被代理对象的方法时  会自动回调 代理类中的Intercept()方法</span></span><br><span class="line">        tm.changeTicket();</span><br><span class="line">        tm.returnTicket();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/5%E3%80%81%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/5%E3%80%81%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">桥接模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:24" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="桥接模式-Bridge"><a href="#桥接模式-Bridge" class="headerlink" title="桥接模式 (Bridge)"></a>桥接模式 (Bridge)</h1><p>一、定义 </p>
+<p>二、结构 </p>
+<p>三、具体案例 </p>
+<p>1.传统方法 </p>
+<p>2.使用桥接模式 </p>
+<p>四、应用场景</p>
+<h2 id="一、定义"><a href="#一、定义" class="headerlink" title="一、定义"></a><strong>一、定义</strong></h2><p>将抽象部分与实现(行为)部分分离，使它们都可以独立的变化。 </p>
+<p>桥接模式的做法是把变化部分(实现)抽象出来，使变化部分与主类(抽象)分离开来，从而将多个维度的变化彻底分离。最后，提供一个管理类(如下面的引擎类)来组合不同维度上的变化，通过这种组合来满足业务的需要。</p>
+<h2 id="二、结构"><a href="#二、结构" class="headerlink" title="二、结构"></a><strong>二、结构</strong></h2><p>图-桥接模式结构图 </p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\3.png"></p>
+<h2 id="三、具体案例"><a href="#三、具体案例" class="headerlink" title="三、具体案例"></a><strong>三、具体案例</strong></h2><p>本案例是实现汽车安装引擎的功能 </p>
+<p>汽车有两种 奔驰和宝马 他们安装的引擎不同 怎么实现了？ </p>
+<p>有两种方法</p>
+<p>1.传统方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span>  <span class="title">Car</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">installEngine200</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">installEngine300</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Bwm</span> <span class="keyword">implements</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">installEngine200</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Bwm车组装Engine200&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">installEngine300</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Bwm车组装Engine300&quot;</span>);      </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Bwm</span> <span class="keyword">implements</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">installEngine200</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Bwm车组装Engine200&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">installEngine300</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Bwm车组装Engine300&quot;</span>);      </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//奔驰车安装200引擎</span></span><br><span class="line">        Car benz=<span class="keyword">new</span> Benz();</span><br><span class="line">        benz.installEngine200();</span><br><span class="line">        <span class="comment">//宝马车安装300引擎</span></span><br><span class="line">        Car bwm=<span class="keyword">new</span> Bwm();</span><br><span class="line">        bwm.installEngine300();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Benz车组装Engine200 </span><br><span class="line"></span><br><span class="line">Bwm车组装Engine300</span><br></pre></td></tr></table></figure>
+
+<p><strong>缺点: 只要在Car接口中增加一个引擎类型的方法 那么它的具体实现类中也得增加一个空实现(如果该车不需要这个引擎) 比如我再增加一个型号400的引擎 ,相应的奔驰和宝马中都得增加该方法 但是我奔驰车不需要这种引擎 这样是不是造成了代码的冗余 所以这种方法不好拓展，这就要用到第二种方法 ：桥接模式了</strong></p>
+<p><strong>2.使用桥接模式</strong></p>
+<p>Implementor : Engine 定义实现接口(也就是引擎接口)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//与实现(行为)部分</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Engine</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEngine</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ConcreteImplementor : Engine200 ;Engine300 实现 引擎接口中方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体实现接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Engine200</span> <span class="keyword">implements</span> <span class="title">Engine</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;组装Engine200&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Engine300</span> <span class="keyword">implements</span> <span class="title">Engine</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;组装Engine300&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Abstraction : Car 定义抽象接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//抽象部分</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Engine engine;<span class="comment">// 持有一个实现部分对象，形成聚合关系</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Car</span><span class="params">(Engine engine)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.engine = engine;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Engine <span class="title">getEngine</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> engine;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEngine</span><span class="params">(Engine engine)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.engine = engine;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">install</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>RefinedAbstraction :Benz ;Bwm 扩展 Abstraction 类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Benz</span> <span class="keyword">extends</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Benz</span><span class="params">(Engine engine)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(engine);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">install</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Benz车安装&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>.getEngine().addEngine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Bwm</span> <span class="keyword">extends</span> <span class="title">Car</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Bwm</span><span class="params">(Engine engine)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(engine);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">install</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Bwm车安装&quot;</span>);</span><br><span class="line">        <span class="keyword">this</span>.getEngine().addEngine();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建实现(行为)  -&gt;Engine引擎</span></span><br><span class="line">        <span class="comment">//第一种 引擎  </span></span><br><span class="line">        Engine engine200=<span class="keyword">new</span> Engine200();</span><br><span class="line">        <span class="comment">//第二种 引擎</span></span><br><span class="line">        Engine engine300=<span class="keyword">new</span> Engine300();</span><br><span class="line">        <span class="comment">//创建抽象    -&gt;车</span></span><br><span class="line">        Car benz=<span class="keyword">new</span> Benz(engine200);</span><br><span class="line">        benz.install();</span><br><span class="line"></span><br><span class="line">        Car bwm=<span class="keyword">new</span> Bwm(engine300);</span><br><span class="line">        bwm.install();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果: </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Benz车安装 </span><br><span class="line"></span><br><span class="line">组装Engine200 </span><br><span class="line"></span><br><span class="line">Bwm车安装 </span><br><span class="line"></span><br><span class="line">组装Engine300</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、应用场景"><a href="#四、应用场景" class="headerlink" title="四、应用场景"></a><strong>四、应用场景</strong></h2><p>1、如果你不希望在抽象和实现部分采用固定的绑定关系，可以采用桥接模式，来把抽象和实现部分分开，然后在程序运行期间来动态的设置抽象部分需要用到的具体的实现，还可以动态切换具体的实现。</p>
+<p>2、如果出现抽象部分和实现部分都应该可以扩展的情况，可以采用桥接模式，让抽象部分和实现部分可以独立的变化，从而可以灵活的进行单独扩展，而不是搅在一起，扩展一边会影响到另一边。</p>
+<p>3、如果希望实现部分的修改，不会对客户产生影响，可以采用桥接模式，客户是面向抽象的接口在运行，实现部分的修改，可以独立于抽象部分，也就不会对客户产生影响了，也可以说对客户是透明的。</p>
+<p>4、如果采用继承的实现方案，会导致产生很多子类，对于这种情况，可以考虑采用桥接模式，分析功能变化的原因，看看是否能分离成不同的纬度，然后通过桥接模式来分离它们，从而减少子类的数目。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/6%E3%80%81%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/6%E3%80%81%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">适配器模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:19" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>1 初步认识**</p>
+<p><strong>适配器模式的定义</strong></p>
+<p>　　将一个类的接口转成客户期望的另外一个接口。适配器模式使得原本由于接口不匹配而不能一起工作的那些类可以一起工作。</p>
+<p><strong>大白话</strong></p>
+<p>　　适配器模式就像旅行插座转换器（图1）、Type-c转VGA转接口（图4）一样。</p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\4.png"></p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\5.png"></p>
+<p>　香港迪拜那边用的插座跟我们不一样，他们的插座需要如图2第1面所示的插头，而我们常用的插座类似第2面。因此我们的笔记本电脑，手机在当地不能直接充电。所以就需要一个插座转换器，转换器第1面插入当地的插座，第2面供我们充电，这样使得我们的插头在当地能使用。Type-c转VGA转接口也是一样的道理。</p>
+<p><strong>2 适配器模式结构图</strong></p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\6.png"></p>
+<p>　如图所示，Client不能直接访问Adaptee。Adapter是适配器，它将Adaptee转换成Client能访问的接口。所以通过适配器Adapter，用户端就可以访问Adaptee。</p>
+<p><strong>3 使用场景例子</strong></p>
+<p>　　手机想要投影到投影仪上，由于手机是Type-c接口，投影仪是VGA接口。不能直接投影，需要一个适配器，将视频信号从Type-c口转到VGA口，最后才能输出到大屏幕上。</p>
+<p><strong>4 适配器模式在使用场景的具体实现</strong></p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\7.png"></p>
+<p>　　如图所示，这有一个适配器，一号口是typec口，二号口是vga口，只有将视频信号从typec口输入，转换输出到vga口，才能和投影仪对接，实现手机屏幕投影到投影仪上的任务。涉及的物品有：手机、适配器、投影仪。</p>
+<p>　　4.1 定义一个手机，它有个typec口，这是视频源。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jstao.adapter;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> jstao</span></span><br><span class="line"><span class="comment"> * 定义一个手机Phone，它有一个Typec接口。</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Phone</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">typecPhone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;信息从Typec口的手机输出。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　4.2 定义一个vga接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jstao.adapter;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> jstao</span></span><br><span class="line"><span class="comment"> * 定义一个VGA接口。</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Vga</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">vgaInterface</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.3 实现一个适配器，适配器实现方式分三类：类的适配器模式、对象的适配器模式、接口的适配器模式。</p>
+<p>4.3.1 类的适配器模式</p>
+<p>　　原理：通过继承特性来实现适配器功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jstao.adapter;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 实现一个Type-c转VGA适配器，</span></span><br><span class="line"><span class="comment"> * 适配器实现方式有三种，这是第一种实现方式。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> jstao</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Typec2Vga1</span> <span class="keyword">extends</span> <span class="title">Phone</span> <span class="keyword">implements</span> <span class="title">Vga</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">vgaInterface</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">        typecPhone();</span><br><span class="line">        System.out.println(<span class="string">&quot;接收到Type-c口信息，信息转换成VGA接口中...&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;信息已转换成VGA接口，显示屏可以对接。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　4.3.2 对象的适配器模式</p>
+<p>　　原理：通过组合方式来实现适配器功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package com.jstao.adapter;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * </span><br><span class="line"> * 实现一个Type-c转VGA适配器，</span><br><span class="line"> * 适配器实现方式有三种，这是第二种实现方式。</span><br><span class="line"> * @author jstao</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Typec2Vga2 implements Vga&#123;</span><br><span class="line"></span><br><span class="line">    private Phone phone;</span><br><span class="line">    </span><br><span class="line">    public Typec2Vga2(Phone phone) &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated constructor stub</span><br><span class="line">        this.phone &#x3D; phone;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public void vgaInterface() &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        if(phone !&#x3D; null) &#123;</span><br><span class="line">            phone.typecPhone();</span><br><span class="line">            System.out.println(&quot;接收到Type-c口信息，信息转换成VGA接口中...&quot;);</span><br><span class="line">            System.out.println(&quot;信息已转换成VGA接口，显示屏可以对接。&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　4.3.3 接口的适配器模式</p>
+<p>　　原理：借助抽象类来实现适配器功能。</p>
+<p>　　定义三个接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package com.jstao.adapter;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * 定义接口</span><br><span class="line"> * @author jstao</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public interface Target &#123;</span><br><span class="line">    </span><br><span class="line">    void typec();</span><br><span class="line">    void typec2vga();</span><br><span class="line">    void typec2hdmi();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义一个抽象类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.jstao.adapter;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * 定义一个抽象类</span><br><span class="line"> * @author jstao</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public abstract class Adapter implements Target&#123;</span><br><span class="line"></span><br><span class="line">    public void typec() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public void typec2vga() &#123; &#125;</span><br><span class="line">    </span><br><span class="line">    public void typec2hdmi() &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现一个VGA适配器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jstao.adapter;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 实现一个VGA适配器,同理还可以实现一个HDMI适配器</span></span><br><span class="line"><span class="comment"> * 适配器实现方式有三种，这是第三种实现方式。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> jstao</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VgaAdapter</span> <span class="keyword">extends</span> <span class="title">Adapter</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">typec</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;信息从Typec口的手机输出。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">typec2vga</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;接收到Type-c口信息，信息转换成VGA接口中...&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;信息已转换成VGA接口，显示屏可以对接。&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.4 定义一个显示屏，用来测试上面实现的三个适配器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jstao.adapter;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 定义一个显示屏</span></span><br><span class="line"><span class="comment"> * 与适配器对接</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> jstao</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Screen</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//第一种适配器用法</span></span><br><span class="line">        System.out.println(<span class="string">&quot;-------------第一种适配器------------&quot;</span>);</span><br><span class="line">        Vga vga = <span class="keyword">new</span> Typec2Vga1();</span><br><span class="line">        vga.vgaInterface();<span class="comment">//适配器将typec转换成vga</span></span><br><span class="line">        System.out.println(<span class="string">&quot;显示屏对接适配器，手机成功投影到显示屏!&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//第二种适配器用法</span></span><br><span class="line">        System.out.println(<span class="string">&quot;-------------第二种适配器------------&quot;</span>);</span><br><span class="line">        Typec2Vga2 typec2Vga1 = <span class="keyword">new</span> Typec2Vga2(<span class="keyword">new</span> Phone());</span><br><span class="line">        typec2Vga1.vgaInterface();<span class="comment">//适配器将typec转换成vga</span></span><br><span class="line">        System.out.println(<span class="string">&quot;显示屏对接适配器，手机成功投影到显示屏!&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//第三种适配器用法</span></span><br><span class="line">        System.out.println(<span class="string">&quot;-------------第三种适配器------------&quot;</span>);</span><br><span class="line">        VgaAdapter vgaAdapter = <span class="keyword">new</span> VgaAdapter();</span><br><span class="line">        vgaAdapter.typec();</span><br><span class="line">        vgaAdapter.typec2vga();<span class="comment">//适配器将typec转换成vga</span></span><br><span class="line">        System.out.println(<span class="string">&quot;显示屏对接适配器，手机成功投影到显示屏!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>5 小结</strong></p>
+<p>　　5.1 适配器模式在源码中的应用：</p>
+<p>　　（1）JDK源码的IO模块用到，例如 java.io.InputStreamReader(InputStream)、java.io.OutputStreamWriter(OutputStream)。</p>
+<p>　　（2）mybatis源码日志模块用到对象适配器模式。</p>
+<p>　　5.1 适配器模式将一个接口转为另外一个接口。它有三种实现方式：</p>
+<p>　　（1）当希望将一个类转换为满足另一个新接口的类时，可以使用<strong>类的适配器模式</strong>，创建一个新类，继承原有的类，实现新的接口即可，例如4.3.1。</p>
+<p>　　（2） 当希望将一个对象转换成满足另一个新接口的对象时，可以创建一个Typec2Vga2 类，持有原类的一个实例，在Typec2Vga2 类的方法中，调用实例的方法就行，例如4.3.2对象的适配器模式。</p>
+<p>　　（3）当不希望实现一个接口中所有的方法时，可以创建一个抽象类Adapter ，实现所有方法，我们写别的类的时候，继承抽象类即可，例如4.3.3接口的适配器模式。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/7%E3%80%81%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/7%E3%80%81%E5%A4%96%E8%A7%82%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">外观模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:08:31" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>外观模式</p>
+<p>一、定义 </p>
+<p>二、结构 </p>
+<p>三、案例 </p>
+<p>四、特点</p>
+<p><strong>一、定义</strong></p>
+<p>Facade（外观）模式为子系统中的各类（或结构与方法）提供一个简明一致的界面，隐藏子系统的复杂性，使子系统更加容易使用。</p>
+<p><strong>二、结构</strong></p>
+<p>门面(Facade)角色 ：客户端可以调用这个角色的方法。此角色知晓相关的（一个或者多个）子系统的功能和责任。在正常情况下，本角色会将所有从客户端发来的请求委派到相应的子系统去。 </p>
+<p>子系统(SubSystem)角色 ：可以同时有一个或者多个子系统。每个子系统都不是一个单独的类，而是一个类的集合（如上面的子系统就是由SystemA、SystemB、 SystemC三个类组合而成）。每个子系统都可以被客户端直接调用，或者被门面角色调用。子系统并不知道门面的存在，对于子系统而言，门面仅仅是另外一 个客户端而已。</p>
+<p><strong>三、案例</strong> </p>
+<p>源代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;子系统(SubSystem)角色</span><br><span class="line">public class SystemA &#123;</span><br><span class="line">    public void doA()&#123;</span><br><span class="line">        System.out.println(&quot;子系统A的功能&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;子系统(SubSystem)角色</span><br><span class="line">public class SystemB &#123;</span><br><span class="line">    public void doB()&#123;</span><br><span class="line">        System.out.println(&quot;子系统B的功能&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;子系统(SubSystem)角色</span><br><span class="line">public class SystemC &#123;</span><br><span class="line">    public void doC()&#123;</span><br><span class="line">        System.out.println(&quot;子系统C的功能&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 门面(Facade)角色</span><br><span class="line"> * @author Administrator</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Facade &#123;</span><br><span class="line">    private SystemA systemA;</span><br><span class="line">    private SystemB systemB;</span><br><span class="line">    private SystemC systemC;</span><br><span class="line"></span><br><span class="line">    Facade()&#123;</span><br><span class="line">        systemA&#x3D;new SystemA();</span><br><span class="line">        systemB&#x3D;new SystemB();</span><br><span class="line">        systemC&#x3D;new SystemC();</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; 方法 满足客户端需要的功能</span><br><span class="line">    public void doAB()&#123;</span><br><span class="line">        systemA.doA();</span><br><span class="line">        systemB.doB();</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; 方法 满足客户端需要的功能</span><br><span class="line">    public void doABC()&#123;</span><br><span class="line">        systemA.doA();</span><br><span class="line">        systemB.doB();</span><br><span class="line">        systemC.doC();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Client &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Facade f&#x3D;new Facade();</span><br><span class="line">        System.out.println(&quot;客户1需要的两个子系统功能&quot;);</span><br><span class="line">        f.doAB();</span><br><span class="line">        System.out.println(&quot;----------------------&quot;);</span><br><span class="line">        System.out.println(&quot;客户2需要的三个子系统功能&quot;);</span><br><span class="line">        f.doABC();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>四、特点</strong></p>
+<p>1、外观模式为复杂子系统提供了一个简单接口，并不为子系统添加新的功能和行为。 </p>
+<p>2、外观模式实现了子系统与客户之间的松耦合关系。 </p>
+<p>3、外观模式没有封装子系统的类，只是提供了简单的接口。 如果应用需要，它并不限制客户使用子系统类。因此可以再系统易用性与通用性之间选择。 </p>
+<p>4、外观模式注重的是简化接口，它更多的时候是从架构的层次去看整个系统，而并非单个类的层次。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/8%E3%80%81%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/8%E3%80%81%E8%A3%85%E9%A5%B0%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">装饰模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:12" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>装饰模式</p>
+<p>一、概述 </p>
+<p>二、装饰模式的结构 </p>
+<p>三、具体案列 </p>
+<p>四、装饰模式与类继承的区别 </p>
+<p>五、装饰模式的特点： </p>
+<p>六、装饰模式、适配器模式、代理模式区别</p>
+<p><strong>一、概述</strong></p>
+<p>1.装饰模式(Decorator)的定义：又名包装(Wrapper)模式，装饰模式以对客户端透明的方式扩展对象的功能，是继承关系的一个替代方案。 </p>
+<p>2.装饰模式以对客户端透明的方式动态的给一个对象附加上更多的责任。换言之客户端并不会觉的对象在装饰前和装饰后有什么区别。 </p>
+<p>3.装饰模式可以在不创造更多的子类的模式下，将对象的功能加以扩展。</p>
+<p><strong>二、装饰模式的结构</strong></p>
+<p>　　装饰模式的类图如下：</p>
+<p><img src="A:\gitdir\学习资料\java\设计模式\img\8.png"></p>
+<p>在装饰模式中的角色有： </p>
+<p>●抽象构件(Component)角色：给出一个抽象接口，以规范准备接收附加责任的对象。 </p>
+<p>●具体构件(ConcreteComponent)角色：定义一个将要接收附加责任的类。 </p>
+<p>●装饰(Decorator)角色：持有一个构件(Component)对象的实例，并定义一个与抽象构件接口一致的接口。 </p>
+<p>●具体装饰(ConcreteDecorator)角色：负责给构件对象“贴上”附加的责任。</p>
+<p>源代码</p>
+<p>抽象构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteComponent</span> <span class="keyword">implements</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>装饰角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Decorator</span> <span class="keyword">implements</span> <span class="title">Component</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Component component;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Decorator</span><span class="params">(Component component)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.component = component;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 委派给构件        </span></span><br><span class="line">    component.sampleOperation();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体装饰角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecoratorA</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecoratorA</span><span class="params">(Component component)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">　　　　　<span class="keyword">super</span>.sampleOperation();</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecoratorB</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecoratorB</span><span class="params">(Component component)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(component);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sampleOperation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">　　　　  <span class="keyword">super</span>.sampleOperation();</span><br><span class="line">        <span class="comment">// 写相关的业务代码    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>三、具体案列</strong></p>
+<p>本例中 抽象构建角色由Programmer程序员接口扮演<br>具体构件角色由类汤高扮演  他实现了程序员具有的功能<br>装饰构件由 类Derector扮演 它必须也实现抽象构件接口<br>具体装饰构件角色由 类Hacker(黑客) 和类 SoftwareAchitect(架构师)扮演<br>具体程序员汤高有编程能力,上帝可以给他赋予更多能力 每赋予一种能力,他就多一个技能 这是通过装饰构件实现的</p>
+<p>抽象构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 抽象构件角色</span></span><br><span class="line"><span class="comment"> *  程序员接口   程序员具有编程的能力</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Programmer</span> </span>&#123;</span><br><span class="line">    <span class="comment">//编程</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体构件角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 具体构件角色  </span></span><br><span class="line"><span class="comment"> *  汤高是一个具体的程序员  </span></span><br><span class="line"><span class="comment"> * 那么他就具有编程能力</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 汤高 <span class="keyword">implements</span> <span class="title">Programmer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;我是一个程序员, 我能编程&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>装饰角色</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 装饰角色</span></span><br><span class="line"><span class="comment"> *  </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Derector</span> <span class="keyword">implements</span> <span class="title">Programmer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Programmer programmer;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Derector</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.programmer = programmer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        programmer.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体装饰角色1</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 　具体装饰角色  </span></span><br><span class="line"><span class="comment"> *  黑客类   他具有附加的功能  他能入侵别人的电脑</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hacker</span> <span class="keyword">extends</span> <span class="title">Derector</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hacker</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(programmer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;我具有黑客的技能   我能入侵别人的电脑&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体装饰角色2</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 　具体装饰角色  </span></span><br><span class="line"><span class="comment"> *  软件架构师类   他具有附加的功能  能设计总个网站或系统的骨</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Administrator</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SoftwareArchitect</span> <span class="keyword">extends</span> <span class="title">Derector</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SoftwareArchitect</span><span class="params">(Programmer programmer)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(programmer);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">programme</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.programme();</span><br><span class="line">        <span class="comment">//附加的责任或者功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;我具有架构师的技能  我能设计总个网站或系统的骨架&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//创建构件对象   汤高 -&gt;他是一个具体的程序员 </span></span><br><span class="line">        <span class="comment">//但是现在他只有编程能力  那怎么行</span></span><br><span class="line">        <span class="comment">//必须赋予他更大的能力  不然怎么赚大钱!</span></span><br><span class="line">        <span class="comment">//所以 上帝给他装饰了一番  瞬间提神了他的B格</span></span><br><span class="line">        Programmer programmer=<span class="keyword">new</span> 汤高();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//装饰类登场  屌丝  我来装饰你  让你具有更大的能力 </span></span><br><span class="line">        Derector hacker=<span class="keyword">new</span> Hacker(programmer);</span><br><span class="line">        <span class="comment">//这下汤高这个屌丝程序员就具有黑客的技能包了</span></span><br><span class="line">        <span class="comment">//这下就没有谁敢叫他屌丝了吧  哈哈  不然分分钟让你电脑崩溃</span></span><br><span class="line">        System.out.println(<span class="string">&quot;第一次装饰&quot;</span>);</span><br><span class="line">        hacker.programme();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//程序员还不满足  他还要更多的技能  因为他要逆袭</span></span><br><span class="line">        <span class="comment">//所以上帝再给他装饰了一下 </span></span><br><span class="line">        <span class="comment">//在他具有黑客技能的基础上另外赋予了他架构师的功能</span></span><br><span class="line">        System.out.println(<span class="string">&quot;--------------第二次装饰&quot;</span>);</span><br><span class="line">        Derector  achitect=<span class="keyword">new</span> SoftwareArchitect(hacker);</span><br><span class="line"></span><br><span class="line">        achitect.programme();</span><br><span class="line">        <span class="comment">//也可以一步装饰两个技能 因为他们有共同的父类抽象构件接口 Programmer</span></span><br><span class="line">        System.out.println(<span class="string">&quot;------------一步装饰两个技能&quot;</span>);</span><br><span class="line">        Derector achitect1=<span class="keyword">new</span> SoftwareArchitect(   <span class="keyword">new</span>  Hacker(<span class="keyword">new</span> 汤高() ) );</span><br><span class="line">        achitect1.programme();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果： </p>
+<p>第一次装饰 </p>
+<p>我是一个程序员, 我能编程 </p>
+<p>我具有黑客的技能 我能入侵别人的电脑 </p>
+<p>————–第二次装饰 </p>
+<p>我是一个程序员, 我能编程 </p>
+<p>我具有黑客的技能 我能入侵别人的电脑 </p>
+<p>我具有架构师的技能 我能设计总个网站或系统的骨架 </p>
+<p>————一步装饰两个技能 </p>
+<p>我是一个程序员, 我能编程 </p>
+<p>我具有黑客的技能 我能入侵别人的电脑 </p>
+<p>我具有架构师的技能 我能设计总个网站或系统的骨架</p>
+<p><strong>四、装饰模式与类继承的区别</strong></p>
+<p>1)装饰模式是一种动态行为，对已经存在类进行随意组合，而类的继承是一种静态的行为，一个类定义成什么样的，该类的对象便具有什么样的功能，无法动态的改变。</p>
+<p>2)装饰模式扩展的是对象的功能，不需要增加类的数量，而类继承扩展是类的功能，在继承的关系中，如果我们想增加一个对象的功能，我们只能通过继承关系，在子类中增加方法。</p>
+<p>3)装饰模式是在不改变原类文件和使用继承的情况下，动态的扩展一个对象的功能，它是通过创建一个包装对象，也就是装饰来包裹真是的对象。</p>
+<p><strong>五、装饰模式的特点：</strong></p>
+<p>1)装饰对象和真实对象具有相同的接口，这样客户端对象就可以以真实对象的相同的方式和装饰对象交互。 </p>
+<p>2)装饰对象包含一个真实对象的引用(reference). </p>
+<p>3)装饰对象接受所有来自客户端的请求，它把这些请求转发给真实的对象。 </p>
+<p>4)装饰对象可以在转发这些请求以前或者以后增加一些附加的功能。这样就能确保在运行时，不用修改给定对象结构就可以在外部增加附加的功能。在面向对象的程序设计中，通常是使用继承的关系来扩展给定类的功能。</p>
+<p><strong>六、装饰模式、适配器模式、代理模式区别</strong></p>
+<p>适配器模式，一个适配允许通常因为接口不兼容而不能在一起工作的类工作在一起，做法是将类自己的接口包裹在一个已存在的类中。</p>
+<p>装饰器模式，原有的不能满足现有的需求，对原有的进行增强。 </p>
+<p>代理模式，同一个类而去调用另一个类的方法，不对这个方法进行直接操作。</p>
+<p>适配器的特点在于兼容，从代码上的特点来说，适配类与原有的类具有相同的接口，并且持有新的目标对象。</p>
+<p>就如同一个三孔转2孔的适配器一样，他有三孔的插头，可以插到三孔插座里，又有两孔的插座可以被2孔插头插入。</p>
+<p>适配器模式是在于对原有3孔的改造。</p>
+<p>在使用适配器模式的时候，我们必须同时持有原对象，适配对象，目标对象。。。。</p>
+<p>装饰器模式特点在于增强，他的特点是被装饰类和所有的装饰类必须实现同一个接口，而且必须持有被装饰的对象，可以无限装饰。</p>
+<p>代理模式的特点在于隔离，隔离调用类和被调用类的关系，通过一个代理类去调用。</p>
+<p>总的来说就是如下三句话： </p>
+<p>1 适配器模式是将一个类通过某种方式转换成另一个类.</p>
+<p>3 代理模式是将一个类转换成具体的操作类.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/CAS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/CAS/" class="post-title-link" itemprop="url">CAS原理以及CAS带来的三大问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:28:53" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="CAS原理以及CAS带来的三大问题"><a href="#CAS原理以及CAS带来的三大问题" class="headerlink" title="CAS原理以及CAS带来的三大问题"></a>CAS原理以及CAS带来的三大问题</h1><ol>
+<li><p>CAS是什么？</p>
+</li>
+<li><p>CAS带来的三大问题</p>
+<ul>
+<li><p>ABA问题</p>
+</li>
+<li><p>循环时间长开销大</p>
+</li>
+<li><p>只能保证一个共享变量的原子操作</p>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-CAS是什么？"><a href="#1-CAS是什么？" class="headerlink" title="1. CAS是什么？"></a>1. CAS是什么？</h3><p><strong>CAS</strong>：Compare and Swap，即比较再交换。</p>
+<p><strong>CAS算法理解</strong>：CAS是一种无锁算法，CAS有3个操作数，内存值V，旧的预期值A，要修改的新值B。当且仅当预期值A和内存值V相同时，将内存值V修改为B，否则什么都不做。</p>
+<h3 id="2-CAS带来的三大问题"><a href="#2-CAS带来的三大问题" class="headerlink" title="2. CAS带来的三大问题"></a>2. CAS带来的三大问题</h3><p>1.ABA问题<br> 因为CAS需要在操作值的时候，检查值有没有发生变化，如果没有发生变化则更新，但是如果一个值原来是A，变成了B，又变成了A，那么CAS进行检查的时候发现它的值没有发生变化，但是实际上却变化了。ABA问题的解决思路就是使用版本号。在变量前面加上版本号，每次变量更新的时候把版本号加1，那么A-&gt;B-&gt;A就会变成1A-&gt;2B-&gt;3A。从Java 1.5开始，JDK的Atomic包里提供了一个类AtomicStampedReference来解决ABA问题。这个类的compareAndSet方法的作用是首先检查当前引用是否等于预期引用，并且检查当前的标志是否等于预期标志，如果全部相等，则以原子方式将该应用和该标志的值设置为给定的更新值。</p>
+<p>2.循环时间长开销大<br> 自旋CAS如果长时间不成功，会给CPU带来非常大的执行开销，如果JVM能支持处理器提供的pause指令，那么效率会有一定的提升。pause指令有两个作用：第一，它可以延迟流水线执行指令（de-pipeline），使CPU不会消耗过多的执行资源，延迟的时间取决于具体实现的版本，在一些处理器上延迟时间是零；第二，它可以避免在循环的时候因内存顺序冲突（Memory Order Violation）而引起CPU流水线被清空，从而提高CPU的实行效率。</p>
+<p>3.只能保证一个共享变量的原子操作<br> 当对一个共享变量执行操作时，我们可以使用循环CAS的方式来保证原子操作，但是对多个共享变量操作时，循环CAS就无法保证操作的原子性，这个时候可以用锁。还有一个取巧的办法，就是把多个共享变量合并成一个共享变量来操作。比如，有两个共享变量i=2,j=a,合并一下ji=2a,然后用CAS来操作ij。从Java 1.5开始，JDK提供了AtomicReference类来保证引用对象之前的原子性，就可以把多个变量放在一个对象里来进行CAS操作。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8FID%E6%96%B9%E6%A1%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E5%88%86%E5%B8%83%E5%BC%8FID%E6%96%B9%E6%A1%88/" class="post-title-link" itemprop="url">分布式ID方案总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:29:06" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>分布式ID方案总结</strong></p>
+<p>ID是数据的唯一标识，传统的做法是利用UUID和数据库的自增ID，在互联网企业中，大部分公司使用的都是Mysql，并且因为需要事务支持，所以通常会使用Innodb存储引擎，UUID太长以及无序，所以并不适合在Innodb中来作为主键，自增ID比较合适，但是随着公司的业务发展，数据量将越来越大，需要对数据进行分表，而分表后，每个表中的数据都会按自己的节奏进行自增，很有可能出现ID冲突。这时就需要一个单独的机制来负责生成唯一ID，生成出来的ID也可以叫做<strong>分布式ID</strong>，或<strong>全局ID</strong>。下面来分析各个生成分布式ID的机制。</p>
+<p><img src="A:\gitdir\学习资料\java\java框架\spring\img\15.png"></p>
+<h2 id="数据库自增ID"><a href="#数据库自增ID" class="headerlink" title="数据库自增ID"></a>数据库自增ID</h2><p>第一种方案仍然还是基于数据库的自增ID，需要单独使用一个数据库实例，在这个实例中新建一个单独的表：</p>
+<p>表结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE &#96;SEQID&#96;;</span><br><span class="line"></span><br><span class="line">CREATE TABLE SEQID.SEQUENCE_ID (</span><br><span class="line">  id bigint(20) unsigned NOT NULL auto_increment, </span><br><span class="line">  stub char(10) NOT NULL default &#39;&#39;,</span><br><span class="line">  PRIMARY KEY (id),</span><br><span class="line">  UNIQUE KEY stub (stub)</span><br><span class="line">) ENGINE&#x3D;MyISAM;</span><br></pre></td></tr></table></figure>
+
+<p>可以使用下面的语句生成并获取到一个自增ID</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">begin;</span><br><span class="line">replace into SEQUENCE_ID (stub) VALUES (&#39;anyword&#39;);</span><br><span class="line">select last_insert_id();</span><br><span class="line">commit;</span><br></pre></td></tr></table></figure>
+
+<p>stub字段在这里并没有什么特殊的意义，只是为了方便的去插入数据，只有能插入数据才能产生自增id。而对于插入我们用的是replace，replace会先看是否存在stub指定值一样的数据，如果存在则先delete再insert，如果不存在则直接insert。</p>
+<p>这种生成分布式ID的机制，需要一个单独的Mysql实例，虽然可行，但是基于性能与可靠性来考虑的话都不够，<strong>业务系统每次需要一个ID时，都需要请求数据库获取，性能低，并且如果此数据库实例下线了，那么将影响所有的业务系统。</strong></p>
+<p>为了解决数据库可靠性问题，我们可以使用第二种分布式ID生成方案。</p>
+<h2 id="数据库多主模式"><a href="#数据库多主模式" class="headerlink" title="数据库多主模式"></a>数据库多主模式</h2><p>如果我们两个数据库组成一个<strong>主从模式</strong>集群，正常情况下可以解决数据库可靠性问题，但是如果主库挂掉后，数据没有及时同步到从库，这个时候会出现ID重复的现象。我们可以使用<strong>双主模式</strong>集群，也就是两个Mysql实例都能单独的生产自增ID，这样能够提高效率，但是如果不经过其他改造的话，这两个Mysql实例很可能会生成同样的ID。需要单独给每个Mysql实例配置不同的起始值和自增步长。</p>
+<p>第一台Mysql实例配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set @@auto_increment_offset &#x3D; 1;     -- 起始值</span><br><span class="line">set @@auto_increment_increment &#x3D; 2;  -- 步长</span><br></pre></td></tr></table></figure>
+
+<p>第二台Mysql实例配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set @@auto_increment_offset &#x3D; 2;     -- 起始值</span><br><span class="line">set @@auto_increment_increment &#x3D; 2;  -- 步长</span><br></pre></td></tr></table></figure>
+
+<p>过上面的配置后，这两个Mysql实例生成的id序列如下：</p>
+<p>mysql1,起始值为1,步长为2,ID生成的序列为：1,3,5,7,9,…</p>
+<p>mysql2,起始值为2,步长为2,ID生成的序列为：2,4,6,8,10,…</p>
+<p>对于这种生成分布式ID的方案，需要单独新增一个生成分布式ID应用，比如DistributIdService，该应用提供一个接口供业务应用获取ID，业务应用需要一个ID时，通过rpc的方式请求DistributIdService，DistributIdService随机去上面的两个Mysql实例中去获取ID。</p>
+<p>实行这种方案后，就算其中某一台Mysql实例下线了，也不会影响DistributIdService，DistributIdService仍然可以利用另外一台Mysql来生成ID。</p>
+<p>但是这种方案的扩展性不太好，如果两台Mysql实例不够用，需要新增Mysql实例来提高性能时，这时就会比较麻烦。</p>
+<p>现在如果要新增一个实例mysql3，要怎么操作呢？</p>
+<p>第一，mysql1、mysql2的步长肯定都要修改为3，而且只能是人工去修改，这是需要时间的。</p>
+<p>第二，因为mysql1和mysql2是不停在自增的，对于mysql3的起始值我们可能要定得大一点，以给充分的时间去修改mysql1，mysql2的步长。</p>
+<p>第三，在修改步长的时候很可能会出现重复ID，要解决这个问题，可能需要停机才行。</p>
+<p>为了解决上面的问题，以及能够进一步提高DistributIdService的性能，如果使用第三种生成分布式ID机制。</p>
+<h2 id="号段模式"><a href="#号段模式" class="headerlink" title="号段模式"></a>号段模式</h2><p>我们可以使用号段的方式来获取自增ID，号段可以理解成批量获取，比如DistributIdService从数据库获取ID时，如果能批量获取多个ID并缓存在本地的话，那样将大大提供业务应用获取ID的效率。</p>
+<p>比如DistributIdService每次从数据库获取ID时，就获取一个号段，比如(1,1000]，这个范围表示了1000个ID，业务应用在请求DistributIdService提供ID时，DistributIdService只需要在本地从1开始自增并返回即可，而不需要每次都请求数据库，一直到本地自增到1000时，也就是当前号段已经被用完时，才去数据库重新获取下一号段。</p>
+<p>所以，我们需要对数据库表进行改动，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">CREATE TABLE <span class="title">id_generator</span> <span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  id <span class="keyword">int</span>(<span class="number">10</span>)</span> NOT NULL,</span></span><br><span class="line"><span class="function">  current_max_id <span class="title">bigint</span><span class="params">(<span class="number">20</span>)</span> NOT NULL COMMENT &#x27;当前最大id&#x27;,</span></span><br><span class="line"><span class="function">  increment_step <span class="title">int</span><span class="params">(<span class="number">10</span>)</span> NOT NULL COMMENT &#x27;号段的长度&#x27;,</span></span><br><span class="line"><span class="function">  PRIMARY <span class="title">KEY</span> <span class="params">(`id`)</span></span></span><br><span class="line"><span class="function">) ENGINE</span>=InnoDB DEFAULT CHARSET=utf8;</span><br></pre></td></tr></table></figure>
+
+<p>这个数据库表用来记录自增步长以及当前自增ID的最大值（也就是当前已经被申请的号段的最后一个值），因为自增逻辑被移到DistributIdService中去了，所以数据库不需要这部分逻辑了。</p>
+<p>这种方案不再强依赖数据库，就算数据库不可用，那么DistributIdService也能继续支撑一段时间。但是如果DistributIdService重启，会丢失一段ID，导致ID空洞。</p>
+<p>为了提高DistributIdService的高可用，需要做一个集群，业务在请求DistributIdService集群获取ID时，会随机的选择某一个DistributIdService节点进行获取，对每一个DistributIdService节点来说，数据库连接的是同一个数据库，那么可能会产生多个DistributIdService节点同时请求数据库获取号段，那么这个时候需要利用乐观锁来进行控制，比如在数据库表中增加一个version字段，在获取号段时使用如下SQL：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update id_generator set current_max_id=#&#123;newMaxId&#125;, version=version+1 where version = #&#123;version&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为newMaxId是DistributIdService中根据oldMaxId+步长算出来的，只要上面的update更新成功了就表示号段获取成功了。</p>
+<p>为了提供数据库层的高可用，需要对数据库使用多主模式进行部署，对于每个数据库来说要保证生成的号段不重复，这就需要利用最开始的思路，再在刚刚的数据库表中增加起始值和步长，比如如果现在是两台Mysql，那么</p>
+<p>mysql1将生成号段（1,1001]，自增的时候序列为1，3，4，5，7….</p>
+<p>mysql1将生成号段（2,1002]，自增的时候序列为2，4，6，8，10…</p>
+<h2 id="雪花算法"><a href="#雪花算法" class="headerlink" title="雪花算法"></a>雪花算法</h2><p>上面的三种方法总的来说是基于自增思想的，而接下来就介绍比较著名的雪花算法-snowflake。</p>
+<p>我们可以换个角度来对分布式ID进行思考，只要能让负责生成分布式ID的每台机器在每毫秒内生成不一样的ID就行了。</p>
+<p>snowflake是twitter开源的分布式ID生成算法，是一种算法，所以它和上面的三种生成分布式ID机制不太一样，它不依赖数据库。</p>
+<p>核心思想是：分布式ID固定是一个long型的数字，一个long型占8个字节，也就是64个bit，原始snowflake算法中对于bit的分配如下图：</p>
+<p><img src="A:\gitdir\学习资料\java\java框架\spring\img\16.png"></p>
+<ul>
+<li><p>第一个bit位是标识部分，在java中由于long的最高位是符号位，正数是0，负数是1，一般生成的ID为正数，所以固定为0。</p>
+</li>
+<li><p>时间戳部分占41bit，这个是毫秒级的时间，一般实现上不会存储当前的时间戳，而是时间戳的差值（当前时间-固定的开始时间），这样可以使产生的ID从更小值开始；41位的时间戳可以使用69年，(1L &lt;&lt; 41) / (1000L * 60 * 60 * 24 * 365) = 69年</p>
+</li>
+<li><p>工作机器id占10bit，这里比较灵活，比如，可以使用前5位作为数据中心机房标识，后5位作为单机房机器标识，可以部署1024个节点。</p>
+</li>
+<li><p>序列号部分占12bit，支持同一毫秒内同一个节点可以生成4096个ID</p>
+</li>
+</ul>
+<p>根据这个算法的逻辑，只需要将这个算法用Java语言实现出来，封装为一个工具方法，那么各个业务应用可以直接使用该工具方法来获取分布式ID，只需保证每个业务应用有自己的工作机器id即可，而不需要单独去搭建一个获取分布式ID的应用。</p>
+<p>snowflake算法实现起来并不难，提供一个github上用java实现的：<a target="_blank" rel="noopener" href="https://github.com/beyondfengyu/SnowFlake">https://github.com/beyondfengyu/SnowFlake</a></p>
+<p>在大厂里，其实并没有直接使用snowflake，而是进行了改造，因为snowflake算法中最难实践的就是工作机器id，原始的snowflake算法需要人工去为每台机器去指定一个机器id，并配置在某个地方从而让snowflake从此处获取机器id。</p>
+<p>但是在大厂里，机器是很多的，人力成本太大且容易出错，所以大厂对snowflake进行了改造。</p>
+<h3 id="百度（uid-generator）"><a href="#百度（uid-generator）" class="headerlink" title="百度（uid-generator）"></a>百度（uid-generator）</h3><p>github地址：<a target="_blank" rel="noopener" href="https://github.com/baidu/uid-generator">uid-generator</a></p>
+<p>uid-generator使用的就是snowflake，只是在生产机器id，也叫做workId时有所不同。</p>
+<p>uid-generator中的workId是由uid-generator自动生成的，并且考虑到了应用部署在docker上的情况，在uid-generator中用户可以自己去定义workId的生成策略，默认提供的策略是：应用启动时由数据库分配。说的简单一点就是：应用在启动时会往数据库表(uid-generator需要新增一个WORKER_NODE表)中去插入一条数据，数据插入成功后返回的该数据对应的自增唯一id就是该机器的workId，而数据由host，port组成。</p>
+<p>对于uid-generator中的workId，占用了22个bit位，时间占用了28个bit位，序列化占用了13个bit位，需要注意的是，和原始的snowflake不太一样，时间的单位是秒，而不是毫秒，workId也不一样，同一个应用每重启一次就会消费一个workId。</p>
+<p>具体可参考<a target="_blank" rel="noopener" href="https://github.com/baidu/uid-generator/blob/master/README.zh_cn.md">https://github.com/baidu/uid-generator/blob/master/README.zh_cn.md</a></p>
+<h3 id="美团（Leaf）"><a href="#美团（Leaf）" class="headerlink" title="美团（Leaf）"></a>美团（Leaf）</h3><p>美团的Leaf也是一个分布式ID生成框架。它非常全面，即支持号段模式，也支持snowflake模式。号段模式这里就不介绍了，和上面的分析类似。</p>
+<p>Leaf中的snowflake模式和原始snowflake算法的不同点，也主要在workId的生成，Leaf中workId是基于ZooKeeper的顺序Id来生成的，每个应用在使用Leaf-snowflake时，在启动时都会都在Zookeeper中生成一个顺序Id，相当于一台机器对应一个顺序节点，也就是一个workId。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>总得来说，上面两种都是自动生成workId，以让系统更加稳定以及减少人工成功。</p>
+<h2 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h2><p>这里额外再介绍一下使用Redis来生成分布式ID，其实和利用Mysql自增ID类似，可以利用Redis中的incr命令来实现原子性的自增与返回，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set seq_id 1     &#x2F;&#x2F; 初始化自增ID为1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; incr seq_id      &#x2F;&#x2F; 增加1，并返回</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; incr seq_id      &#x2F;&#x2F; 增加1，并返回</span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure>
+
+<p>使用redis的效率是非常高的，但是要考虑持久化的问题。Redis支持RDB和AOF两种持久化的方式。</p>
+<p>RDB持久化相当于定时打一个快照进行持久化，如果打完快照后，连续自增了几次，还没来得及做下一次快照持久化，这个时候Redis挂掉了，重启Redis后会出现ID重复。</p>
+<p>AOF持久化相当于对每条写命令进行持久化，如果Redis挂掉了，不会出现ID重复的现象，但是会由于incr命令过得，导致重启恢复数据时间过长。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">雪花算法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:29:13" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E9%AB%98%E5%B9%B6%E5%8F%91%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">高并发分布式</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><p>SnowFlake算法生成id的结果是一个64bit大小的整数，它的结构如下图：</p>
+<p><img src="img%5C1.png"></p>
+<ol>
+<li><strong>1bit</strong>，不用，因为二进制中最高位是符号位，1表示负数，0表示正数。生成的id一般都是用整数，所以最高位固定为0。</li>
+<li><strong>41bit-时间戳</strong>，用来记录时间戳，毫秒级。<br> - 41位可以表示<img src="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1" alt="2^{41}-1">个数字，<br> - 如果只用来表示正整数（计算机中正数包含0），可以表示的数值范围是：0 至 <img src="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1" alt="2^{41}-1">，减1是因为可表示的数值范围是从0开始算的，而不是1。<br> - 也就是说41位可以表示<img src="https://math.jianshu.com/math?formula=2%5E%7B41%7D-1" alt="2^{41}-1">个毫秒的值，转化成单位年则是<img src="https://math.jianshu.com/math?formula=(2%5E%7B41%7D-1)%20/%20(1000%20*%2060%20*%2060%20*%2024%20*365)%20=%2069" alt="(2^{41}-1) / (1000 * 60 * 60 * 24 *365) = 69">年</li>
+<li><strong>10bit-工作机器id</strong>，用来记录工作机器id。<br> - 可以部署在<img src="https://math.jianshu.com/math?formula=2%5E%7B10%7D%20=%201024" alt="2^{10} = 1024">个节点，包括5位datacenterId和5位workerId<br> - 5位（bit）可以表示的最大正整数是<img src="https://math.jianshu.com/math?formula=2%5E%7B5%7D-1%20=%2031" alt="2^{5}-1 = 31">，即可以用0、1、2、3、….31这32个数字，来表示不同的datecenterId或workerId</li>
+<li><strong>12bit-序列号</strong>，序列号，用来记录同毫秒内产生的不同id。<br> -  12位（bit）可以表示的最大正整数是<img src="https://math.jianshu.com/math?formula=2%5E%7B12%7D-1%20=%204095" alt="2^{12}-1 = 4095">，即可以用0、1、2、3、….4094这4095个数字，来表示同一机器同一时间截（毫秒)内产生的4095个ID序号。</li>
+</ol>
+<p><strong>SnowFlake可以保证：</strong></p>
+<blockquote>
+<ol>
+<li>所有生成的id按时间趋势递增</li>
+<li>整个分布式系统内不会产生重复id（因为有datacenterId和workerId来做区分）</li>
+</ol>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -353,20 +1485,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/nanchenkunkun.github.io/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/nanchenkunkun.github.io/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/nanchenkunkun.github.io/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
