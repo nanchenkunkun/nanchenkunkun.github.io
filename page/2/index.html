@@ -128,7 +128,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a>
+    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">33</span></a>
 
   </li>
   </ul>
@@ -154,6 +154,225 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/Bitmap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/Bitmap/" class="post-title-link" itemprop="url">BitMap</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-08 11:28:53 / 修改时间：11:31:25" itemprop="dateCreated datePublished" datetime="2020-09-08T11:28:53+08:00">2020-09-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h5 id="1、BitMap是什么"><a href="#1、BitMap是什么" class="headerlink" title="1、BitMap是什么"></a>1、BitMap是什么</h5><p>​    就是通过一个bit位来表示某个元素对应的值或者状态,其中的key就是对应元素本身。我们知道8个bit可以组成一个Byte，所以bitmap本身会极大的节省储存空间。</p>
+<p><strong>2、Redis中的BitMap</strong></p>
+<p>Redis从2.2.0版本开始新增了<code>setbit</code>,<code>getbit</code>,<code>bitcount</code>等几个bitmap相关命令。虽然是新命令，但是并没有新增新的数据类型，因为<code>setbit</code>等命令只不过是在<code>set</code>上的扩展。</p>
+<p>3、<strong>setbit命令介绍</strong></p>
+<p>指令 <code>SETBIT key offset value</code><br>设置或者清空key的value(字符串)在offset处的bit值(只能只0或者1)。</p>
+<p><strong>4、使用场景一：用户签到</strong></p>
+<p>很多网站都提供了签到功能(这里不考虑数据落地事宜)，并且需要展示最近一个月的签到情况，如果使用bitmap我们怎么做？一言不合亮代码！<br>根据日期 offset =hash % 365  ； key = 年份#用户id</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit 2020#zkk 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit 2020#zkk 2 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitcount 2020#zkk</span><br><span class="line">(integer) 2</span><br></pre></td></tr></table></figure>
+
+<p><strong>6、使用场景二：统计活跃用户</strong></p>
+<p>使用时间作为cacheKey，然后用户ID为offset，如果当日活跃过就设置为1<br>那么我该如果计算某几天/月/年的活跃用户呢(暂且约定，统计时间内只有有一天在线就称为活跃)，有请下一个redis的命令<br>命令 <code>BITOP operation destkey key [key ...]</code><br>说明：对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上。<br>说明：BITOP 命令支持 AND 、 OR 、 NOT 、 XOR 这四种操作中的任意一种参数</p>
+<p>20190216 活跃用户 【1，2】<br>20190217 活跃用户 【1】<br>统计20190216~20190217 总活跃用户数: 1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit 20190216 1 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; setbit 20190216 2 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; setbit 20190217 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitop and desk1 20190216 20190217</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bitcount desk1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bitop or desk2 20190216 20190217</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bitcount desk2</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>7、使用场景三：用户在线状态</strong></p>
+<p>开发一个查询当前用户是否在线的接口。使用bitmap是一个节约空间效率又高的一种方法，只需要一个key，然后用户ID为offset，如果在线就设置为1，不在线就设置为0，和上面的场景一样，5000W用户只需要6MB的空间。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%9B%9B%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%9B%9B%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1/" class="post-title-link" itemprop="url">多线程通信</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-02 10:40:53 / 修改时间：10:42:55" itemprop="dateCreated datePublished" datetime="2020-09-02T10:40:53+08:00">2020-09-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="多线程通信"><a href="#多线程通信" class="headerlink" title="多线程通信"></a>多线程通信</h1><p>​        经典的生产者-消费者模型：当队列满时，生产者需要等待队列有空间才能继续往里面放入商品，而<strong>在等待的期间内，生产者必须释放对临界资源（即队列）的占用权</strong>。因为生产者如果不释放对临界资源的占用权，那么<strong>消费者就无法消费队列中的商品</strong>，就不会让队列有空间，那么生产者就会一直无限等待下去。因此，一般情况下，当队列满时，会让生产者交出对临界资源的占用权，并进入挂起状态。然后等待消费者消费了商品，然后消费者通知生产者队列有空间了。同样地，当队列空时，消费者也必须等待，等待生产者通知它队列中有商品了。这种互相通信的过程就是线程间的协作。</p>
+<p>　　Java中线程通信协作的最常见的两种方式：</p>
+<p>　　一.syncrhoized加锁的线程的<strong>Object类</strong>的wait()/notify()/notifyAll()</p>
+<p>　　二.ReentrantLock类加锁的线程的<strong>Condition类的</strong>await()/signal()/signalAll()</p>
+<h3 id="一-syncrhoized加锁的线程的Object类的wait-notify-notifyAll"><a href="#一-syncrhoized加锁的线程的Object类的wait-notify-notifyAll" class="headerlink" title="一.syncrhoized加锁的线程的Object类的wait()/notify()/notifyAll()"></a>一.syncrhoized加锁的线程的<strong>Object类</strong>的wait()/notify()/notifyAll()</h3><p>wait()、notify()和notifyAll()是Object类中的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Wakes up a single thread that is waiting on this object&#x27;s</span></span><br><span class="line"><span class="comment"> * monitor. If any threads are waiting on this object, one of them</span></span><br><span class="line"><span class="comment"> * is chosen to be awakened. The choice is arbitrary and occurs at</span></span><br><span class="line"><span class="comment"> * the discretion of the implementation. A thread waits on an object&#x27;s</span></span><br><span class="line"><span class="comment"> * monitor by calling one of the wait methods</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Wakes up all threads that are waiting on this object&#x27;s monitor. A</span></span><br><span class="line"><span class="comment"> * thread waits on an object&#x27;s monitor by calling one of the</span></span><br><span class="line"><span class="comment"> * wait methods.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Causes the current thread to wait until either another thread invokes the</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> java.lang.Object#notify()&#125; method or the</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> java.lang.Object#notifyAll()&#125; method for this object, or a</span></span><br><span class="line"><span class="comment"> * specified amount of time has elapsed.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * The current thread must own this object&#x27;s monitor.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>从这三个方法的文字描述可以知道以下几点信息：</p>
+<p>　　1）wait()、notify()和notifyAll()方法是<strong>本地方法</strong>，并且为<strong>final方法，无法被重写。</strong></p>
+<p>　　2）调用<strong>某个对象的wait()方法</strong>能让当<strong>前线程阻塞</strong>，并且<strong>当前线程必须拥有此对象的monitor（即锁）</strong></p>
+<p>　　3）调用<strong>某个对象的notify()方法</strong>能够<strong>唤醒一个正在等待这个对象的monitor的线程</strong>，如果有多个线程都在等待这个对象的monitor，则<strong>只能唤醒其中一个线程</strong>；</p>
+<p>　　4）调用notifyAll()方法能够<strong>唤醒所有正在等待这个对象的monitor的线程</strong>；</p>
+<p>　　有朋友可能会有疑问：<strong>为何这三个不是Thread类声明中的方法，而是Object类中声明的方法</strong>（当然由于Thread类继承了Object类，所以Thread也可以调用者三个方法）？其实这个问题很简单，<strong>由于每个对象都拥有monitor（即锁）</strong>，所以让当前线程等待某个对象的锁，当然应该通过这个对象来操作了。而不是用当前线程来操作，因为<strong>当前线程可能会等待多个线程的锁</strong>，如果通过线程来操作，就非常复杂了。</p>
+<p>　　上面已经提到，如果<strong>调用某个对象的wait()方法，当前线程必须拥有这个对象的monitor（即锁）</strong>，<strong>因此调用wait()方法必须在同步块或者同步方法中进行（synchronized块或者synchronized方法）</strong>。<strong>如果当前线程没有这个对象的锁就调用wait（）方法，则会抛出IllegalMonitorStateException.</strong></p>
+<p>　　 <strong>调用某个对象的wait()方法，相当于让当前线程交出（释放）此对象的monitor，然后进入等待状态</strong>，等待后续再次获得此对象的锁（Thread类中的<strong>sleep方法使当前线程暂停执行一段时间，从而让其他线程有机会继续执行，但它并不释放对象锁</strong>）；　　</p>
+<p>　　notify()方法能够唤醒一个正在等待该对象的monitor的线程，当有多个线程都在等待该对象的monitor的话，则只能唤醒其中一个线程，具体唤醒哪个线程则不得而知。 同样地，<strong>调用某个对象的notify()方法，当前线程也必须拥有这个对象的monitor</strong>，因此调用notify()方法必须在同步块或者同步方法中进行（synchronized块或者synchronized方法）。</p>
+<p>​        nofityAll()方法能够唤醒所有正在等待该对象的monitor的线程，这一点与notify()方法是不同的。</p>
+<p>　　这里要注意一点：<strong>notify()和notifyAll()方法只是唤醒等待该对象的monitor的线程，并不决定哪个线程能够获取到monitor。</strong></p>
+<p> 　　举个简单的例子：假如有三个线程Thread1、Thread2和Thread3都在等待对象objectA的monitor，此时Thread4拥有对象objectA的monitor，当在Thread4中调用objectA.notify()方法之后，Thread1、Thread2和Thread3只有一个能被唤醒。注意，被唤醒不等于立刻就获取了objectA的monitor。假若在<strong>Thread4中调用objectA.notifyAll()方法，则Thread1、Thread2和Thread3三个线程都会被唤醒</strong>，<strong>至于哪个线程接下来能够获取到objectA的monitor就具体依赖于操作系统的调度了</strong>。</p>
+<p>　　上面尤其要注意一点，一个线程被唤醒不代表立即获取了对象的monitor，只有等调用完notify()或者notifyAll()并退出synchronized块，<strong>释放对象锁后，其余线程才可获得锁执行</strong>。</p>
+<h3 id="一个生产者一个消费者"><a href="#一个生产者一个消费者" class="headerlink" title="一个生产者一个消费者"></a>一个生产者一个消费者</h3><p>一个对象，作为锁（利用该对象的monitor）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jp.oneone;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String value = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>生产者：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jp.oneone;</span><br><span class="line"></span><br><span class="line"><span class="comment">//生产者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">P</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String lock;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">P</span><span class="params">(String lock)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">synchronized</span> (lock) &#123; <span class="comment">//当前线程必须获得锁才可以进行下面的操作</span></span><br><span class="line">                    <span class="keyword">if</span> (!ValueObject.value.equals(<span class="string">&quot;&quot;</span>)) &#123;<span class="comment">//如果Value不为空，说明字符串还没被消费，所以调用wait方法，把当前线程（生成线程）阻塞</span></span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125;</span><br><span class="line">                    String value = System.currentTimeMillis() + <span class="string">&quot;_&quot;</span></span><br><span class="line">                            + System.nanoTime();</span><br><span class="line">                    System.out.println(<span class="string">&quot;set的值是&quot;</span> + value);</span><br><span class="line">                    ValueObject.value = value;<span class="comment">//为空的话，则生成</span></span><br><span class="line">                    lock.notify();<span class="comment">//生成完就唤醒等待该对象锁的线程，（这里只有一个消费者等这个锁，所以就是唤醒的它）</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>消费者：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jp.oneone;</span><br><span class="line"></span><br><span class="line"><span class="comment">//消费者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String lock;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">C</span><span class="params">(String lock)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (ValueObject.value.equals(<span class="string">&quot;&quot;</span>)) &#123;<span class="comment">//如果字符串为空，即被消费完了，所以wait等待。</span></span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(<span class="string">&quot;get的值是&quot;</span> + ValueObject.value);</span><br><span class="line">                    ValueObject.value = <span class="string">&quot;&quot;</span>;</span><br><span class="line">                    lock.notify();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.jp.oneone;</span><br><span class="line"></span><br><span class="line">public class Run &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        String lock &#x3D; new String(&quot;&quot;);</span><br><span class="line">        P p &#x3D; new P(lock);</span><br><span class="line">        C r &#x3D; new C(lock);</span><br><span class="line"></span><br><span class="line">        p.start();</span><br><span class="line">        r.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="多个生产者多个消费者"><a href="#多个生产者多个消费者" class="headerlink" title="多个生产者多个消费者"></a>多个生产者多个消费者</h3><p>实现和上面1对1基本一样，只是在测试代码中，多new几个生产者，几个消费者。</p>
+<p>只需注意一个问题：假死</p>
+<p>问题描述：所有线程都被wait，这个项目就停止运行了。</p>
+<p>问题原因：代码中使用wait/notify进行通信，不能保证notify唤醒的是异类（生产者唤醒消费者还是生产者），比如生产者唤醒生产者，消费者唤醒消费者，就可能导致都在等待的状态。</p>
+<p>问题解决：其实很简单，就是唤醒的时候同类异类都唤醒，<strong>把notify()改为natifyAll()就解决了。</strong></p>
+<h2 id="二-ReentrantLock类加锁的线程的Condition类的"><a href="#二-ReentrantLock类加锁的线程的Condition类的" class="headerlink" title="二.ReentrantLock类加锁的线程的Condition类的"></a>二.ReentrantLock类加锁的线程的<strong>Condition类的</strong></h2><h2 id="await-signal-signalAll"><a href="#await-signal-signalAll" class="headerlink" title="await()/signal()/signalAll()"></a>await()/signal()/signalAll()</h2><p>　　Condition是在java 1.5中才出现的，它用来替代传统的Object的wait()、notify()实现线程间的协作，相比使用Object的wait()、notify()，使用Condition1的await()、signal()这种方式实现线程间协作更加安全和高效。因此通常来说比较推荐使用Condition，在阻塞队列那一篇博文中就讲述到了，阻塞队列实际上是使用了Condition来模拟线程间协作。</p>
+<ul>
+<li>Condition是个接口，基本的方法就是await()和signal()方法；</li>
+<li>Condition依赖于Lock接口，生成一个Condition的基本代码是lock.newCondition() </li>
+<li>调用Condition的await()和signal()方法，都必须在lock保护之内，就是说必须在lock.lock()和lock.unlock之间才可以使用</li>
+</ul>
+<p>　　Conditon中的await()对应Object的wait()；</p>
+<p>　　Condition中的signal()对应Object的notify()；</p>
+<p>　　Condition中的signalAll()对应Object的notifyAll()。</p>
+<h3 id="一个生产者一个消费者-1"><a href="#一个生产者一个消费者-1" class="headerlink" title="一个生产者一个消费者"></a>一个生产者一个消费者</h3><p> 这个例子用了《Java多线程编程核心技术》中的方式，把生产者和消费者的方法写到一个类中，与生成线程和消费线程分开，感觉更高大上，当然上面的例子也可以写成这种方式。</p>
+<p>含有生成者消费者的类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> oneone;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Condition;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();<span class="comment">//拿到可重入锁，相当于synchronized的作用</span></span><br><span class="line">    <span class="keyword">private</span> Condition condition = lock.newCondition();<span class="comment">//调用await和signal方法的对象，相当于Object对象（任意对象）的的wait和notify方法</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> hasValue = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//生产者</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();<span class="comment">//获得锁</span></span><br><span class="line">            <span class="keyword">while</span> (hasValue == <span class="keyword">true</span>) &#123;</span><br><span class="line">                condition.await(); <span class="comment">//没被消费则阻塞该生产线程，当然也释放了锁，进入等锁的队列</span></span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;打印★&quot;</span>);</span><br><span class="line">            hasValue = <span class="keyword">true</span>;</span><br><span class="line">            condition.signal();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//消费者</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();</span><br><span class="line">            <span class="keyword">while</span> (hasValue == <span class="keyword">false</span>) &#123;</span><br><span class="line">                condition.await();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;打印☆&quot;</span>);</span><br><span class="line">            hasValue = <span class="keyword">false</span>;</span><br><span class="line">            condition.signal();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应生成者的线程类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package oneone;</span><br><span class="line"></span><br><span class="line">public class MyThreadA extends Thread &#123;</span><br><span class="line"></span><br><span class="line">    private MyService myService;</span><br><span class="line"></span><br><span class="line">    public MyThreadA(MyService myService) &#123;</span><br><span class="line">        super();</span><br><span class="line">        this.myService &#x3D; myService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int i &#x3D; 0; i &lt; Integer.MAX_VALUE; i++) &#123;</span><br><span class="line">            myService.set();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应消费者的线程类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package oneone;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class MyThreadB extends Thread &#123;</span><br><span class="line"></span><br><span class="line">    private MyService myService;</span><br><span class="line"></span><br><span class="line">    public MyThreadB(MyService myService) &#123;</span><br><span class="line">        super();</span><br><span class="line">        this.myService &#x3D; myService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int i &#x3D; 0; i &lt; Integer.MAX_VALUE; i++) &#123;</span><br><span class="line">            myService.get();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package oneone;</span><br><span class="line"></span><br><span class="line">public class Run &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        MyService myService &#x3D; new MyService();</span><br><span class="line"></span><br><span class="line">        MyThreadA a &#x3D; new MyThreadA(myService);</span><br><span class="line">        a.start();</span><br><span class="line"></span><br><span class="line">        MyThreadB b &#x3D; new MyThreadB(myService);</span><br><span class="line">        b.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1372,268 +1591,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/1%E3%80%81%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
-      <meta itemprop="name" content="zkk">
-      <meta itemprop="description" content="只有变光,才能变强">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kkの博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/1%E3%80%81%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">单例模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:49" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><strong>单例模式</strong> </p>
-<h5 id="一、特点："><a href="#一、特点：" class="headerlink" title="一、特点："></a>一、特点：</h5><h5 id="二．分类"><a href="#二．分类" class="headerlink" title="二．分类"></a>二．分类</h5><p>(一)、懒汉式单例 </p>
-<p>(二)、双重检查锁定 </p>
-<p>(三)、静态(类级)内部类 </p>
-<p>(四)、饿汉式单例 </p>
-<p>(五)、单例和枚举 </p>
-<h5 id="三、饿汉式和懒汉式区别"><a href="#三、饿汉式和懒汉式区别" class="headerlink" title="三、饿汉式和懒汉式区别"></a>三、饿汉式和懒汉式区别</h5><p><strong>一、特点：</strong> </p>
-<p>1、单例类只能有一个实例。 </p>
-<p>2、单例类必须自己创建自己的唯一实例。 </p>
-<p>3、单例类必须给所有其他对象提供这一实例。 </p>
-<p>单例模式确保某个类只有一个实例，而且自行实例化并向整个系统提供这个实例。</p>
-<p><strong>二．分类</strong> </p>
-<p><strong>(一)、懒汉式单例</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//懒汉式单例类.在第一次调用的时候实例化自己   </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 构造方法私有化</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton single = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">// 静态工厂方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (single == <span class="keyword">null</span>) &#123;</span><br><span class="line">            single = <span class="keyword">new</span> Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> single;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-
-<p>Singleton通过将构造方法限定为private避免了类在外部被实例化，在同一个虚拟机范围内，Singleton的唯一实例只能通过getInstance()方法访问。 </p>
-<p>（事实上，通过Java反射机制是能够实例化构造方法为private的类的，那基本上会使所有的Java单例实现失效。此问题在此处不做讨论，姑且掩耳盗铃地认为反射机制不存在。） </p>
-<p>但 是以上懒汉式单例的实现没有考虑线程安全问题，它是线程不安全的，并发环境下很可能出现多个Singleton实例，要实现线程安全，有以下三种方式，都 是对getInstance这个方法改造，保证了懒汉式单例的线程安全，如果你第一次接触单例模式，对线程安全不是很了解，可以先跳过下面这三小条，去看 饿汉式单例，等看完后面再回头考虑线程安全的问题：</p>
-<p>1、在getInstance方法上加同步</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static synchronized  Singleton getInstance() &#123;</span><br><span class="line">        if (single &#x3D;&#x3D; null) &#123;</span><br><span class="line">            single &#x3D; new Singleton();</span><br><span class="line">        &#125;</span><br><span class="line">        return single;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>(二)、双重检查锁定</strong> </p>
-<p>可以使用“双重检查加锁”的方式来实现，就可以既实现线程安全，又能够使性能不受很大的影响。那么什么是“双重检查加锁”机制呢？ </p>
-<p>所谓“双重检查加锁”机制，指的是：并不是每次进入getInstance方法都需要同步，而是先不同步，进入方法后，先检查实例是否存在，如 果不存在才进行下面的同步块，这是第一重检查，进入同步块过后，再次检查实例是否存在，如果不存在，就在同步的情况下创建一个实例，这是第二重检查。这样 一来，就只需要同步一次了，从而减少了多次在同步情况下进行判断所浪费的时间。 </p>
-<p>“双重检查加锁”机制的实现会使用关键字volatile，它的意思是：被volatile修饰的变量的值，将不会被本地线程缓存，所有对该变量的读写都是直接操作共享内存，从而确保多个线程能正确的处理该变量。 </p>
-<p>注意：在java1.4及以前版本中，很多JVM对于volatile关键字的实现的问题，会导致“双重检查加锁”的失败，因此“双重检查加锁”机制只只能用在java5及以上的版本。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//先检查实例是否存在，如果不存在才进入下面的同步块</span></span><br><span class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="comment">//同步块，线程安全的创建实例</span></span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="comment">//再次检查实例是否存在，如果不存在才真正的创建实例</span></span><br><span class="line">                <span class="keyword">if</span>(instance == <span class="keyword">null</span>)&#123;</span><br><span class="line">                    instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这种实现方式既可以实现线程安全地创建实例，而又不会对性能造成太大的影响。它只是第一次创建实例的时候同步，以后就不需要同步了，从而加快了运行速度。 </p>
-<p>(摘自网络)提示：由于volatile关键字可能会屏蔽掉虚拟机中一些必要的代码优化，所以运行效率并不是很高。因此一般建议，没有特别的需要，不要使用。也就是说，虽然可以使用“双重检查加锁”机制来实现线程安全的单例，但并不建议大量采用，可以根据情况来选用。</p>
-<p><strong>(三)、静态(类级)内部类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *    类级的内部类，也就是静态的成员式内部类，该内部类的实例与外部类的实例</span></span><br><span class="line"><span class="comment">     *    没有绑定关系，而且只有被调用到时才会装载，从而实现了延迟加载。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span></span>&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 静态初始化器，由JVM来保证线程安全</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> SingletonHolder.instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这种比上面1、2都好一些，既实现了线程安全，又避免了同步带来的性能影响。　当getInstance方法第一次被调用的时候，它第一次读取 SingletonHolder.instance，导致SingletonHolder类得到初始化；而这个类在装载并被初始化的时候，会初始化它的静 态域，从而创建Singleton的实例，由于是静态的域，因此只会在虚拟机装载类的时候初始化一次，并由虚拟机来保证它的线程安全性。 </p>
-<p>这个模式的优势在于，getInstance方法并没有被同步，并且只是执行一个域的访问，因此延迟初始化并没有增加任何访问成本。</p>
-<p><strong>(四)、饿汉式单例</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//饿汉式单例类.在类初始化时，已经自行实例化   </span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">EagerSingleton</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> EagerSingleton instance = <span class="keyword">new</span> EagerSingleton();</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 构造方法私有化</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="title">EagerSingleton</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 静态工厂方法</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> EagerSingleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> instance;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>饿汉式在类创建的同时就已经创建好一个静态的对象供系统使用，以后不再改变，所以天生是线程安全的。</p>
-<p><strong>(五)、单例和枚举</strong> </p>
-<p>用枚举来实现单例非常简单，只需要编写一个包含单个元素的枚举类型即可。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 定义一个枚举的元素，它就代表了Singleton的一个实例。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    uniqueInstance;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 单例可以有自己的操作</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">singletonOperation</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//功能处理</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>　相关测试代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> SingletonEnum &#123;</span><br><span class="line">    INSTANCE01, INSTANCE02;<span class="comment">// 定义枚举的两个类型</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">            SingletonEnum instance01=SingletonEnum.INSTANCE01;</span><br><span class="line">            instance01.setName(<span class="string">&quot;tanggao&quot;</span>);</span><br><span class="line">            System.out.println(instance01.getName());</span><br><span class="line"></span><br><span class="line">            SingletonEnum instance02=SingletonEnum.INSTANCE01;</span><br><span class="line">            System.out.println(instance02.getName());</span><br><span class="line"></span><br><span class="line">            SingletonEnum instance03=SingletonEnum.INSTANCE02;</span><br><span class="line">            instance03.setName(<span class="string">&quot;zsy&quot;</span>);</span><br><span class="line">            System.out.println(instance03.getName());</span><br><span class="line"></span><br><span class="line">            SingletonEnum instance04=SingletonEnum.INSTANCE02;</span><br><span class="line">            instance04.setName(<span class="string">&quot;zsy1&quot;</span>);</span><br><span class="line">            System.out.println(instance04.getName());</span><br><span class="line">            System.out.println(instance03.hashCode()+<span class="string">&quot;\t&quot;</span>+instance04.hashCode());</span><br><span class="line">            System.out.println(instance03==instance04);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果: </p>
-<p>tanggao  tanggao  zsy  zsy1  3346521 3346521  true </p>
-<p>使用枚举来实现单实例控制会更加简洁，而且无偿地提供了序列化机制，并由JVM从根本上提供保障，绝对防止多次实例化，是更简洁、高效、安全的实现单例的方式。</p>
-<p><strong>三、饿汉式和懒汉式区别</strong> </p>
-<p>从名字上来说，饿汉和懒汉， </p>
-<p>饿汉就是类一旦加载，就把单例初始化完成，保证getInstance的时候，单例是已经存在的了， </p>
-<p>而懒汉比较懒，只有当调用getInstance的时候，才回去初始化这个单例。 </p>
-<p>另外从以下两点再区分以下这两种方式：</p>
-<p>1、线程安全： </p>
-<p>饿汉式天生就是线程安全的，可以直接用于多线程而不会出现问题， </p>
-<p>懒汉式本身是非线程安全的，为了实现线程安全有几种写法，分别是上面的1、2、3，这三种实现在资源加载和性能方面有些区别。</p>
-<p>2、资源加载和性能： </p>
-<p>饿汉式在类创建的同时就实例化一个静态对象出来，不管之后会不会使用这个单例，都会占据一定的内存，但是相应的，在第一次调用时速度也会更快，因为其资源已经初始化完成， </p>
-<p>而懒汉式顾名思义，会延迟加载，在第一次使用该单例的时候才会实例化对象出来，第一次调用时要做初始化，如果要做的工作比较多，性能上会有些延迟，之后就和饿汉式一样了。 </p>
-<p>至于1、2、3这三种实现又有些区别， </p>
-<p>第1种，在方法调用上加了同步，虽然线程安全了，但是每次都要同步，会影响性能，毕竟99%的情况下是不需要同步的， </p>
-<p>第2种，在getInstance中做了两次null检查，确保了只有第一次调用单例的时候才会做同步，这样也是线程安全的，同时避免了每次都同步的性能损耗 </p>
-<p>第3种，保证初始化instance时只有一个线程，所以也是线程安全的，同时没有性能损耗，一般倾向于使用这一种。</p>
-<p>3、什么是线程安全？ </p>
-<p>如果你的代码所在的进程中有多个线程在同时运行，而这些线程可能会同时运行这段代码。如果每次运行结果和单线程运行的结果是一样的，而且其他的变量的值也和预期的是一样的，就是线程安全的。 </p>
-<p>或者说：一个类或者程序所提供的接口对于线程来说是原子操作，或者多个线程之间的切换不会导致该接口的执行结果存在二义性,也就是说我们不用考虑同步的问题，那就是线程安全的。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2%E3%80%81%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
-      <meta itemprop="name" content="zkk">
-      <meta itemprop="description" content="只有变光,才能变强">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kkの博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/nanchenkunkun.github.io/2020/09/01/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/2%E3%80%81%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">建造者模式</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-01 09:37:26 / 修改时间：10:09:43" itemprop="dateCreated datePublished" datetime="2020-09-01T09:37:26+08:00">2020-09-01</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>建造者模式 </p>
-<p>一、概念 </p>
-<p>1、产品的内部表象 </p>
-<p>2、对象性质的建造 </p>
-<p>二、建造模式的结构 </p>
-<p>三、建造模式分成两个很重要的部分 </p>
-<p>四、使用场景 </p>
-<p>五、使用建造模式构建复杂对象</p>
-<p>一、概念　 </p>
-<p>建造模式是对象的创建模式。建造模式可以将一个产品的内部表象（internal representation）与产品的生产过程分割开来，从而可以使一个建造过程生成具有不同的内部表象的产品对象。</p>
-<p>1、产品的内部表象 </p>
-<p>一个产品常有不同的组成成分作为产品的零件，这些零件有可能是对象，也有可能不是对象，它们通常又叫做产品的内部表象（internal representation）。不同的产品可以有不同的内部表象，也就是不同的零件。使用建造模式可以使客户端不需要知道所生成的产品有哪些零件，每个 产品的对应零件彼此有何不同，是怎么建造出来的，以及怎么组成产品。 </p>
-<p>2、对象性质的建造</p>
-<p>　　有些情况下，一个对象的一些性质必须按照某个顺序赋值才有意义。在某个性质没有赋值之前，另一个性质则无法赋值。这些情况使得性质本身的建造涉 及到复杂的商业逻辑。这时候，此对象相当于一个有待建造的产品，而对象的这些性质相当于产品的零件，建造产品的过程是建造零件的过程。由于建造零件的过程 很复杂，因此，这些零件的建造过程往往被“外部化”到另一个称做建造者的对象里，建造者对象返还给客户端的是一个全部零件都建造完毕的产品对象。 </p>
-<p>顾名思义，builder的意思是建造者或者建筑工人。例如：楼房是千差万别的，楼房的外形，层数，内部房间的数量，房间的装饰都不一样。但是对于 建造者来 说，抽象出来的建筑流程是确定的。因为建筑一座楼房，都可以归纳为几个步骤(也就是生产过程：对象性质的建造)：1打桩(内部具体细节构建:内部表象, 下2-4同为内部具体细节构建)、2建地基、3搭框架、4内部建设。同理，建造者设计模式也是基于这样 的概念而生的，这个设计模式用来解决什么样的情况呢：即流程不变，但每个流程实现的具体细节是会变化的。这样的情况，可以考虑使用建造者。就像盖房子，4 个流程都必须有，但每个流程各自的实现细节，各个房子各有不同。建造者模式的好处就是保证了流程不会变化，即流程不会增加也不会遗漏，也不会产生流程次序 的错误。这是非常重要的，看新闻，一些楼歪歪的事件，很多都是建设楼盘的时候，流程出现了问题导致的。（看来这些人并不知道建造者模式啊）。而建造者模 式，保证了流程的确定性，而流程内部的实现细节，是可继承扩展的。从根源上解决了流程不规范的问题。</p>
-<p>​    <img src="C:/Users/Administrator/AppData/Local/YNote/data/qqE7A9513F2B43487AF63C2910F7080996/f8c1aa974b3240bbae53d285dfc384f8/124163530064.png" alt="img"></p>
-<p>在这个示意性的系统里，最终产品Product只有两个零件，即part1和part2。相应的建造方法也有两个：buildPart1()和buildPart2()、同时可以看出本模式涉及到四个角色，它们分别是：</p>
-<p>　　<strong>抽象建造者（Builder）角色</strong>：给出一个抽象接口，以规范产品对象的各个组成成分的建造。一般而言，此接口独立于应用程序的商业逻辑。模式中直接创建产品对象的是具体建造者 (ConcreteBuilder)角色。具体建造者类必须实现这个接口所要求的两种方法：一种是建造方法(buildPart1和 buildPart2)，另一种是返还结构方法(retrieveResult)。一般来说，产品所包含的零件数目与建造方法的数目相符。换言之，有多少 零件，就有多少相应的建造方法。 </p>
-<p>　　<strong>导演者（Director）角色</strong>：担任这个角色的类调用具体建造者角色以创建产品对象。应当指出的是，导演者角色并没有产品类的具体知识，真正拥有产品类的具体知识的是具体建造者角色。 </p>
-<p>   <strong>产品（Product）角色</strong>：产品便是建造中的复杂对象。一般来说，一个系统中会有多于一个的产品类，而且这些产品类并不一定有共同的接口，而完全可以是不相关联的。 </p>
-<p>　　一般来说，每有一个产品类，就有一个相应的具体建造者类。这些产品应当有一样数目的零件，而每有一个零件就相应地在所有的建造者角色里有一个建造方法。 </p>
-<p>代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 产品角色</span><br><span class="line"> * 　产品类Product</span><br><span class="line"> * @author Administrator</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Product &#123;</span><br><span class="line">    &#x2F;&#x2F;定义一些产品的部件</span><br><span class="line">    private String part1;</span><br><span class="line">    private String part2;</span><br><span class="line"></span><br><span class="line">    public String getPart1() &#123;</span><br><span class="line">        return part1;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setPart1(String part1) &#123;</span><br><span class="line">        this.part1 &#x3D; part1;</span><br><span class="line">    &#125;</span><br><span class="line">    public String getPart2() &#123;</span><br><span class="line">        return part2;</span><br><span class="line">    &#125;</span><br><span class="line">    public void setPart2(String part2) &#123;</span><br><span class="line">        this.part2 &#x3D; part2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 抽象建造者角色</span><br><span class="line"> *      抽象建造者类Builder</span><br><span class="line"> * @author Administrator</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public interface Builder &#123;</span><br><span class="line">    &#x2F;&#x2F;产品零件一建造方法</span><br><span class="line">    public void buildPart1();</span><br><span class="line">    &#x2F;&#x2F;产品零件二建造方法</span><br><span class="line">    public void buildPart2();</span><br><span class="line">    &#x2F;&#x2F;返回产品的方法</span><br><span class="line">    public Product retrieveResult();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 具体建造者角色</span><br><span class="line"> *      具体建造者类ConcreteBuilder</span><br><span class="line"> * @author Administrator</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class ConcreteBuilder implements Builder &#123;</span><br><span class="line">    private Product product &#x3D; new Product();</span><br><span class="line">    @Override</span><br><span class="line">    public void buildPart1() &#123;</span><br><span class="line">        &#x2F;&#x2F;构建产品的第一个零件</span><br><span class="line">        product.setPart1(&quot;编号：007&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void buildPart2() &#123;</span><br><span class="line">        &#x2F;&#x2F;构建产品的第二个零件</span><br><span class="line">        product.setPart2(&quot;名称：暗黑者&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Product retrieveResult() &#123;</span><br><span class="line">        &#x2F;&#x2F;返回产品</span><br><span class="line">        return product;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * 导演者角色</span><br><span class="line"> *      导演者类Director</span><br><span class="line"> * @author Administrator</span><br><span class="line"> *</span><br><span class="line"> *&#x2F;</span><br><span class="line">public class Director &#123;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 持有当前需要使用的建造器对象</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private Builder builder;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 构造方法，传入建造器对象</span><br><span class="line">     * @param builder 建造器对象</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public Director(Builder builder)&#123;</span><br><span class="line">        this.builder &#x3D; builder;</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;**</span><br><span class="line">     * 产品构造方法，负责调用各个零件建造方法,比如产品的生产顺序等</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public void construct()&#123;</span><br><span class="line">        builder.buildPart1();</span><br><span class="line">        builder.buildPart2();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;客户端</span><br><span class="line">public class Client &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Builder builder &#x3D; new ConcreteBuilder();</span><br><span class="line">        Director director &#x3D; new Director(builder);</span><br><span class="line">        director.construct();</span><br><span class="line">        Product product &#x3D; builder.retrieveResult();</span><br><span class="line">        System.out.println(product.getPart1());</span><br><span class="line">        System.out.println(product.getPart2());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>时序图 </p>
-<p><img src="C:/Users/Administrator/AppData/Local/YNote/data/qqE7A9513F2B43487AF63C2910F7080996/8b7a05b83e5a4041b136df9e9652ee51/124163803926.png" alt="img"></p>
-<p>客户端负责创建导演者和具体建造者对象。然后，客户端把具体建造者对象交给导演者，导演者操作具体建造者，开始创建产品。当产品完成后，建造者把产品返还给客户端。 </p>
-<p>把创建具体建造者对象的任务交给客户端而不是导演者对象，是为了将导演者对象与具体建造者对象的耦合变成动态的，从而使导演者对象可以操纵数个具体建造者对象中的任何一个。</p>
-<p><strong>三、建造模式分成两个很重要的部分</strong> </p>
-<ol>
-<li><p>一个部分是Builder接口，这里是定义了如何构建各个部件，也就是知道每个部件功能如何实现 </p>
-</li>
-<li><p>另外一个部分是Director，Director是知道如何组合来构建产品，也就是说Director负责整体的构建算法，而且通常是分步骤地来执行,也就是说如何组装这些部件。</p>
-</li>
-</ol>
-<p>不管如何变化，建造模式都存在这么两个部分，一个部分是部件构造。另一个部分是整体构建的算法。 </p>
-<p>再直白点说，建造模式的重心在于分离构建算法和具体的构造实现，从而使得构建算法可以重用。具体的构造实现可以很方便地扩展和切换，从而可以灵活地组合来构造出不同的产品对象。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/nanchenkunkun.github.io/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/nanchenkunkun.github.io/">1</a><span class="page-number current">2</span><a class="page-number" href="/nanchenkunkun.github.io/page/3/">3</a><a class="extend next" rel="next" href="/nanchenkunkun.github.io/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/nanchenkunkun.github.io/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/nanchenkunkun.github.io/">1</a><span class="page-number current">2</span><a class="page-number" href="/nanchenkunkun.github.io/page/3/">3</a><a class="page-number" href="/nanchenkunkun.github.io/page/4/">4</a><a class="extend next" rel="next" href="/nanchenkunkun.github.io/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1701,7 +1662,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/nanchenkunkun.github.io/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

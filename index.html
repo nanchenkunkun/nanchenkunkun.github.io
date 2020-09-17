@@ -128,7 +128,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">30</span></a>
+    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">33</span></a>
 
   </li>
   </ul>
@@ -154,6 +154,106 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/16/java/%E6%A1%86%E6%9E%B6/mybatis/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/16/java/%E6%A1%86%E6%9E%B6/mybatis/mybatis%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">mybatis源码分析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-16 13:52:18 / 修改时间：17:32:40" itemprop="dateCreated datePublished" datetime="2020-09-16T13:52:18+08:00">2020-09-16</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/java/%E6%A1%86%E6%9E%B6/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="从-XML-中构建-SqlSessionFactory"><a href="#从-XML-中构建-SqlSessionFactory" class="headerlink" title="从 XML 中构建 SqlSessionFactory"></a>从 XML 中构建 SqlSessionFactory</h3><p>每个基于 MyBatis 的应用都是以一个 SqlSessionFactory 的实例为核心的。SqlSessionFactory 的实例可以通过 SqlSessionFactoryBuilder 获得。而 SqlSessionFactoryBuilder 则可以从 XML 配置文件或一个预先配置的 Configuration 实例来构建出 SqlSessionFactory 实例。</p>
+<p>从 XML 文件中构建 SqlSessionFactory 的实例非常简单，建议使用类路径下的资源文件进行配置。 但也可以使用任意的输入流（InputStream）实例，比如用文件路径字符串或 file:// URL 构造的输入流。MyBatis 包含一个名叫 Resources 的工具类，它包含一些实用方法，使得从类路径或其它位置加载资源文件更加容易。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String resource = <span class="string">&quot;org/mybatis/example/mybatis-config.xml&quot;</span>;</span><br><span class="line">InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">SqlSessionFactory sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</span><br></pre></td></tr></table></figure>
+
+<p>XML 配置文件中包含了对 MyBatis 系统的核心设置，包括获取数据库连接实例的数据源（DataSource）以及决定事务作用域和控制方式的事务管理器（TransactionManager）。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">configuration</span></span></span><br><span class="line"><span class="meta">  <span class="meta-keyword">PUBLIC</span> <span class="meta-string">&quot;-//mybatis.org//DTD Config 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">  <span class="meta-string">&quot;http://mybatis.org/dtd/mybatis-3-config.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;driver&#125;&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;url&#125;&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;username&#125;&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;password&#125;&quot;</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dataSource</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">environment</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">environments</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;org/mybatis/example/BlogMapper.xml&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">mappers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//构建了sqlsessoinfactory之后就可以获取 sqlsession</span></span><br><span class="line"><span class="keyword">try</span> (SqlSession session = sqlSessionFactory.openSession()) &#123;</span><br><span class="line">  Blog blog = (Blog) session.selectOne(<span class="string">&quot;org.mybatis.example.BlogMapper.selectBlog&quot;</span>, <span class="number">101</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这个是用来生成SqlSessionFactory工厂的方法</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> SqlSessionFactory <span class="title">build</span><span class="params">(Reader reader)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.build((Reader)reader, (String)<span class="keyword">null</span>, (Properties)<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> SqlSessionFactory <span class="title">build</span><span class="params">(Reader reader, String environment, Properties properties)</span> </span>&#123;</span><br><span class="line">        SqlSessionFactory var5;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//解析xml</span></span><br><span class="line">            XMLConfigBuilder parser = <span class="keyword">new</span> XMLConfigBuilder(reader, environment, properties);</span><br><span class="line">            var5 = <span class="keyword">this</span>.build(parser.parse());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception var14) &#123;</span><br><span class="line">            <span class="keyword">throw</span> ExceptionFactory.wrapException(<span class="string">&quot;Error building SqlSession.&quot;</span>, var14);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            ErrorContext.instance().reset();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                reader.close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException var13) &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> var5;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>XMLConfigBuilder类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">四个属性:</span><br><span class="line">  private boolean parsed;</span><br><span class="line">  private final XPathParser parser;</span><br><span class="line">  private String environment;</span><br><span class="line">  private final ReflectorFactory localReflectorFactory;</span><br><span class="line">  </span><br><span class="line">七个构造方法：</span><br><span class="line">  public XMLConfigBuilder(Reader reader)</span><br><span class="line">  public XMLConfigBuilder(Reader reader, String environment)</span><br><span class="line">  public XMLConfigBuilder(Reader reader, String environment, Properties props) </span><br><span class="line">  public XMLConfigBuilder(InputStream inputStream) </span><br><span class="line">  public XMLConfigBuilder(InputStream inputStream, String environment)</span><br><span class="line">  public XMLConfigBuilder(InputStream inputStream, String environment, Properties props) </span><br><span class="line">  private XMLConfigBuilder(XPathParser parser, String environment, Properties props)</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//上一步所调用的是这个构造函数</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">XMLConfigBuilder</span><span class="params">(Reader reader, String environment, Properties props)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(<span class="keyword">new</span> XPathParser(reader, <span class="keyword">true</span>, props, <span class="keyword">new</span> XMLMapperEntityResolver()), environment, props);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<p>XPathParser类</p>
+<p>My Batis 提供的XPathParser 类封装了前面涉及的XPath 、Doc ument 和EntityResolver </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private Document document ; &#x2F;&#x2F; D ocu me nt 对象</span><br><span class="line">private boolean validation; ／／是否开启验证</span><br><span class="line">private EntityResolver entityResolver ; ／／ 用于加载本地D T D 文件</span><br><span class="line">private Properties variables ; &#x2F;&#x2F; mybatis -c onfi g. xml 中＜ p ropter i es ＞ 标签定义的键位对集合</span><br><span class="line">private XPath xpath ; &#x2F;&#x2F; XPath 对象</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -318,6 +418,148 @@
 <li><strong>垃圾邮件过滤</strong>，从数十亿个垃圾邮件列表中判断某邮箱是否是杀垃圾邮箱。</li>
 <li><strong>解决数据库缓存击穿</strong>，黑客攻击服务器时，会构建大量不存在于缓存中的key向服务器发起请求，在数据量足够大的时候，频繁的数据库查询会导致挂机。</li>
 <li><strong>秒杀系统</strong>，查看用户是否重复购买。</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%93%A8%E5%85%B5%E3%80%81%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/%E5%93%A8%E5%85%B5%E3%80%81%E6%8C%81%E4%B9%85%E5%8C%96%E3%80%81%E4%B8%BB%E4%BB%8E/" class="post-title-link" itemprop="url">reids哨兵，持久化，主从</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-08 11:28:53" itemprop="dateCreated datePublished" datetime="2020-09-08T11:28:53+08:00">2020-09-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-17 09:21:30" itemprop="dateModified" datetime="2020-09-17T09:21:30+08:00">2020-09-17</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Redis为什么快"><a href="#Redis为什么快" class="headerlink" title="Redis为什么快"></a>Redis为什么快</h3><p><strong>Redis</strong>采用的是基于内存的采用的是单进程单线程模型的 KV 数据库，由C语言编写，官方提供的数据是可以达到100000+的<strong>QPS（每秒内查询次数）</strong>。</p>
+<ul>
+<li>完全基于内存，绝大部分请求是纯粹的内存操作，非常快速。它的，数据存在内存中，类似于<strong>HashMap</strong>，<strong>HashMap</strong>的优势就是查找和操作的时间复杂度都是O(1)；</li>
+<li>数据结构简单，对数据操作也简单，<strong>Redis</strong>中的数据结构是专门进行设计的；</li>
+<li>采用单线程，避免了不必要的上下文切换和竞争条件，也不存在多进程或者多线程导致的切换而消耗 <strong>CPU</strong>，不用去考虑各种锁的问题，不存在加锁释放锁操作，没有因为可能出现死锁而导致的性能消耗；</li>
+<li>使用多路I/O复用模型，非阻塞IO；</li>
+<li>使用底层模型不同，它们之间底层实现方式以及与客户端之间通信的应用协议不一样，<strong>Redis</strong>直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求；</li>
+</ul>
+<h3 id="Redis的持久化"><a href="#Redis的持久化" class="headerlink" title="Redis的持久化"></a>Redis的持久化</h3><p>持久化的话是<strong>Redis</strong>高可用中比较重要的一个环节，因为<strong>Redis</strong>数据在内存的特性，持久化必须得有。</p>
+<ul>
+<li>RDB：<strong>RDB</strong> 持久化机制，是对 <strong>Redis</strong> 中的数据执行<strong>周期性</strong>的持久化。</li>
+<li>AOF：<strong>AOF</strong> 机制对每条写入命令作为日志，以 <strong>append-only</strong> 的模式写入一个日志文件中，因为这个模式是只追加的方式，所以没有任何磁盘寻址的开销，所以很快，有点像Mysql中的<strong>binlog</strong>。</li>
+</ul>
+<p>两种方式都可以把<strong>Redis</strong>内存中的数据持久化到磁盘上，然后再将这些数据备份到别的地方去，<strong>RDB</strong>更适合做<strong>冷备</strong>，<strong>AOF</strong>更适合做<strong>热备</strong>，比如我杭州的某电商公司有这两个数据，我备份一份到我杭州的节点，再备份一个到上海的，就算发生无法避免的自然灾害，也不会两个地方都一起挂吧，这<strong>灾备</strong>也就是<strong>异地容灾</strong>，地球毁灭他没办法。</p>
+<p><strong>tip：两种机制全部开启的时候，Redis在重启的时候会默认使用AOF去重新构建数据，因为AOF的数据是比RDB更完整的。</strong></p>
+<p>两种持久化方式的优缺点：</p>
+<p><strong>RDB</strong></p>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><p>他会生成多个数据文件，每个数据文件分别都代表了某一时刻<strong>Redis</strong>里面的数据，这种方式，有没有觉得很适合做<strong>冷备</strong>，完整的数据运维设置定时任务，定时同步到远端的服务器，比如阿里的云服务，这样一旦线上挂了，你想恢复多少分钟之前的数据，就去远端拷贝一份之前的数据就好了。</p>
+<p><strong>RDB</strong>对<strong>Redis</strong>的性能影响非常小，是因为在同步数据的时候他只是<strong>fork</strong>了一个子进程去做持久化的，而且他在数据恢复的时候速度比<strong>AOF</strong>来的快。</p>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h4><p><strong>RDB</strong>都是快照文件，都是默认五分钟甚至更久的时间才会生成一次，这意味着你这次同步到下次同步这中间五分钟的数据都很可能全部丢失掉。<strong>AOF</strong>则最多丢一秒的数据，<strong>数据完整性</strong>上高下立判。</p>
+<p>还有就是<strong>RDB</strong>在生成数据快照的时候，如果文件很大，客户端可能会暂停几毫秒甚至几秒，你公司在做秒杀的时候他刚好在这个时候<strong>fork</strong>了一个子进程去生成一个大快照，哦豁，出大问题。</p>
+<p><strong>AOF</strong></p>
+<h4 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h4><p>上面提到了，<strong>RDB</strong>五分钟一次生成快照，但是<strong>AOF</strong>是一秒一次去通过一个后台的线程<code>fsync</code>操作，那最多丢这一秒的数据。</p>
+<p><strong>AOF</strong>在对日志文件进行操作的时候是以<code>append-only</code>的方式去写的，他只是追加的方式写数据，自然就少了很多磁盘寻址的开销了，写入性能惊人，文件也不容易破损。</p>
+<p><strong>AOF</strong>的日志是通过一个叫<strong>非常可读</strong>的方式记录的，这样的特性就适合做<strong>灾难性数据误删除</strong>的紧急恢复了，比如公司的实习生通过<strong>flushall</strong>清空了所有的数据，只要这个时候后台重写还没发生，你马上拷贝一份<strong>AOF</strong>日志文件，把最后一条<strong>flushall</strong>命令删了就完事了。</p>
+<h4 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h4><p>一样的数据，<strong>AOF</strong>文件比<strong>RDB</strong>还要大。</p>
+<p><strong>AOF</strong>开启后，<strong>Redis</strong>支持写的<strong>QPS</strong>会比<strong>RDB</strong>支持写的要低，他不是每秒都要去异步刷新一次日志嘛<strong>fsync</strong>，当然即使这样性能还是很高，我记得<strong>ElasticSearch</strong>也是这样的，异步刷新缓存区的数据去持久化。</p>
+<p>单独用<strong>RDB</strong>会丢失很多数据，单独用<strong>AOF</strong>，数据恢复没<strong>RDB</strong>来的快，真出什么事情第一时间用<strong>RDB</strong>恢复，然后<strong>AOF</strong>做数据补全。</p>
+<p><strong>哨兵模式：</strong></p>
+<p>哨兵必须用三个实例去保证自己的健壮性的，哨兵+主从并<strong>不能保证数据不丢失</strong>，但是可以保证集群的<strong>高可用</strong>。</p>
+<p>为啥必须要三个实例呢？我们先看看两个哨兵会咋样。</p>
+<p>master宕机了 s1和s2两个哨兵只要有一个认为你宕机了就切换了，并且会选举出一个哨兵去执行故障，但是这个时候也需要大多数哨兵都是运行的。</p>
+<p>那这样有啥问题呢？M1宕机了，S1没挂那其实是OK的，但是整个机器都挂了呢？哨兵就只剩下S2个裸了，没有哨兵去允许故障转移了，虽然另外一个机器上还有R1，但是故障转移就是不执行。</p>
+<p>经典的哨兵集群是这样的：</p>
+<p>M1所在的机器挂了，哨兵还有两个，两个人一看他不是挂了嘛，那我们就选举一个出来执行故障转移不就好了。</p>
+<p>哨兵组件的主要功能：</p>
+<ul>
+<li>集群监控：负责监控 Redis master 和 slave 进程是否正常工作。</li>
+<li>消息通知：如果某个 <strong>Redis</strong> 实例有故障，那么哨兵负责发送消息作为报警通知给管理员。</li>
+<li>故障转移：如果 master node 挂掉了，会自动转移到 slave node 上。</li>
+<li>配置中心：如果故障转移发生了，通知 client 客户端新的 master 地址。</li>
+</ul>
+<h3 id="主从之间的数据同步"><a href="#主从之间的数据同步" class="headerlink" title="主从之间的数据同步"></a>主从之间的数据同步</h3><p>前面提到了单机<strong>QPS</strong>是有上限的，而且<strong>Redis</strong>的特性就是必须支撑读高并发的，那你一台机器又读又写，一般是顶不住的，但是你让这个master机器去写，数据同步给别的slave机器，他们都拿去读，分发掉大量的请求那是不是好很多，而且扩容的时候还可以轻松实现水平扩容。</p>
+<p>你启动一台slave 的时候，他会发送一个<strong>psync</strong>命令给master ，如果是这个slave第一次连接到master，他会触发一个全量复制。master就会启动一个线程，生成<strong>RDB</strong>快照，还会把新的写请求都缓存在内存中，<strong>RDB</strong>文件生成后，master会将这个<strong>RDB</strong>发送给slave的，slave拿到之后做的第一件事情就是写进本地的磁盘，然后加载进内存，然后master会把内存里面缓存的那些新命名都发给slave。</p>
+<h3 id="内存淘汰机制"><a href="#内存淘汰机制" class="headerlink" title="内存淘汰机制"></a>内存淘汰机制</h3><p>redis的过期策略： 定期删除 +　惰性删除</p>
+<p><strong>定期删除</strong>：默认100ms就随机抽一些设置了过期时间的key，去检查是否过期，过期了就删了</p>
+<p><strong>惰性删除</strong>：等用户主动查询后，确认过期了就删除。</p>
+<p>存在定期没删除，也没查询：</p>
+<p><strong>内存淘汰机制</strong>！</p>
+<p>官网上给到的内存淘汰机制是以下几个：</p>
+<ul>
+<li><p><strong>noeviction</strong>:返回错误当内存限制达到并且客户端尝试执行会让更多内存被使用的命令（大部分的写入指令，但DEL和几个例外）</p>
+</li>
+<li><p><strong>allkeys-lru</strong>: 尝试回收最少使用的键（LRU），使得新添加的数据有空间存放。</p>
+</li>
+<li><p><strong>volatile-lru</strong>: 尝试回收最少使用的键（LRU），但仅限于在过期集合的键,使得新添加的数据有空间存放。</p>
+</li>
+<li><p><strong>allkeys-random</strong>: 回收随机的键使得新添加的数据有空间存放。</p>
+</li>
+<li><p><strong>volatile-random</strong>: 回收随机的键使得新添加的数据有空间存放，但仅限于在过期集合的键。</p>
+</li>
+<li><p><strong>volatile-ttl</strong>: 回收在过期集合的键，并且优先回收存活时间（TTL）较短的键,使得新添加的数据有空间存放。</p>
+<p>如果没有键满足回收的前提条件的话，策略<strong>volatile-lru</strong>, <strong>volatile-random</strong>以及<strong>volatile-ttl</strong>就和noeviction 差不多了。</p>
+</li>
 </ul>
 
       
@@ -1164,229 +1406,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/Bitmap/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
-      <meta itemprop="name" content="zkk">
-      <meta itemprop="description" content="只有变光,才能变强">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kkの博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/Bitmap/" class="post-title-link" itemprop="url">BitMap</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-08 11:28:53 / 修改时间：11:31:25" itemprop="dateCreated datePublished" datetime="2020-09-08T11:28:53+08:00">2020-09-08</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h5 id="1、BitMap是什么"><a href="#1、BitMap是什么" class="headerlink" title="1、BitMap是什么"></a>1、BitMap是什么</h5><p>​    就是通过一个bit位来表示某个元素对应的值或者状态,其中的key就是对应元素本身。我们知道8个bit可以组成一个Byte，所以bitmap本身会极大的节省储存空间。</p>
-<p><strong>2、Redis中的BitMap</strong></p>
-<p>Redis从2.2.0版本开始新增了<code>setbit</code>,<code>getbit</code>,<code>bitcount</code>等几个bitmap相关命令。虽然是新命令，但是并没有新增新的数据类型，因为<code>setbit</code>等命令只不过是在<code>set</code>上的扩展。</p>
-<p>3、<strong>setbit命令介绍</strong></p>
-<p>指令 <code>SETBIT key offset value</code><br>设置或者清空key的value(字符串)在offset处的bit值(只能只0或者1)。</p>
-<p><strong>4、使用场景一：用户签到</strong></p>
-<p>很多网站都提供了签到功能(这里不考虑数据落地事宜)，并且需要展示最近一个月的签到情况，如果使用bitmap我们怎么做？一言不合亮代码！<br>根据日期 offset =hash % 365  ； key = 年份#用户id</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit 2020#zkk 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit 2020#zkk 2 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitcount 2020#zkk</span><br><span class="line">(integer) 2</span><br></pre></td></tr></table></figure>
-
-<p><strong>6、使用场景二：统计活跃用户</strong></p>
-<p>使用时间作为cacheKey，然后用户ID为offset，如果当日活跃过就设置为1<br>那么我该如果计算某几天/月/年的活跃用户呢(暂且约定，统计时间内只有有一天在线就称为活跃)，有请下一个redis的命令<br>命令 <code>BITOP operation destkey key [key ...]</code><br>说明：对一个或多个保存二进制位的字符串 key 进行位元操作，并将结果保存到 destkey 上。<br>说明：BITOP 命令支持 AND 、 OR 、 NOT 、 XOR 这四种操作中的任意一种参数</p>
-<p>20190216 活跃用户 【1，2】<br>20190217 活跃用户 【1】<br>统计20190216~20190217 总活跃用户数: 1</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit 20190216 1 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; setbit 20190216 2 1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; setbit 20190217 1 1</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitop and desk1 20190216 20190217</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bitcount desk1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bitop or desk2 20190216 20190217</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bitcount desk2</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>7、使用场景三：用户在线状态</strong></p>
-<p>开发一个查询当前用户是否在线的接口。使用bitmap是一个节约空间效率又高的一种方法，只需要一个key，然后用户ID为offset，如果在线就设置为1，不在线就设置为0，和上面的场景一样，5000W用户只需要6MB的空间。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%9B%9B%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
-      <meta itemprop="name" content="zkk">
-      <meta itemprop="description" content="只有变光,才能变强">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kkの博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%9B%9B%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%80%9A%E4%BF%A1/" class="post-title-link" itemprop="url">多线程通信</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-02 10:40:53 / 修改时间：10:42:55" itemprop="dateCreated datePublished" datetime="2020-09-02T10:40:53+08:00">2020-09-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="多线程通信"><a href="#多线程通信" class="headerlink" title="多线程通信"></a>多线程通信</h1><p>​        经典的生产者-消费者模型：当队列满时，生产者需要等待队列有空间才能继续往里面放入商品，而<strong>在等待的期间内，生产者必须释放对临界资源（即队列）的占用权</strong>。因为生产者如果不释放对临界资源的占用权，那么<strong>消费者就无法消费队列中的商品</strong>，就不会让队列有空间，那么生产者就会一直无限等待下去。因此，一般情况下，当队列满时，会让生产者交出对临界资源的占用权，并进入挂起状态。然后等待消费者消费了商品，然后消费者通知生产者队列有空间了。同样地，当队列空时，消费者也必须等待，等待生产者通知它队列中有商品了。这种互相通信的过程就是线程间的协作。</p>
-<p>　　Java中线程通信协作的最常见的两种方式：</p>
-<p>　　一.syncrhoized加锁的线程的<strong>Object类</strong>的wait()/notify()/notifyAll()</p>
-<p>　　二.ReentrantLock类加锁的线程的<strong>Condition类的</strong>await()/signal()/signalAll()</p>
-<h3 id="一-syncrhoized加锁的线程的Object类的wait-notify-notifyAll"><a href="#一-syncrhoized加锁的线程的Object类的wait-notify-notifyAll" class="headerlink" title="一.syncrhoized加锁的线程的Object类的wait()/notify()/notifyAll()"></a>一.syncrhoized加锁的线程的<strong>Object类</strong>的wait()/notify()/notifyAll()</h3><p>wait()、notify()和notifyAll()是Object类中的方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Wakes up a single thread that is waiting on this object&#x27;s</span></span><br><span class="line"><span class="comment"> * monitor. If any threads are waiting on this object, one of them</span></span><br><span class="line"><span class="comment"> * is chosen to be awakened. The choice is arbitrary and occurs at</span></span><br><span class="line"><span class="comment"> * the discretion of the implementation. A thread waits on an object&#x27;s</span></span><br><span class="line"><span class="comment"> * monitor by calling one of the wait methods</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Wakes up all threads that are waiting on this object&#x27;s monitor. A</span></span><br><span class="line"><span class="comment"> * thread waits on an object&#x27;s monitor by calling one of the</span></span><br><span class="line"><span class="comment"> * wait methods.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Causes the current thread to wait until either another thread invokes the</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> java.lang.Object#notify()&#125; method or the</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> java.lang.Object#notifyAll()&#125; method for this object, or a</span></span><br><span class="line"><span class="comment"> * specified amount of time has elapsed.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * The current thread must own this object&#x27;s monitor.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout)</span> <span class="keyword">throws</span> InterruptedException</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>从这三个方法的文字描述可以知道以下几点信息：</p>
-<p>　　1）wait()、notify()和notifyAll()方法是<strong>本地方法</strong>，并且为<strong>final方法，无法被重写。</strong></p>
-<p>　　2）调用<strong>某个对象的wait()方法</strong>能让当<strong>前线程阻塞</strong>，并且<strong>当前线程必须拥有此对象的monitor（即锁）</strong></p>
-<p>　　3）调用<strong>某个对象的notify()方法</strong>能够<strong>唤醒一个正在等待这个对象的monitor的线程</strong>，如果有多个线程都在等待这个对象的monitor，则<strong>只能唤醒其中一个线程</strong>；</p>
-<p>　　4）调用notifyAll()方法能够<strong>唤醒所有正在等待这个对象的monitor的线程</strong>；</p>
-<p>　　有朋友可能会有疑问：<strong>为何这三个不是Thread类声明中的方法，而是Object类中声明的方法</strong>（当然由于Thread类继承了Object类，所以Thread也可以调用者三个方法）？其实这个问题很简单，<strong>由于每个对象都拥有monitor（即锁）</strong>，所以让当前线程等待某个对象的锁，当然应该通过这个对象来操作了。而不是用当前线程来操作，因为<strong>当前线程可能会等待多个线程的锁</strong>，如果通过线程来操作，就非常复杂了。</p>
-<p>　　上面已经提到，如果<strong>调用某个对象的wait()方法，当前线程必须拥有这个对象的monitor（即锁）</strong>，<strong>因此调用wait()方法必须在同步块或者同步方法中进行（synchronized块或者synchronized方法）</strong>。<strong>如果当前线程没有这个对象的锁就调用wait（）方法，则会抛出IllegalMonitorStateException.</strong></p>
-<p>　　 <strong>调用某个对象的wait()方法，相当于让当前线程交出（释放）此对象的monitor，然后进入等待状态</strong>，等待后续再次获得此对象的锁（Thread类中的<strong>sleep方法使当前线程暂停执行一段时间，从而让其他线程有机会继续执行，但它并不释放对象锁</strong>）；　　</p>
-<p>　　notify()方法能够唤醒一个正在等待该对象的monitor的线程，当有多个线程都在等待该对象的monitor的话，则只能唤醒其中一个线程，具体唤醒哪个线程则不得而知。 同样地，<strong>调用某个对象的notify()方法，当前线程也必须拥有这个对象的monitor</strong>，因此调用notify()方法必须在同步块或者同步方法中进行（synchronized块或者synchronized方法）。</p>
-<p>​        nofityAll()方法能够唤醒所有正在等待该对象的monitor的线程，这一点与notify()方法是不同的。</p>
-<p>　　这里要注意一点：<strong>notify()和notifyAll()方法只是唤醒等待该对象的monitor的线程，并不决定哪个线程能够获取到monitor。</strong></p>
-<p> 　　举个简单的例子：假如有三个线程Thread1、Thread2和Thread3都在等待对象objectA的monitor，此时Thread4拥有对象objectA的monitor，当在Thread4中调用objectA.notify()方法之后，Thread1、Thread2和Thread3只有一个能被唤醒。注意，被唤醒不等于立刻就获取了objectA的monitor。假若在<strong>Thread4中调用objectA.notifyAll()方法，则Thread1、Thread2和Thread3三个线程都会被唤醒</strong>，<strong>至于哪个线程接下来能够获取到objectA的monitor就具体依赖于操作系统的调度了</strong>。</p>
-<p>　　上面尤其要注意一点，一个线程被唤醒不代表立即获取了对象的monitor，只有等调用完notify()或者notifyAll()并退出synchronized块，<strong>释放对象锁后，其余线程才可获得锁执行</strong>。</p>
-<h3 id="一个生产者一个消费者"><a href="#一个生产者一个消费者" class="headerlink" title="一个生产者一个消费者"></a>一个生产者一个消费者</h3><p>一个对象，作为锁（利用该对象的monitor）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jp.oneone;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ValueObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String value = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>生产者：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jp.oneone;</span><br><span class="line"></span><br><span class="line"><span class="comment">//生产者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">P</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String lock;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">P</span><span class="params">(String lock)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">synchronized</span> (lock) &#123; <span class="comment">//当前线程必须获得锁才可以进行下面的操作</span></span><br><span class="line">                    <span class="keyword">if</span> (!ValueObject.value.equals(<span class="string">&quot;&quot;</span>)) &#123;<span class="comment">//如果Value不为空，说明字符串还没被消费，所以调用wait方法，把当前线程（生成线程）阻塞</span></span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125;</span><br><span class="line">                    String value = System.currentTimeMillis() + <span class="string">&quot;_&quot;</span></span><br><span class="line">                            + System.nanoTime();</span><br><span class="line">                    System.out.println(<span class="string">&quot;set的值是&quot;</span> + value);</span><br><span class="line">                    ValueObject.value = value;<span class="comment">//为空的话，则生成</span></span><br><span class="line">                    lock.notify();<span class="comment">//生成完就唤醒等待该对象锁的线程，（这里只有一个消费者等这个锁，所以就是唤醒的它）</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>消费者：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.jp.oneone;</span><br><span class="line"></span><br><span class="line"><span class="comment">//消费者</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String lock;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">C</span><span class="params">(String lock)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.lock = lock;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (ValueObject.value.equals(<span class="string">&quot;&quot;</span>)) &#123;<span class="comment">//如果字符串为空，即被消费完了，所以wait等待。</span></span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(<span class="string">&quot;get的值是&quot;</span> + ValueObject.value);</span><br><span class="line">                    ValueObject.value = <span class="string">&quot;&quot;</span>;</span><br><span class="line">                    lock.notify();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>测试：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package com.jp.oneone;</span><br><span class="line"></span><br><span class="line">public class Run &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        String lock &#x3D; new String(&quot;&quot;);</span><br><span class="line">        P p &#x3D; new P(lock);</span><br><span class="line">        C r &#x3D; new C(lock);</span><br><span class="line"></span><br><span class="line">        p.start();</span><br><span class="line">        r.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="多个生产者多个消费者"><a href="#多个生产者多个消费者" class="headerlink" title="多个生产者多个消费者"></a>多个生产者多个消费者</h3><p>实现和上面1对1基本一样，只是在测试代码中，多new几个生产者，几个消费者。</p>
-<p>只需注意一个问题：假死</p>
-<p>问题描述：所有线程都被wait，这个项目就停止运行了。</p>
-<p>问题原因：代码中使用wait/notify进行通信，不能保证notify唤醒的是异类（生产者唤醒消费者还是生产者），比如生产者唤醒生产者，消费者唤醒消费者，就可能导致都在等待的状态。</p>
-<p>问题解决：其实很简单，就是唤醒的时候同类异类都唤醒，<strong>把notify()改为natifyAll()就解决了。</strong></p>
-<h2 id="二-ReentrantLock类加锁的线程的Condition类的"><a href="#二-ReentrantLock类加锁的线程的Condition类的" class="headerlink" title="二.ReentrantLock类加锁的线程的Condition类的"></a>二.ReentrantLock类加锁的线程的<strong>Condition类的</strong></h2><h2 id="await-signal-signalAll"><a href="#await-signal-signalAll" class="headerlink" title="await()/signal()/signalAll()"></a>await()/signal()/signalAll()</h2><p>　　Condition是在java 1.5中才出现的，它用来替代传统的Object的wait()、notify()实现线程间的协作，相比使用Object的wait()、notify()，使用Condition1的await()、signal()这种方式实现线程间协作更加安全和高效。因此通常来说比较推荐使用Condition，在阻塞队列那一篇博文中就讲述到了，阻塞队列实际上是使用了Condition来模拟线程间协作。</p>
-<ul>
-<li>Condition是个接口，基本的方法就是await()和signal()方法；</li>
-<li>Condition依赖于Lock接口，生成一个Condition的基本代码是lock.newCondition() </li>
-<li>调用Condition的await()和signal()方法，都必须在lock保护之内，就是说必须在lock.lock()和lock.unlock之间才可以使用</li>
-</ul>
-<p>　　Conditon中的await()对应Object的wait()；</p>
-<p>　　Condition中的signal()对应Object的notify()；</p>
-<p>　　Condition中的signalAll()对应Object的notifyAll()。</p>
-<h3 id="一个生产者一个消费者-1"><a href="#一个生产者一个消费者-1" class="headerlink" title="一个生产者一个消费者"></a>一个生产者一个消费者</h3><p> 这个例子用了《Java多线程编程核心技术》中的方式，把生产者和消费者的方法写到一个类中，与生成线程和消费线程分开，感觉更高大上，当然上面的例子也可以写成这种方式。</p>
-<p>含有生成者消费者的类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> oneone;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.Condition;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();<span class="comment">//拿到可重入锁，相当于synchronized的作用</span></span><br><span class="line">    <span class="keyword">private</span> Condition condition = lock.newCondition();<span class="comment">//调用await和signal方法的对象，相当于Object对象（任意对象）的的wait和notify方法</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> hasValue = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//生产者</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();<span class="comment">//获得锁</span></span><br><span class="line">            <span class="keyword">while</span> (hasValue == <span class="keyword">true</span>) &#123;</span><br><span class="line">                condition.await(); <span class="comment">//没被消费则阻塞该生产线程，当然也释放了锁，进入等锁的队列</span></span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;打印★&quot;</span>);</span><br><span class="line">            hasValue = <span class="keyword">true</span>;</span><br><span class="line">            condition.signal();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//消费者</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            lock.lock();</span><br><span class="line">            <span class="keyword">while</span> (hasValue == <span class="keyword">false</span>) &#123;</span><br><span class="line">                condition.await();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;打印☆&quot;</span>);</span><br><span class="line">            hasValue = <span class="keyword">false</span>;</span><br><span class="line">            condition.signal();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对应生成者的线程类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package oneone;</span><br><span class="line"></span><br><span class="line">public class MyThreadA extends Thread &#123;</span><br><span class="line"></span><br><span class="line">    private MyService myService;</span><br><span class="line"></span><br><span class="line">    public MyThreadA(MyService myService) &#123;</span><br><span class="line">        super();</span><br><span class="line">        this.myService &#x3D; myService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int i &#x3D; 0; i &lt; Integer.MAX_VALUE; i++) &#123;</span><br><span class="line">            myService.set();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对应消费者的线程类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">package oneone;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class MyThreadB extends Thread &#123;</span><br><span class="line"></span><br><span class="line">    private MyService myService;</span><br><span class="line"></span><br><span class="line">    public MyThreadB(MyService myService) &#123;</span><br><span class="line">        super();</span><br><span class="line">        this.myService &#x3D; myService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        for (int i &#x3D; 0; i &lt; Integer.MAX_VALUE; i++) &#123;</span><br><span class="line">            myService.get();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>测试类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">package oneone;</span><br><span class="line"></span><br><span class="line">public class Run &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        MyService myService &#x3D; new MyService();</span><br><span class="line"></span><br><span class="line">        MyThreadA a &#x3D; new MyThreadA(myService);</span><br><span class="line">        a.start();</span><br><span class="line"></span><br><span class="line">        MyThreadB b &#x3D; new MyThreadB(myService);</span><br><span class="line">        b.start();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/nanchenkunkun.github.io/page/2/">2</a><a class="page-number" href="/nanchenkunkun.github.io/page/3/">3</a><a class="extend next" rel="next" href="/nanchenkunkun.github.io/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/nanchenkunkun.github.io/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/nanchenkunkun.github.io/page/4/">4</a><a class="extend next" rel="next" href="/nanchenkunkun.github.io/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1454,7 +1477,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/nanchenkunkun.github.io/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
