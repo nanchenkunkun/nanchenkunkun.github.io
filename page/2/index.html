@@ -118,17 +118,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">5</span></a>
+    <a href="/nanchenkunkun.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">9</span></a>
+    <a href="/nanchenkunkun.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">10</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">34</span></a>
+    <a href="/nanchenkunkun.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">35</span></a>
 
   </li>
   </ul>
@@ -154,6 +154,160 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
+      <meta itemprop="name" content="zkk">
+      <meta itemprop="description" content="只有变光,才能变强">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="kkの博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/nanchenkunkun.github.io/2020/09/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/Redis/" class="post-title-link" itemprop="url">Redis</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-09-08 11:28:53 / 修改时间：11:32:05" itemprop="dateCreated datePublished" datetime="2020-09-08T11:28:53+08:00">2020-09-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/" itemprop="url" rel="index"><span itemprop="name">中间件</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/nanchenkunkun.github.io/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/" itemprop="url" rel="index"><span itemprop="name">redis</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h3 id="Redis可以做什么"><a href="#Redis可以做什么" class="headerlink" title="Redis可以做什么"></a>Redis可以做什么</h3><p>正常大家知道的就是缓存，又或者分布式情况的分布式锁，还有么？</p>
+<p>博客场景会用到redis：</p>
+<ol>
+<li>记录帖子的点赞数、评论数和点击数 (hash)。</li>
+<li>记录用户的帖子 ID 列表 (排序)，便于快速显示用户的帖子列表 (zset)。</li>
+<li>记录帖子的标题、摘要、作者和封面信息，用于列表页展示 (hash)。</li>
+<li>记录帖子的点赞用户 ID 列表，评论 ID 列表，用于显示和去重计数 (zset)。</li>
+<li>缓存近期热帖内容 (帖子内容空间占用比较大)，减少数据库压力 (hash)。</li>
+<li>记录帖子的相关文章 ID，根据内容推荐相关帖子 (list)。</li>
+<li>如果帖子 ID 是整数自增的，可以使用 Redis 来分配帖子 ID(计数器)。</li>
+<li>收藏集和帖子之间的关系 (zset)。</li>
+<li>记录热榜帖子 ID 列表，总热榜和分类热榜 (zset)。</li>
+<li>缓存用户行为历史，进行恶意行为过滤 (zset,hash)。</li>
+<li>数据推送去重Bloom filter</li>
+<li>pv，uv统计</li>
+</ol>
+<p>大家是不是从未发现Redis居然有这么多的用法？</p>
+<h3 id="Redis端口为啥是6379"><a href="#Redis端口为啥是6379" class="headerlink" title="Redis端口为啥是6379"></a>Redis端口为啥是6379</h3><p>Redis 由意大利人 Salvatore Sanfilippo（网名 Antirez） 开发，Antirez 不仅帅的不像实力派，也非常有趣。</p>
+<p>他出生在非英语系国家，英语能力长期以来是一个短板，他曾经专门为自己蹩脚的英语能力写过一篇博文《英语伤痛 15 年》，用自己的成长经历来鼓励那些非英语系的技术开发者们努力攻克英语难关。</p>
+<p>我们都知道 Redis 的默认端口是 6379，这个端口号也不是随机选的，而是由手机键盘字母「MERZ」的位置决定的。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>分布式锁本质上要实现的目标就是在 Redis 里面占一个“茅坑”，当别的进程也要来占时，发现已经有人蹲在那里了，就只好放弃或者稍后再试。</p>
+<p>占坑一般是使用 setnx(set if not exists) 指令，只允许被一个客户端占坑，先来先占， 用完了，再调用 del 指令释放茅坑。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">setnx aobing</span><br><span class="line">expire aobing</span><br><span class="line">del aobing</span><br></pre></td></tr></table></figure>
+
+<p>失败，怎么办？</p>
+<p>当时出现了贼多的第三方插件，作者为了解决这个乱象，就在Redis 2.8 版本中作者加入了 set 指令的扩展参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">set  aobing ture  ex 5 nx</span><br><span class="line">del  aobing</span><br></pre></td></tr></table></figure>
+
+<p>但是这样还是有问题超时问题，可重入问题等等，这个时候，第三方的一些插件就横空出世了，Redission ，Jedis，他们的底层我就不过多描述了，都是通过lua脚本去保证的，大致逻辑跟我们代码实现是差不多的。</p>
+<p>就比如去删除的时候，去校验是否当前线程锁定的，就把比较和删除这样一些动作都放到一起了：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># delifequals</span><br><span class="line"><span class="keyword">if</span> redis.call(<span class="string">&quot;get&quot;</span>,KEYS[<span class="number">1</span>]) == ARGV[<span class="number">1</span>] <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> redis.call(<span class="string">&quot;del&quot;</span>,KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="延时队列"><a href="#延时队列" class="headerlink" title="延时队列"></a>延时队列</h3><p>我们平时习惯于使用 Rabbitmq 、RocketMQ和 Kafka 作为消息队列中间件，来给应用程序之间增加异步消息传递功能。这两个中间件都是专业的消息队列中间件，特性之多超出了大多数人的理解能力。</p>
+<p>使用过 Rabbitmq 的同学知道它使用起来有多复杂，发消息之前要创建 Exchange，再创建 Queue，还要将 Queue 和 Exchange 通过某种规则绑定起来，发消息的时候要指定 routing-key，还要控制头部信息。消费者在消费消息之前也要进行上面一系列的繁琐过程。</p>
+<p>但是绝大多数情况下，虽然我们的消息队列只有一组消费者，但还是需要经历上面这些繁琐的过程。</p>
+<p>有了 Redis，它就可以让我们解脱出来，对于那些只有一组消费者的消息队列，使用 Redis 就可以非常轻松的搞定。</p>
+<p>Redis 的消息队列不是专业的消息队列，它没有非常多的高级特性，没有 ack 保证，如果对消息的可靠性有着极致的追求，那么它就不适合使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&gt; rpush notify-queue apple banana pear</span><br><span class="line">(integer) 3</span><br><span class="line">&gt; llen notify-queue</span><br><span class="line">(integer) 3</span><br><span class="line">&gt; lpop notify-queue</span><br><span class="line">&quot;apple&quot;</span><br><span class="line">&gt; llen notify-queue</span><br><span class="line">(integer) 2</span><br><span class="line">&gt; lpop notify-queue</span><br><span class="line">&quot;banana&quot;</span><br><span class="line">&gt; llen notify-queue</span><br><span class="line">(integer) 1</span><br><span class="line">&gt; lpop notify-queue</span><br><span class="line">&quot;pear&quot;</span><br><span class="line">&gt; llen notify-queue</span><br><span class="line">(integer) 0</span><br><span class="line">&gt; lpop notify-queue</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+
+<p>但是这样有问题大家发现没有？队列会空是吧，那怎么解决呢？</p>
+<p>客户端是通过队列的 pop 操作来获取消息，然后进行处理，处理完了再接着获取消息，再进行处理。</p>
+<p>如此循环往复，这便是作为队列消费者的客户端的生命周期。</p>
+<p>可是如果队列空了，客户端就会陷入 pop 的死循环，不停地 pop，没有数据，接着再 pop，又没有数据，这就是浪费生命的空轮询。</p>
+<p>空轮询不但拉高了客户端的 CPU，redis 的 QPS 也会被拉高，如果这样空轮询的客户端有几十来个，Redis 的慢查询可能会显著增多。</p>
+<p>解决方式很简单，让线程睡一秒 Thread.sleep(1000)</p>
+<p>Redis在我开发的一些简易后台我确实有用到，因为我觉得没必要接入消息队列中间件，大家平时开发小系统可以试试。</p>
+<h3 id="位图bitmap"><a href="#位图bitmap" class="headerlink" title="位图bitmap"></a>位图bitmap</h3><p>在我们平时开发过程中，会有一些 bool 型数据需要存取，比如用户一年的签到记录，签了是 1，没签是 0，要记录 365 天。如果使用普通的 key/value，每个用户要记录 365 个，当用户上亿的时候，需要的存储空间是惊人的。</p>
+<p>为了解决这个问题，Redis 提供了位图数据结构，这样每天的签到记录只占据一个位，365 天就是 365 个位，46 个字节 (一个稍长一点的字符串) 就可以完全容纳下，这就大大节约了存储空间。</p>
+<p>位图不是特殊的数据结构，它的内容其实就是普通的字符串，也就是 byte 数组。我们可以使用普通的 get/set 直接获取和设置整个位图的内容，也可以使用位图操作 getbit/setbit 等将 byte 数组看成「位数组」来处理。</p>
+<p>当我们要统计月活的时候，因为需要去重，需要使用 set 来记录所有活跃用户的 id，这非常浪费内存。</p>
+<p>这时就可以考虑使用位图来标记用户的活跃状态。每个用户会都在这个位图的一个确定位置上，0 表示不活跃，1 表示活跃。然后到月底遍历一次位图就可以得到月度活跃用户数。</p>
+<p>这个类型不仅仅可以用来让我们改二进制改字符串值，最经典的就是用户连续签到。</p>
+<p>key 可以设置为 前缀:用户id:年月    譬如 setbit sign:123:1909 0 1</p>
+<p>代表用户ID=123签到，签到的时间是19年9月份，0代表该月第一天，1代表签到了</p>
+<p>第二天没有签到，无需处理，系统默认为0</p>
+<p>第三天签到  setbit sign:123:1909 2 1</p>
+<p>可以查看一下目前的签到情况，显示第一天和第三天签到了，前8天目前共签到了2天</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit sign:123:1909 0 1</span><br><span class="line">0</span><br><span class="line">127.0.0.1:6379&gt; setbit sign:123:1909 2 1</span><br><span class="line">0</span><br><span class="line">127.0.0.1:6379&gt; getbit sign:123:1909 0</span><br><span class="line">1</span><br><span class="line">127.0.0.1:6379&gt; getbit sign:123:1909 1</span><br><span class="line">0</span><br><span class="line">127.0.0.1:6379&gt; getbit sign:123:1909 2</span><br><span class="line">1</span><br><span class="line">127.0.0.1:6379&gt; getbit sign:123:1909 3</span><br><span class="line">0</span><br><span class="line">127.0.0.1:6379&gt; bitcount sign:123:1909 0 0</span><br><span class="line">2</span><br></pre></td></tr></table></figure>
+
+<h3 id="HyperLogLog"><a href="#HyperLogLog" class="headerlink" title="HyperLogLog"></a>HyperLogLog</h3><p>如果统计 PV 那非常好办，给每个网页一个独立的 Redis 计数器就可以了，这个计数器的 key 后缀加上当天的日期。这样来一个请求，incrby 一次，最终就可以统计出所有的 PV 数据。</p>
+<p>但是 UV 不一样，它要去重，同一个用户一天之内的多次访问请求只能计数一次。</p>
+<p>这就要求每一个网页请求都需要带上用户的 ID，无论是登陆用户还是未登陆用户都需要一个唯一 ID 来标识。</p>
+<p>你也许已经想到了一个简单的方案，那就是为每一个页面一个独立的 set 集合来存储所有当天访问过此页面的用户 ID。</p>
+<p>当一个请求过来时，我们使用 sadd 将用户 ID 塞进去就可以了。</p>
+<p>通过 scard 可以取出这个集合的大小，这个数字就是这个页面的 UV 数据。没错，这是一个非常简单的方案。</p>
+<p>但是，如果你的页面访问量非常大，比如一个爆款页面几千万的 UV，你需要一个很大的 set 集合来统计，这就非常浪费空间。</p>
+<p>如果这样的页面很多，那所需要的存储空间是惊人的。为这样一个去重功能就耗费这样多的存储空间，值得么？其实老板需要的数据又不需要太精确，105w 和 106w 这两个数字对于老板们来说并没有多大区别，So，有没有更好的解决方案呢？</p>
+<p>HyperLogLog 提供了两个指令 pfadd 和 pfcount，根据字面意义很好理解，一个是增加计数，一个是获取计数。</p>
+<p>pfadd 用法和 set 集合的 sadd 是一样的，来一个用户 ID，就将用户 ID 塞进去就是，pfcount 和 scard 用法是一样的，直接获取计数值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; pfadd codehole user1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount codehole</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfadd codehole user2</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount codehole</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; pfadd codehole user3</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount codehole</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; pfadd codehole user4</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount codehole</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; pfadd codehole user5</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount codehole</span><br><span class="line">(integer) 5</span><br><span class="line">127.0.0.1:6379&gt; pfadd codehole user6</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount codehole</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; pfadd codehole user7 user8 user9 user10</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; pfcount codehole</span><br><span class="line">(integer) 10</span><br></pre></td></tr></table></figure>
+
+<h3 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h3><p>HyperLogLog 数据结构来进行估数，它非常有价值，可以解决很多精确度不高的统计需求。</p>
+<p>但是如果我们想知道某一个值是不是已经在 HyperLogLog 结构里面了，它就无能为力了，它只提供了 pfadd 和 pfcount 方法，没有提供 pfcontains 这种方法。</p>
+<p>讲个使用场景，比如我们在使用新闻客户端看新闻时，它会给我们不停地推荐新的内容，它每次推荐时要去重，去掉那些已经看过的内容。问题来了，新闻客户端推荐系统如何实现推送去重的？</p>
+<p>你会想到服务器记录了用户看过的所有历史记录，当推荐系统推荐新闻时会从每个用户的历史记录里进行筛选，过滤掉那些已经存在的记录。问题是当用户量很大，每个用户看过的新闻又很多的情况下，这种方式，推荐系统的去重工作在性能上跟的上么？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; bf.add codehole user1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bf.add codehole user2</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bf.add codehole user3</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bf.exists codehole user1</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bf.exists codehole user2</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bf.exists codehole user3</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bf.exists codehole user4</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bf.madd codehole user4 user5 user6</span><br><span class="line">1) (integer) 1</span><br><span class="line">2) (integer) 1</span><br><span class="line">3) (integer) 1</span><br><span class="line">127.0.0.1:6379&gt; bf.mexists codehole user4 user5 user6 user7</span><br><span class="line">1) (integer) 1</span><br><span class="line">2) (integer) 1</span><br><span class="line">3) (integer) 1</span><br><span class="line">4) (integer) 0</span><br></pre></td></tr></table></figure>
+
+<p>布隆过滤器的initial_size估计的过大，会浪费存储空间，估计的过小，就会影响准确率，用户在使用之前一定要尽可能地精确估计好元素数量，还需要加上一定的冗余空间以避免实际元素可能会意外高出估计值很多。</p>
+<p>布隆过滤器的error_rate越小，需要的存储空间就越大，对于不需要过于精确的场合，error_rate设置稍大一点也无伤大雅。比如在新闻去重上而言，误判率高一点只会让小部分文章不能让合适的人看到，文章的整体阅读量不会因为这点误判率就带来巨大的改变。</p>
+<p>在爬虫系统中，我们需要对 URL 进行去重，已经爬过的网页就可以不用爬了。但是 URL 太多了，几千万几个亿，如果用一个集合装下这些 URL 地址那是非常浪费空间的。这时候就可以考虑使用布隆过滤器。它可以大幅降低去重存储消耗，只不过也会使得爬虫系统错过少量的页面。</p>
+<p>布隆过滤器在 NoSQL 数据库领域使用非常广泛，我们平时用到的 HBase、Cassandra 还有 LevelDB、RocksDB 内部都有布隆过滤器结构，布隆过滤器可以显著降低数据库的 IO 请求数量。当用户来查询某个 row 时，可以先通过内存中的布隆过滤器过滤掉大量不存在的 row 请求，然后再去磁盘进行查询。</p>
+<p>邮箱系统的垃圾邮件过滤功能也普遍用到了布隆过滤器，因为用了这个过滤器，所以平时也会遇到某些正常的邮件被放进了垃圾邮件目录中，这个就是误判所致，概率很低。</p>
+<p>他其实还有很多用法，我没怎么讲，比如限流，附近的人GeoHash等等，我们公司的附近的人也是用它实现的。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1469,120 +1623,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E4%B8%80%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/nanchenkunkun.github.io/images/1.jpg">
-      <meta itemprop="name" content="zkk">
-      <meta itemprop="description" content="只有变光,才能变强">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="kkの博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/nanchenkunkun.github.io/2020/09/02/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E4%B8%80%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">多线程基础</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-09-02 10:40:53 / 修改时间：10:41:26" itemprop="dateCreated datePublished" datetime="2020-09-02T10:40:53+08:00">2020-09-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/nanchenkunkun.github.io/categories/java/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="多线程基础"><a href="#多线程基础" class="headerlink" title="多线程基础"></a>多线程基础</h1><h2 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h2><p>​        每个正在系统上运行的程序都是一个进程。每个进程包含一到多个线程。线程是一组指令的集合，或者是程序的特殊段，它可以在程序里独立执行。也可以把它理解为代码运行的上下文。所以线程基本上是轻量级的进程，它负责在单个程序里执行多任务。通常由操作系统负责多个线程的调度和执行。</p>
-<p>使用线程可以把占据时间长的程序中的任务放到后台去处理，程序的运行速度可能加快，在一些等待的任务实现上如用户输入、文件读写和网络收发数据等，线程就比较有用了。在这种情况下可以释放一些珍贵的资源如内存占用等等。</p>
-<p>如果有大量的线程,会影响性能，因为操作系统需要在它们之间切换，更多的线程需要更多的内存空间，线程的中止需要考虑其对程序运行的影响。通常块模型数据是在多个线程间共享的，需要防止线程死锁情况的发生。</p>
-<p>总结:进程是所有线程的集合，每一个线程是进程中的一条执行路径。</p>
-<h2 id="同步与异步"><a href="#同步与异步" class="headerlink" title="同步与异步"></a>同步与异步</h2><p>​        <img src="A:\gitdir\学习资料\java\多线程\img\2.png"></p>
-<p>​        </p>
-<p>​        同步和异步关注的是消息通信机制 (synchronous communication/ asynchronous communication)。同步，就是调用某个东西是，调用方得等待这个调用返回结果才能继续往后执行。异步，和同步相反  调用方不会理解得到结果，而是在调用发出后调用者可用继续执行后续操作，被调用者通过状体来通知调用者，或者通过回掉函数来处理这个调用。</p>
-<ul>
-<li><p><strong>同步方法</strong>调用一旦开始，调用者必须等到方法调用返回后，才能继续后续的行为。</p>
-</li>
-<li><p><strong>异步方法</strong>调用更像一个消息传递，一旦开始，方法调用就会立即返回，调用者就可以继续后续的操作。而，异步方法通常会在另外一个线程中，“真实”地执行着。整个过程，不会阻碍调用者的工作</p>
-</li>
-</ul>
-<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>​        阻塞和非阻塞 强调的是程序在等待调用结果（消息，返回值）时的状态.  阻塞调用是指调用结果返回之前，当前线程会被挂起。调用线程只有在得到结果之后才会返回。非阻塞调用指在不能立刻得到结果之前，该调用不会阻塞当前线程。 对于同步调用来说，很多时候当前线程还是激活的状态，只是从逻辑上当前函数没有返回而已，即同步等待时什么都不干，白白占用着资源。</p>
-<p><strong>同步和异步关注的是消息通信机制，阻塞和非阻塞关注的是程序在等待调用结果（消息，返回值）时线程的状态.</strong></p>
-<h2 id="多线程的创建方式"><a href="#多线程的创建方式" class="headerlink" title="多线程的创建方式"></a>多线程的创建方式</h2><p>第一种继承Thread类，重写run方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CreateThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">	<span class="comment">// run方法中编写 多线程需要执行的代码</span></span><br><span class="line">	<span class="function">publicvoid <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (inti = <span class="number">0</span>; i&lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;i:&quot;</span> + i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function">publicstaticvoid <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;-----多线程创建开始-----&quot;</span>);</span><br><span class="line">		<span class="comment">// 1.创建一个线程</span></span><br><span class="line">		CreateThread createThread = <span class="keyword">new</span> CreateThread();</span><br><span class="line">		<span class="comment">// 2.开始执行线程 注意 开启线程不是调用run方法，而是start方法</span></span><br><span class="line">		System.out.println(<span class="string">&quot;-----多线程创建启动-----&quot;</span>);</span><br><span class="line">		createThread.start();</span><br><span class="line">		System.out.println(<span class="string">&quot;-----多线程创建结束-----&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第二种实现runnable接口，重写run方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CreateRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function">publicvoid <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (inti = <span class="number">0</span>; i&lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;i:&quot;</span> + i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadDemo2</span> </span>&#123;</span><br><span class="line">	<span class="function">publicstaticvoid <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">&quot;-----多线程创建开始-----&quot;</span>);</span><br><span class="line">		<span class="comment">// 1.创建一个线程</span></span><br><span class="line">		CreateRunnable createThread = <span class="keyword">new</span> CreateRunnable();</span><br><span class="line">		<span class="comment">// 2.开始执行线程 注意 开启线程不是调用run方法，而是start方法</span></span><br><span class="line">		System.out.println(<span class="string">&quot;-----多线程创建启动-----&quot;</span>);</span><br><span class="line">		Thread thread = <span class="keyword">new</span> Thread(createThread);</span><br><span class="line">		thread.start();</span><br><span class="line">		System.out.println(<span class="string">&quot;-----多线程创建结束-----&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">还可以使用匿名内部类的方式：</span><br><span class="line">     System.out.println(<span class="string">&quot;-----多线程创建开始-----&quot;</span>);</span><br><span class="line">    Thread thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;i:&quot;</span> + i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">    thread.start();</span><br><span class="line">    System.out.println(<span class="string">&quot;-----多线程创建结束-----&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<h2 id="守护线程"><a href="#守护线程" class="headerlink" title="守护线程"></a>守护线程</h2><p>​           Java中有两种线程，一种是用户线程，另一种是守护线程。用户线程是指用户自定义创建的线程，<strong>主线程停止用户线程不会停止</strong>,守护线程当进程不存在或主线程停止，守护线程也会被停止。使用setDaemon(true)方法设置为守护线程</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DaemonThread</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">                    <span class="keyword">try</span>&#123;</span><br><span class="line">                        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                    &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(<span class="string">&quot;我是子线程&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        thread.setDaemon(<span class="keyword">true</span>); <span class="comment">//设置为守护线程</span></span><br><span class="line">        thread.start();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">100</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;我是主线程&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;我是主线程&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;主线程执行完毕!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="多线程的运行状态"><a href="#多线程的运行状态" class="headerlink" title="多线程的运行状态"></a>多线程的运行状态</h2><p><img src="A:\gitdir\学习资料\java\多线程\img\1.png"></p>
-<h4 id="新建状态"><a href="#新建状态" class="headerlink" title="新建状态"></a>新建状态</h4><p>​        当用new操作符创建一个线程时， 例如new Thread(r)，线程还没有开始运行，此时线程处在新建状态。 当一个线程处于新生状态时，程序还没有开始运行线程中的代码。</p>
-<h3 id="就绪状态"><a href="#就绪状态" class="headerlink" title="就绪状态"></a>就绪状态</h3><p>​         一个新创建的线程并不自动开始运行，要执行线程，必须调用线程的start()方法。当线程对象调用start()方法即启动了线程，start()方法创建线程运行的系统资源，并调度线程运行run()方法。当start()方法返回后，线程就处于就绪状态。</p>
-<p>​        处于就绪状态的线程并不一定立即运行run()方法，线程还必须同其他线程竞争CPU时间，只有获得CPU时间才可以运行线程。因为在单CPU的计算机系统中，不可能同时运行多个线程，一个时刻仅有一个线程处于运行状态。因此此时可能有多个线程处于就绪状态。对多个处于就绪状态的线程是由<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/java">Java</a>运行时系统的线程调度程序(<em>thread scheduler</em>)来调度的。</p>
-<h3 id="运行状态"><a href="#运行状态" class="headerlink" title="运行状态"></a><strong>运行状态</strong></h3><p>​        当线程获得CPU时间片后，它才进入运行状态，真正开始执行run()方法.</p>
-<h3 id="阻塞状态"><a href="#阻塞状态" class="headerlink" title="阻塞状态"></a>阻塞状态</h3><p>​    线程运行过程中，可能由于各种原因进入阻塞状态:<br>​        1&gt;线程通过调用sleep方法进入睡眠状态；<br>​        2&gt;线程调用一个在I/O上被阻塞的操作，即该操作在输入输出操作完成之前不会返回到它的调用者；<br>​        3&gt;线程试图得到一个锁，而该锁正被其他线程持有；<br>​        4&gt;线程在等待某个触发条件；</p>
-<h3 id="死亡状态"><a href="#死亡状态" class="headerlink" title="死亡状态"></a><strong>死亡</strong>状态</h3><p>有两个原因会导致线程死亡：</p>
-<ol>
-<li>run方法正常退出而自然死亡，</li>
-<li>一个未捕获的异常终止了run方法而使线程猝死。<br>为了确定线程在当前是否存活着（就是要么是可运行的，要么是被阻塞了），需要使用isAlive方法。如果是可运行或被阻塞，这个方法返回true； 如果线程仍旧是new状态且不是可运行的， 或者线程死亡了，则返回false。</li>
-</ol>
-<h2 id="线程抢占"><a href="#线程抢占" class="headerlink" title="线程抢占"></a>线程抢占</h2><p>当在主线程当中执行到t1.join()方法时，就认为主线程应该把执行权让给t1</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DaemonThread</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Thread thread = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span>(i&lt;<span class="number">10</span>)&#123;</span><br><span class="line">                    <span class="keyword">try</span>&#123;</span><br><span class="line">                        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">                    &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(<span class="string">&quot;我是子线程&quot;</span> + i++);</span><br><span class="line">                    <span class="keyword">if</span>( i == <span class="number">10</span>)&#123;</span><br><span class="line">                        System.out.println(<span class="string">&quot;子线程执行完毕&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        thread.start();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            thread.join(); <span class="comment">//子线程执行完毕后才会执行主线程</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i&lt;<span class="number">10</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                Thread.sleep(<span class="number">100</span>);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(<span class="string">&quot;我是主线程&quot;</span> + i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;我是主线程&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;主线程执行完毕!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a><strong>优先级</strong></h2><p>​        现代操作系统基本采用时分的形式调度运行的线程，线程分配得到的时间片的多少决定了线程使用处理器资源的多少，也对应了线程优先级这个概念。在JAVA线程中，通过一个int priority来控制优先级，范围为1-10，其中10最高，默认值为5。下面是源码（基于1.8）中关于priority的一些量和方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrioritytThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">			System.out.println(Thread.currentThread().toString() + <span class="string">&quot;---i:&quot;</span> + i);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadDemo4</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		PrioritytThread prioritytThread = <span class="keyword">new</span> PrioritytThread();</span><br><span class="line">		Thread t1 = <span class="keyword">new</span> Thread(prioritytThread);</span><br><span class="line">		Thread t2 = <span class="keyword">new</span> Thread(prioritytThread);</span><br><span class="line">		t1.start();</span><br><span class="line">		<span class="comment">// 注意设置了优先级， 不代表每次都一定会被执行。 只是CPU调度会优先分配</span></span><br><span class="line">		t1.setPriority(<span class="number">10</span>);</span><br><span class="line">		t2.start();</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="线程让步"><a href="#线程让步" class="headerlink" title="线程让步"></a>线程让步</h2><p>​        Thread.yield()方法的作用：暂停当前正在执行的线程（不会进入阻塞状态），并执行其他线程。（可能没有效果）yield()让当前正在运行的线程回到就绪状态，以允许具有相同优先级的其他线程获得运行的机会。因此，使用yield()的目的是让具有相同优先级的线程之间能够适当的轮换执行。但是，实际中无法保证yield()达到让步的目的，因为，让步的线程可能被线程调度程序再次选中。</p>
-<p>结论：大多数情况下，yield()将导致线程从运行状态转到可运行状态，但有可能没有效果。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1654,20 +1694,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/nanchenkunkun.github.io/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">35</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/nanchenkunkun.github.io/categories/">
           
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/nanchenkunkun.github.io/tags/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
